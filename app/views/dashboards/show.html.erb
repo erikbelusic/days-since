@@ -7,7 +7,7 @@
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <h1 class="font-display text-3xl font-bold">Days since…</h1>
-  <div class="flex items-center gap-3">
+  <div class="flex flex-wrap items-center gap-3">
     <div class="flex overflow-hidden rounded-md border border-border text-sm" role="group" aria-label="Dashboard layout">
       <% { "cards" => "Cards", "list" => "List" }.each do |layout, label| %>
         <%= button_to label, dashboard_layout_path, method: :patch, params: { layout: layout },

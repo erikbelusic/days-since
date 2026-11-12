@@ -17,7 +17,7 @@
   </header>
 
   <div class="my-6 text-center">
-    <p class="font-display text-7xl font-bold tabular-nums <%= result.ongoing? ? "text-danger" : "text-ink" %>" data-days>
+    <p class="font-numeric text-7xl font-bold tabular-nums <%= result.ongoing? ? "text-danger" : "text-ink" %>" data-days>
       <%= result.infinite? ? "∞" : result.days %>
     </p>
     <p class="mt-1 text-sm text-ink-muted"><%= counter_caption(result) %></p>

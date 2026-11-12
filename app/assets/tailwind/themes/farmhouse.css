@@ -17,6 +17,7 @@
   --ds-danger-surface: #f6e3df;
   --ds-font-body: Georgia, "Iowan Old Style", "Times New Roman", serif;
   --ds-font-display: "Smokum", "Rockwell", Georgia, serif;
+  --ds-font-numeric: var(--fh-numeral-font);
   --ds-radius-card: 0.2rem;
   color-scheme: light;
 

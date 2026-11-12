@@ -28,6 +28,7 @@
   --color-danger-surface: var(--ds-danger-surface);
   --font-body: var(--ds-font-body);
   --font-display: var(--ds-font-display);
+  --font-numeric: var(--ds-font-numeric, var(--ds-font-display));
   --radius-card: var(--ds-radius-card);
 }
 
