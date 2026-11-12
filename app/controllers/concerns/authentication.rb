@@ -13,6 +13,10 @@ module Authentication
   end
 
   private
+    def skip_sign_in_pages_in_single_user_mode
+      redirect_to root_path if SingleUserMode.enabled?
+    end
+
     def authenticated?
       resume_session
     end
@@ -22,6 +26,8 @@ module Authentication
     end
 
     def resume_session
+      return Current.single_user ||= SingleUserMode.user if SingleUserMode.enabled?
+
       Current.session ||= find_session_by_cookie
     end
 
