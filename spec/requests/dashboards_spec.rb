@@ -64,3 +64,23 @@ RSpec.describe "Dashboard live updates", :single_user_mode do
     expect(response.body).to include('<meta name="turbo-refresh-method" content="morph">')
   end
 end
+
+RSpec.describe "Dashboard status page links", :single_user_mode do
+  it "links each card's title to the service's real status page" do
+    subscription = create(:subscription, user: SingleUserMode.user, feed: create(:feed, name: "GitHub", site_url: "https://www.githubstatus.com"))
+
+    get root_path
+
+    link = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)} h2 a")
+    expect(link["href"]).to eq("https://www.githubstatus.com")
+    expect(link["target"]).to eq("_blank")
+  end
+
+  it "shows a plain title when the status page URL is unknown" do
+    subscription = create(:subscription, user: SingleUserMode.user, feed: create(:feed, name: "Mystery", site_url: nil))
+
+    get root_path
+
+    expect(Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)} h2 a")).to be_nil
+  end
+end

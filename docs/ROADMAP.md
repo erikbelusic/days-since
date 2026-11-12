@@ -25,7 +25,7 @@ Ideas to pick up **after the MVP is complete** (after phase H and the final chec
   - Add a tooltip showing the active threshold.
   - Link to the full incident list.
 
-## Logos and links
+## Logos
 
 ### Service logos on cards
 - Show each service's logo on its card.
@@ -36,8 +36,6 @@ Ideas to pick up **after the MVP is complete** (after phase H and the final chec
   4. Let users upload or override a logo per subscription (Active Storage).
 - Store the logo on `Feed`, since it's shared, with an optional per-subscription override.
 
-### Link cards to the real status page
-- Make the card's title (or a small "status page ↗" link) open `feed.site_url`. Statuspage and most feeds already give us that URL.
 
 ## Carried over from MVP decisions
 
