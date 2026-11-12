@@ -41,6 +41,7 @@ Ruby is pinned in `.ruby-version` and managed with mise.
 - **Network I/O goes through Faraday** using the shared connection builder (timeouts, user agent, conditional GET headers). No model or view makes HTTP calls directly.
 - **Enums use string values** (`enum :provider, { statuspage: "statuspage", rss: "rss" }`) so the database stays readable.
 - **Times:** store UTC and compute "days since" in the user's `time_zone`. Use `Time.current` and `Date.current` in the right zone, never `Time.now`.
+- **SQLite migrations: beware table rebuilds.** On SQLite, `rename_column`, `change_column`, `remove_column` and similar changes rebuild the whole table. Rails turns foreign keys off for that, but SQLite ignores the setting inside a migration transaction, so dropping the old table fires `ON DELETE CASCADE` and deletes child rows. Renaming a `users` column once wiped every subscription this way. Prefer additive changes. If a rebuild is unavoidable, add `disable_ddl_transaction!` to the migration and test it on a copy of real data before committing.
 - **Hotwire first.** Use Turbo Frames and Streams for interactivity, and Stimulus only when Turbo can't do the job. Don't add a JavaScript build step, because the app uses Importmaps.
 
 ## Testing (RSpec)
