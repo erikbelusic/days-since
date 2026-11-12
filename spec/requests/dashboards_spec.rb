@@ -227,3 +227,21 @@ RSpec.describe "Dashboard level words follow the theme", :single_user_mode do
     expect(row.at_css("[data-level-label]").text).to eq("Warning")
   end
 end
+
+RSpec.describe "Dashboard logos", :single_user_mode do
+  it "shows each service's logo or monogram on cards and list rows" do
+    user = SingleUserMode.user
+    with_logo = create(:subscription, user: user, feed: create(:feed, name: "GitHub"))
+    with_logo.feed.logo.attach(io: StringIO.new(file_fixture("logos/icon.png").binread), filename: "logo.png", content_type: "image/png")
+    without = create(:subscription, user: user, feed: create(:feed, name: "Slack"))
+
+    %w[cards list].each do |layout|
+      user.update!(dashboard_layout: layout)
+      get root_path
+      page = Nokogiri::HTML(response.body)
+
+      expect(page.at_css("##{ActionView::RecordIdentifier.dom_id(with_logo)} img[data-service-logo]")).to be_present
+      expect(page.at_css("##{ActionView::RecordIdentifier.dom_id(without)} [data-service-logo='monogram']").text).to eq("S")
+    end
+  end
+end

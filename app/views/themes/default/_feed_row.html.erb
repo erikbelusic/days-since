@@ -5,6 +5,7 @@
   </td>
   <td class="py-2 pr-3 font-medium">
     <span class="mr-1.5 inline-block h-2.5 w-2.5 rounded-full bg-level align-middle <%= "ds-pulse" if result.ongoing? %>" aria-hidden="true"></span>
+    <%= service_logo(subscription, css_class: "mr-1.5 inline-flex h-5 w-5 rounded align-middle", monogram_class: "bg-surface-muted text-ink-muted text-[0.65rem]") %>
     <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
           class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener" %>
   </td>
