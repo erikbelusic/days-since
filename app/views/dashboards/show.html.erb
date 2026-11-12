@@ -2,6 +2,7 @@
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <h1 class="font-display text-3xl font-bold">Days since…</h1>
+  <%= link_to "Add status page", new_subscription_path, class: "rounded-md bg-accent px-4 py-2 font-medium text-accent-ink hover:opacity-90" %>
 </div>
 
 <% if @cards.any? %>
