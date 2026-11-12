@@ -23,11 +23,12 @@ Ruby is pinned in `.ruby-version` and managed with mise.
 
 ## Git workflow
 
+- **Only commit or push when asked.** Don't commit or push on your own initiative. Leave changes in the working tree for review unless the user asks for a commit or push in the current session. When you do commit, follow the rules below.
 - **Atomic commits.** Each commit is one focused step, such as "Add Feed model" or "Add Statuspage provider". Don't mix unrelated changes, like setup with features or refactors with behavior changes.
 - **Message style:** a plain imperative subject line of 72 characters or fewer, with no Conventional Commits prefix. Example: `Add exponential backoff to feed polling`. Add a body when the *why* isn't obvious.
 - **Trailer:** end every commit message with `Co-Authored-By: Claude <model> <noreply@anthropic.com>`.
-- **Branching:** commit to `main` until the MVP is complete. Use feature branches after that.
-- **Push after every commit** to `origin` (`git@github.com:erikbelusic/days-since.git`).
+- **Branching:** the MVP is complete, so per decision 9b new work goes on feature branches. Check with the user before committing directly to `main`.
+- **Remote:** `origin` is `git@github.com:erikbelusic/days-since.git`.
 - Before committing, run `bundle exec rspec` and `bin/rubocop`, and both must pass. Never commit a red suite.
 - `.lavish/` holds local review artifacts. It is gitignored, so never commit it.
 

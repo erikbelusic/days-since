@@ -156,7 +156,7 @@ Post-MVP ideas are tracked in [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Contributing
 
-- `main` is the only branch until the MVP ships. Feature branches start after that.
+- The MVP is complete, so new work happens on feature branches.
 - Commits are small and atomic, with plain imperative messages (`Add Statuspage provider`).
 - New behavior comes with specs. See [`CLAUDE.md`](CLAUDE.md) for coding, testing and theming conventions.
 
