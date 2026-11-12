@@ -186,3 +186,30 @@ RSpec.describe "Dashboard stability levels", :single_user_mode do
     expect(node(subscription).text).to include("Recovering")
   end
 end
+
+RSpec.describe "Dashboard live incident callouts", :single_user_mode do
+  let(:user) { SingleUserMode.user }
+
+  def page = Nokogiri::HTML(response.body)
+
+  it "lists live incidents in a banner and counts them in the tab title" do
+    %w[Cloudflare Slack].each do |name|
+      create(:incident, :ongoing, feed: create(:subscription, user: user, feed: create(:feed, name: name)).feed)
+    end
+    create(:subscription, user: user, feed: create(:feed, name: "GitHub"))
+
+    get root_path
+
+    expect(page.at_css("#live_incidents").text.squish).to eq("⚠ 2 services have an incident in progress: Cloudflare and Slack")
+    expect(page.at_css("title").text).to eq("(2) Dashboard · days-since")
+  end
+
+  it "shows no banner or count when everything is calm" do
+    create(:subscription, user: user)
+
+    get root_path
+
+    expect(page.at_css("#live_incidents")).to be_nil
+    expect(page.at_css("title").text).to eq("Dashboard · days-since")
+  end
+end

@@ -1,0 +1,6 @@
+<%# locals: (subscriptions:) %>
+<div id="live_incidents" role="alert" data-level="ongoing" class="ds-pulse mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-card bg-level px-4 py-3 font-semibold text-surface">
+  <span aria-hidden="true">⚠</span>
+  <span><%= pluralize(subscriptions.size, "service") %> <%= subscriptions.one? ? "has" : "have" %> an incident in progress:</span>
+  <span class="font-normal"><%= subscriptions.map(&:name).to_sentence %></span>
+</div>
