@@ -100,3 +100,45 @@ RSpec.describe "Dashboard counted-incident explanation", :single_user_mode do
     end
   end
 end
+
+RSpec.describe "Dashboard layouts", :single_user_mode do
+  let(:user) { SingleUserMode.user }
+  let!(:subscription) { create(:subscription, user: user, feed: create(:feed, name: "GitHub")) }
+
+  def page = Nokogiri::HTML(response.body)
+
+  it "shows cards by default" do
+    get root_path
+
+    expect(page.at_css("article##{ActionView::RecordIdentifier.dom_id(subscription)}")).to be_present
+    expect(page.at_css("table")).to be_nil
+  end
+
+  it "switches to a compact list and remembers the choice" do
+    create(:incident, :ongoing, feed: subscription.feed, title: "API outage")
+
+    patch dashboard_layout_path, params: { layout: "list" }
+    expect(response).to redirect_to(root_path)
+    get root_path
+
+    row = page.at_css("tr##{ActionView::RecordIdentifier.dom_id(subscription)}")
+    expect(row.text.squish).to include("GitHub").and include("0").and include("Ongoing").and include("API outage")
+    expect(user.reload).to be_dashboard_layout_list
+  end
+
+  it "switches back to cards" do
+    user.update!(dashboard_layout: "list")
+
+    patch dashboard_layout_path, params: { layout: "cards" }
+    get root_path
+
+    expect(page.at_css("article##{ActionView::RecordIdentifier.dom_id(subscription)}")).to be_present
+  end
+
+  it "rejects unknown layouts" do
+    patch dashboard_layout_path, params: { layout: "carousel" }
+
+    expect(flash[:alert]).to eq("Unknown dashboard layout.")
+    expect(user.reload).to be_dashboard_layout_cards
+  end
+end

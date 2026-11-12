@@ -7,18 +7,47 @@
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <h1 class="font-display text-3xl font-bold">Days since…</h1>
-  <%= link_to "Add status page", new_subscription_path, class: "rounded-md bg-accent px-4 py-2 font-medium text-accent-ink hover:opacity-90" %>
+  <div class="flex items-center gap-3">
+    <div class="flex overflow-hidden rounded-md border border-border text-sm" role="group" aria-label="Dashboard layout">
+      <% { "cards" => "Cards", "list" => "List" }.each do |layout, label| %>
+        <%= button_to label, dashboard_layout_path, method: :patch, params: { layout: layout },
+              aria: { pressed: Current.user.dashboard_layout == layout },
+              class: "cursor-pointer px-3 py-2 #{Current.user.dashboard_layout == layout ? "bg-surface-muted font-semibold" : "bg-surface text-ink-muted hover:text-ink"}" %>
+      <% end %>
+    </div>
+    <%= link_to "Add status page", new_subscription_path, class: "rounded-md bg-accent px-4 py-2 font-medium text-accent-ink hover:opacity-90" %>
+  </div>
 </div>
 
-<% if @cards.any? %>
+<% if @cards.empty? %>
+  <div id="empty_state" class="rounded-card border border-dashed border-border bg-surface p-10 text-center">
+    <p class="font-display text-2xl font-semibold">No status pages yet</p>
+    <p class="mt-2 text-ink-muted">Add a status page like githubstatus.com to start counting.</p>
+  </div>
+<% elsif Current.user.dashboard_layout_list? %>
+  <div class="overflow-x-auto rounded-card border border-border bg-surface">
+    <table class="w-full text-left">
+      <thead class="text-xs uppercase tracking-wide text-ink-muted">
+        <tr>
+          <th class="py-2 pl-3"><span class="sr-only">Reorder</span></th>
+          <th class="py-2 pr-3">Service</th>
+          <th class="py-2 pr-3 text-right">Days</th>
+          <th class="py-2 pr-3">Status</th>
+          <th class="hidden py-2 pr-3 md:table-cell">Last counted incident</th>
+          <th class="py-2 pr-3"><span class="sr-only">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody id="subscriptions" data-controller="sortable" data-sortable-handle-value="[data-sortable-handle]">
+        <% @cards.each do |subscription, result| %>
+          <%= render themed_partial("feed_row"), subscription: subscription, result: result %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
   <div id="subscriptions" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-controller="sortable" data-sortable-handle-value="[data-sortable-handle]">
     <% @cards.each do |subscription, result| %>
       <%= render themed_partial("feed_card"), subscription: subscription, result: result %>
     <% end %>
-  </div>
-<% else %>
-  <div id="empty_state" class="rounded-card border border-dashed border-border bg-surface p-10 text-center">
-    <p class="font-display text-2xl font-semibold">No status pages yet</p>
-    <p class="mt-2 text-ink-muted">Add a status page like githubstatus.com to start counting.</p>
   </div>
 <% end %>

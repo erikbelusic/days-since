@@ -1,0 +1,35 @@
+<%# locals: (subscription:, result:) %>
+<tr id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" class="border-t border-border <%= "bg-danger-surface" if result.ongoing? %>">
+  <td class="w-6 py-2 pl-3 text-ink-muted">
+    <span data-sortable-handle class="cursor-grab select-none" title="Drag to reorder" aria-hidden="true">⠿</span>
+  </td>
+  <td class="py-2 pr-3 font-medium">
+    <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+          class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener" %>
+  </td>
+  <td class="py-2 pr-3 text-right font-display text-xl font-bold tabular-nums <%= result.ongoing? ? "text-danger" : "" %>" data-days>
+    <%= result.infinite? ? "∞" : result.days %>
+  </td>
+  <td class="py-2 pr-3 text-sm whitespace-nowrap">
+    <% if result.ongoing? %>
+      <span class="rounded-full bg-danger px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-surface">Ongoing</span>
+    <% else %>
+      <span class="text-ink-muted"><%= counter_caption(result) %></span>
+    <% end %>
+  </td>
+  <td class="hidden max-w-xs py-2 pr-3 text-sm text-ink-muted md:table-cell">
+    <% if result.incident %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>">
+        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:underline", target: "_blank", rel: "noopener" %>
+      </p>
+    <% end %>
+    <% if subscription.feed.failing? %>
+      <p class="truncate text-danger" title="<%= subscription.feed.last_error %>">Can't reach status page</p>
+    <% elsif result.ignored_count.positive? %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>"><%= ignored_incidents_note(result) %></p>
+    <% end %>
+  </td>
+  <td class="py-2 pr-3 text-right text-sm">
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "text-ink-muted hover:text-ink hover:underline", aria: { label: "Edit #{subscription.name}" } %>
+  </td>
+</tr>

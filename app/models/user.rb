@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :feeds, through: :subscriptions
 
   enum :no_incident_display, { infinity: "infinity", since_tracking: "since_tracking" }, prefix: true, validate: true
+  enum :dashboard_layout, { cards: "cards", list: "list" }, prefix: true, validate: true
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
