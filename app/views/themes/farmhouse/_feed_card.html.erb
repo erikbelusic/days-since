@@ -1,0 +1,52 @@
+<%# locals: (subscription:, result:) %>
+<% digits = result.infinite? ? [ "∞" ] : result.days.to_s.rjust(3, "0").chars %>
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>"
+         class="fh-wood flex flex-col rounded-card px-6 pt-4 pb-4">
+  <header class="flex items-center justify-between gap-2 font-body text-xs text-[#1d1a17]">
+    <span data-sortable-handle class="cursor-grab select-none" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <h2 class="min-w-0 truncate rounded-sm bg-[#fbfaf7]/80 px-2 text-center font-body text-base font-bold tracking-wide shadow-sm">
+      <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+            class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+    </h2>
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "rounded-sm bg-[#fbfaf7]/70 px-1.5 hover:underline", aria: { label: "Edit #{subscription.name}" } %>
+  </header>
+
+  <p class="fh-ink mt-3 text-center font-display text-[2.6rem] leading-[0.95] uppercase">
+    <% if result.no_history? && result.infinite? %>
+      <span class="block">No incidents</span> <span class="block">on record</span>
+    <% elsif result.no_history? %>
+      <span class="block">Days since</span> <span class="block">we started</span>
+    <% else %>
+      <span class="block">Days since</span> <span class="block">last incident</span>
+    <% end %>
+  </p>
+
+  <div class="mt-5 flex justify-center gap-3" data-days aria-label="<%= result.infinite? ? "infinite" : result.days %> days">
+    <% digits.each do |digit| %>
+      <span class="fh-flip <%= "fh-flip-ongoing" if result.ongoing? %> flex h-24 w-16 items-center justify-center pt-3 text-6xl leading-none" aria-hidden="true"><%= digit %></span>
+    <% end %>
+  </div>
+
+  <% if result.ongoing? %>
+    <p class="mt-4 text-center font-display text-2xl uppercase text-[#7d1f1a] drop-shadow-[0_1px_0_rgb(255_255_255/0.35)]">Incident in progress</p>
+  <% end %>
+
+  <footer class="mt-auto pt-4">
+    <div class="space-y-0.5 rounded-sm bg-[#fbfaf7]/85 px-2.5 py-1.5 font-body text-xs text-[#1d1a17] shadow-sm empty:hidden">
+    <% if result.incident %>
+      <p class="truncate">
+        <%= result.ongoing? ? "Current:" : "Last:" %>
+        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "font-semibold hover:underline", target: "_blank", rel: "noopener" %>
+      </p>
+    <% end %>
+    <% if result.ignored_count.positive? %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>"><%= ignored_incidents_note(result) %></p>
+    <% end %>
+    <% if subscription.feed.failing? %>
+      <p class="truncate text-[#962f2a]" title="<%= subscription.feed.last_error %>">Can't reach the status page: <%= subscription.feed.last_error %></p>
+    <% elsif subscription.feed.last_success_at.nil? %>
+      <p>Waiting on the first update…</p>
+    <% end %>
+    </div>
+  </footer>
+</article>

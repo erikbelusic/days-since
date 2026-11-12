@@ -1,0 +1,18 @@
+<header class="fh-header fh-wood text-[#fbfaf7]">
+  <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <%= link_to root_path, class: "font-display text-3xl leading-none tracking-wide drop-shadow-[0_1px_0_rgb(0_0_0/0.4)]" do %>
+      Days Since
+    <% end %>
+
+    <% if authenticated? %>
+      <div class="flex flex-wrap items-center gap-4 text-sm [&_select]:border-[#fbfaf7]/60 [&_select]:bg-[#5e5446] [&_select]:text-[#fbfaf7] [&_label]:text-[#fbfaf7]/80">
+        <%= render "shared/theme_picker" %>
+        <span class="hidden text-[#fbfaf7]/75 lg:inline"><%= Current.user.email_address %></span>
+        <%= link_to "Settings", edit_settings_path, class: "hover:underline" %>
+        <% unless SingleUserMode.enabled? %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "cursor-pointer rounded border border-[#fbfaf7]/60 px-3 py-1 hover:bg-[#fbfaf7] hover:text-[#5e5446]" %>
+        <% end %>
+      </div>
+    <% end %>
+  </nav>
+</header>

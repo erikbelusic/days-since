@@ -18,3 +18,20 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Farmhouse: Smokum is Apache-2.0 licensed; Abril Fatface is OFL. */
+@font-face {
+  font-family: "Smokum";
+  src: url("/farmhouse/Smokum-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Abril Fatface";
+  src: url("/farmhouse/AbrilFatface-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

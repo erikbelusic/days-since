@@ -5,6 +5,7 @@
 /* Theme token values. Add one import per theme (see CLAUDE.md). */
 @import "./themes/default.css";
 @import "./themes/worksite.css";
+@import "./themes/farmhouse.css";
 
 /*
  * Semantic tokens: views use these utilities (bg-surface, text-ink,
