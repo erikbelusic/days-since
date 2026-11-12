@@ -10,7 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_043040) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_043113) do
+  create_table "feeds", force: :cascade do |t|
+    t.string "url", null: false
+    t.string "provider", null: false
+    t.string "name"
+    t.string "site_url"
+    t.datetime "last_polled_at"
+    t.datetime "last_success_at"
+    t.datetime "next_poll_at"
+    t.text "last_error"
+    t.integer "consecutive_failures", default: 0, null: false
+    t.string "etag"
+    t.string "last_modified"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["next_poll_at"], name: "index_feeds_on_next_poll_at"
+    t.index ["url"], name: "index_feeds_on_url", unique: true
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
