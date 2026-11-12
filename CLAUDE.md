@@ -53,7 +53,7 @@ Ruby is pinned in `.ruby-version` and managed with mise.
   3. **System specs** (Capybara + Cuprite) for key user journeys and theme rendering.
   4. **Job specs** only where the job contains logic beyond delegating.
 - **factory_bot** for test data. Keep factories minimal and valid, and use traits for variations (`:ongoing`, `:resolved`, `:maintenance`).
-- **WebMock blocks all real HTTP.** Stub requests with **hand-written fixtures** in `spec/fixtures/` (`statuspage/*.json`, `rss/*.xml`). Don't use VCR.
+- **WebMock blocks all real HTTP.** Stub requests with **hand-written fixtures** in `spec/fixtures/files/` (`statuspage/*.json`, `rss/*.xml`), loaded with `file_fixture`. Don't use VCR.
 - **Time-dependent specs** use `travel_to` and set an explicit user time zone. Cover the edge around midnight in the user's zone.
 - Every bug fix comes with a spec that reproduces the bug.
 - SimpleCov is intentionally deferred, so don't add it yet.

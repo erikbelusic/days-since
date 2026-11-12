@@ -60,3 +60,20 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
+
+group :development, :test do
+  # RSpec test framework [https://rspec.info]
+  gem "rspec-rails"
+
+  # Test data factories [https://github.com/thoughtbot/factory_bot_rails]
+  gem "factory_bot_rails"
+end
+
+group :test do
+  # Stub and block real HTTP requests in specs [https://github.com/bblimke/webmock]
+  gem "webmock"
+
+  # System specs driven by headless Chrome via CDP [https://github.com/rubycdp/cuprite]
+  gem "capybara"
+  gem "cuprite"
+end
