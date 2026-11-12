@@ -77,3 +77,7 @@ group :test do
   gem "capybara"
   gem "cuprite"
 end
+
+# HTTP client for polling status pages [https://lostisland.github.io/faraday]
+gem "faraday"
+gem "faraday-follow_redirects"
