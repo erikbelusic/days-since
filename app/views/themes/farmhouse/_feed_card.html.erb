@@ -1,7 +1,7 @@
 <%# locals: (subscription:, result:) %>
 <% digits = result.infinite? ? [ "∞" ] : result.days.to_s.rjust(3, "0").chars %>
-<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>"
-         class="fh-wood flex flex-col rounded-card px-6 pt-4 pb-4">
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="fh-wood <%= "ds-pulse" if result.ongoing? %> flex flex-col rounded-card px-6 pt-4 pb-4">
   <header class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] items-center gap-2 font-body text-xs text-[#1d1a17]">
     <span data-sortable-handle class="cursor-grab select-none justify-self-start" title="Drag to reorder" aria-hidden="true">⠿</span>
     <h2 class="min-w-0 justify-self-center truncate rounded-sm bg-[#fbfaf7]/80 px-2 text-center font-body text-base font-bold tracking-wide shadow-sm">
@@ -11,7 +11,9 @@
     <%= link_to "Edit", edit_subscription_path(subscription), class: "justify-self-end rounded-sm bg-[#fbfaf7]/70 px-1.5 hover:underline", aria: { label: "Edit #{subscription.name}" } %>
   </header>
 
-  <p class="fh-ink mt-3 text-center font-display text-[2.6rem] leading-[0.95] uppercase">
+  <p class="mt-3 text-center"><span class="fh-ribbon bg-level px-5 py-1 font-body text-xs font-bold uppercase tracking-[0.15em] text-[#fbfaf7]" data-level-label><%= stability_label(result.level) %></span></p>
+
+  <p class="fh-ink mt-2 text-center font-display text-[2.6rem] leading-[0.95] uppercase">
     <% if result.no_history? && result.infinite? %>
       <span class="block">No incidents</span> <span class="block">on record</span>
     <% elsif result.no_history? %>

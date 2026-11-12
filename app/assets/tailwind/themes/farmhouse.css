@@ -19,6 +19,11 @@
   --ds-font-display: "Smokum", "Rockwell", Georgia, serif;
   --ds-font-numeric: var(--fh-numeral-font);
   --ds-radius-card: 0.2rem;
+  --ds-level-ongoing: #962f2a;       /* barn red */
+  --ds-level-day-one: #b4531f;       /* rust */
+  --ds-level-short-streak: #9a7412;  /* mustard */
+  --ds-level-long-streak: #4e6a3a;   /* sage */
+  --ds-level-solid-streak: #2b2724;  /* charcoal */
   color-scheme: light;
 
   --fh-numeral-font: "Abril Fatface", "Bodoni 72", Didot, Georgia, serif;
@@ -78,6 +83,13 @@
 
   .fh-flip-ongoing {
     color: var(--ds-danger);
+  }
+
+  /* A painted ribbon banner with notched ends. */
+  .fh-ribbon {
+    display: inline-block;
+    clip-path: polygon(0 0, 100% 0, 94% 50%, 100% 100%, 0 100%, 6% 50%);
+    box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.15);
   }
 
   .fh-header {

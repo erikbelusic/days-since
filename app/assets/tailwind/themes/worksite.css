@@ -18,10 +18,10 @@
   --ds-font-body: "Oswald", "Arial Narrow", sans-serif-condensed, sans-serif;
   --ds-font-display: "Bebas Neue", "Oswald", "Arial Narrow", Impact, sans-serif;
   --ds-radius-card: 0.25rem;
-  --ds-level-ongoing: #c62828;     /* DANGER red */
-  --ds-level-day-one: #c2410c;    /* WARNING orange (darkened for text on yellow) */
+  --ds-level-ongoing: #c62828;       /* DANGER red */
+  --ds-level-day-one: #c2410c;       /* WARNING orange (darkened for text on yellow) */
   --ds-level-short-streak: #6b5200;  /* CAUTION gold, readable on safety yellow */
-  --ds-level-long-streak: #1e7a34;      /* SAFE green */
+  --ds-level-long-streak: #1e7a34;   /* SAFE green */
   --ds-level-solid-streak: #111111;  /* black */
   color-scheme: light;
 

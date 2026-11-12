@@ -13,7 +13,7 @@
   </td>
   <td class="py-2 pr-3 text-sm whitespace-nowrap">
     <% if result.ongoing? %>
-      <span class="rounded-full bg-danger px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-surface">Ongoing</span>
+      <span class="rounded-full bg-danger px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-surface" data-level-label><%= stability_label(result.level) %></span>
     <% else %>
       <span class="font-semibold text-level" data-level-label><%= stability_label(result.level) %></span>
       <span class="text-ink-muted">· <%= counter_caption(result) %></span>

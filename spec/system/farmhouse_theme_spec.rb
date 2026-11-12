@@ -33,4 +33,23 @@ RSpec.describe "Farmhouse theme", :single_user_mode do
       end
     end
   end
+
+  it "paints a ribbon with the theme's word for each stability level" do
+    words = { nil => "Trouble now", 3 => "Starting over", 14 => "Good stretch", 45 => "Long stretch", 120 => "Solid ground" }
+    subscriptions = words.keys.to_h do |days|
+      sub = create(:subscription, user: user)
+      if days
+        create(:incident, feed: sub.feed, impact: "major", started_at: days.days.ago - 1.hour, resolved_at: days.days.ago)
+      else
+        create(:incident, :ongoing, feed: sub.feed)
+      end
+      [ days, sub ]
+    end
+
+    visit root_path
+
+    words.each do |days, word|
+      expect(page).to have_css("##{ActionView::RecordIdentifier.dom_id(subscriptions[days])} .fh-ribbon[data-level-label]", exact_text: word)
+    end
+  end
 end
