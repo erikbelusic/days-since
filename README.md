@@ -17,6 +17,7 @@ It is **local-first**: run it on your own machine without logging in. It is also
 - **Auto-detection**: paste a status page URL and the provider is detected for you. You can override the result.
 - **Shared polling**: users who subscribe to the same status URL share one `Feed` record and one polling schedule.
 - **Live updates**: cards refresh through Turbo Streams when new incidents arrive.
+- **Service logos** are fetched from each status page (apple-touch-icon, the page's declared icons, then `/favicon.ico`) and re-checked weekly. A letter monogram is shown when there's no logo. No third-party logo services are used.
 - **Per-user themes**: a clean default theme with light/dark mode, plus a **"Worksite Safety Sign"** parody theme with hazard stripes, industrial type and a site-board counter.
 
 ## Tech stack

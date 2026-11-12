@@ -4,14 +4,7 @@ Ideas to pick up **after the MVP is complete** (after phase H and the final chec
 
 ## Logos
 
-### Service logos on cards
-- Show each service's logo on its card.
-- Options to explore, roughly in order of effort:
-  1. The site's favicon or `apple-touch-icon` from `site_url`, fetched once and cached.
-  2. Statuspage pages often show a logo in their HTML header. Scrape it once during detection.
-  3. A third-party logo or favicon API. This is a privacy and dependency tradeoff, and our `HttpClient` currently blocks it by design.
-  4. Let users upload or override a logo per subscription (Active Storage).
-- Store the logo on `Feed`, since it's shared, with an optional per-subscription override.
+- **Logo uploads.** Logos are fetched automatically from each status page, falling back to a monogram. Next would be letting users upload or override a logo (Active Storage is already installed). Decide between a per-subscription override and a shared one on the feed.
 
 ## Carried over from MVP decisions
 
