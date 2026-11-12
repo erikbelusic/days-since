@@ -26,7 +26,7 @@
   <footer class="mt-auto space-y-1 border-t border-border pt-3 text-sm text-ink-muted">
     <% if result.incident %>
       <p class="truncate">
-        <%= result.ongoing? ? "Current" : "Last counted" %> <span title="<%= threshold_explanation(result) %>">(<%= severity_short_label(result.min_severity) %>)</span>:
+        <%= result.ongoing? ? "Current:" : "Last:" %>
         <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink underline-offset-2 hover:underline", target: "_blank", rel: "noopener" %>
       </p>
     <% end %>
