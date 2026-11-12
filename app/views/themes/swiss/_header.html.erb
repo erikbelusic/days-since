@@ -1,8 +1,11 @@
 <header class="border-b-4 border-ink bg-surface">
   <nav class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4 px-4 pt-5 pb-3 sm:px-6">
-    <%= link_to root_path, class: "leading-none" do %>
+    <%= link_to root_path, class: "flex items-end gap-3 leading-none" do %>
+      <span class="h-10 w-10 bg-accent" aria-hidden="true"></span>
+      <span>
       <span class="block text-2xl font-bold sw-tight">days-since</span>
       <span class="sw-caps mt-1 block text-[0.65rem] text-ink-muted">Incident report</span>
+      </span>
     <% end %>
 
     <% if authenticated? %>

@@ -28,6 +28,12 @@
   .sw-tight { letter-spacing: -0.045em; }
   .sw-caps { text-transform: uppercase; letter-spacing: 0.12em; }
 
+  /* Poster-scale page heading. */
+  main h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: -0.05em; line-height: 0.9; }
+
+  /* Ochre is too light for white type; darken the field slightly. */
+  [data-level="short_streak"] .sw-field { background: #b07f00; }
+
   /* No rounded corners anywhere, including shared buttons and pills. */
   :is(.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-full) { border-radius: 0; }
 }
