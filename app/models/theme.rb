@@ -5,7 +5,8 @@ class Theme < Data.define(:key, :name, :description)
   REGISTRY = [
     new(key: "default", name: "Default", description: "Clean Tailwind look with automatic light and dark mode."),
     new(key: "worksite", name: "Worksite Safety Sign", description: "Hazard stripes and a \"DAYS SINCE LAST INCIDENT\" site board."),
-    new(key: "farmhouse", name: "Farmhouse", description: "A hand-lettered barn-wood sign with hanging flip-card numbers.")
+    new(key: "farmhouse", name: "Farmhouse", description: "A hand-lettered barn-wood sign with hanging flip-card numbers."),
+    new(key: "github", name: "GitHub-inspired", description: "Primer-style boxes, status labels, and a contribution-style activity grid. Light and dark.")
   ].freeze
 
   class << self

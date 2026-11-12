@@ -132,3 +132,44 @@ RSpec.describe DaysSinceCounter, "explaining what was counted" do
     expect(result.ignored_count).to eq(0)
   end
 end
+
+RSpec.describe DaysSinceCounter, "recent activity" do
+  let(:user) { create(:user, time_zone: "America/Chicago", default_min_severity: "minor") }
+  let(:feed) { create(:feed) }
+  let(:subscription) { create(:subscription, user: user, feed: feed) }
+  let(:now) { Time.utc(2026, 3, 28, 18) } # Mar 28 noon-ish in Chicago (CDT, UTC-5)
+
+  def activity = described_class.new(subscription.reload, now: now).result.activity
+
+  it "covers the last 28 local days, oldest first" do
+    expect(activity.size).to eq(28)
+    expect(activity).to all(eq(0))
+  end
+
+  it "marks every local day an incident was active, including multi-day ones" do
+    create(:incident, feed: feed, impact: "major", started_at: Time.utc(2026, 3, 20, 15), resolved_at: Time.utc(2026, 3, 22, 15))
+
+    expect(activity.each_index.select { |i| activity[i].positive? }).to eq([ 19, 20, 21 ]) # Mar 20, 21, 22
+  end
+
+  it "marks ongoing incidents through today and ignores below-threshold ones" do
+    create(:incident, :ongoing, feed: feed, impact: "minor", started_at: Time.utc(2026, 3, 27, 15))
+    create(:incident, feed: feed, impact: "none", started_at: Time.utc(2026, 3, 10, 15), resolved_at: Time.utc(2026, 3, 10, 16))
+
+    expect(activity.last(2)).to eq([ 1, 1 ])
+    expect(activity.sum).to eq(2)
+  end
+
+  it "uses the user's local dates" do
+    create(:incident, feed: feed, impact: "major", started_at: Time.utc(2026, 3, 27, 3), resolved_at: Time.utc(2026, 3, 27, 4)) # Mar 26 evening in Chicago
+
+    expect(activity[25]).to eq(1)
+    expect(activity[26]).to eq(0)
+  end
+
+  it "ignores incidents that ended before the window" do
+    create(:incident, feed: feed, impact: "major", started_at: Time.utc(2026, 2, 1), resolved_at: Time.utc(2026, 2, 2))
+
+    expect(activity.sum).to eq(0)
+  end
+end

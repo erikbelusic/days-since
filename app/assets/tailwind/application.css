@@ -6,6 +6,7 @@
 @import "./themes/default.css";
 @import "./themes/worksite.css";
 @import "./themes/farmhouse.css";
+@import "./themes/github.css";
 
 /*
  * Semantic tokens: views use these utilities (bg-surface, text-ink,

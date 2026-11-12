@@ -1,0 +1,51 @@
+<%# locals: (subscription:, result:) %>
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>"
+         class="flex flex-col overflow-hidden rounded-card border bg-surface <%= result.ongoing? ? "border-danger" : "border-border" %>">
+  <header class="flex items-center gap-2 border-b border-border bg-surface-muted px-4 py-2.5 text-sm">
+    <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <h2 class="min-w-0 flex-1 truncate font-semibold">
+      <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+            class: "text-accent hover:underline", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+    </h2>
+    <% if result.ongoing? %>
+      <span class="inline-flex items-center gap-1 rounded-full border border-danger px-2 py-0.5 text-xs font-medium text-danger">
+        <%= render "themes/github/icon", name: "alert", css_class: "h-3 w-3" %> Incident
+      </span>
+    <% elsif result.no_history? %>
+      <span class="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-ink-muted">No history</span>
+    <% else %>
+      <span class="inline-flex items-center gap-1 rounded-full border border-ok px-2 py-0.5 text-xs font-medium text-ok">
+        <%= render "themes/github/icon", name: "check", css_class: "h-3 w-3" %> Operational
+      </span>
+    <% end %>
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "text-xs text-ink-muted hover:text-accent hover:underline", aria: { label: "Edit #{subscription.name}" } %>
+  </header>
+
+  <div class="flex items-end justify-between gap-4 px-4 pt-4">
+    <div>
+      <p class="text-5xl font-semibold tabular-nums <%= result.ongoing? ? "text-danger" : "" %>" data-days><%= result.infinite? ? "∞" : result.days %></p>
+      <p class="mt-1 text-sm text-ink-muted"><%= counter_caption(result) %></p>
+    </div>
+    <%= render "themes/github/activity_grid", activity: result.activity %>
+  </div>
+
+  <footer class="mt-auto space-y-1 px-4 pt-3 pb-3 text-xs text-ink-muted">
+    <% if result.incident %>
+      <p class="flex min-w-0 items-center gap-1.5">
+        <%= render "themes/github/icon", name: result.ongoing? ? "alert" : "dash", css_class: "h-3.5 w-3.5 shrink-0 #{result.ongoing? ? "text-danger" : ""}" %>
+        <span class="truncate">
+          <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent hover:underline", target: "_blank", rel: "noopener" %>
+          <span class="gh-mono">· <%= time_ago_in_words(result.incident.resolved_at || result.incident.started_at) %> ago</span>
+        </span>
+      </p>
+    <% end %>
+    <% if result.ignored_count.positive? %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>"><%= ignored_incidents_note(result) %></p>
+    <% end %>
+    <% if subscription.feed.failing? %>
+      <p class="truncate text-danger" title="<%= subscription.feed.last_error %>">Can't reach the status page: <%= subscription.feed.last_error %></p>
+    <% elsif subscription.feed.last_success_at.nil? %>
+      <p>Waiting for the first update…</p>
+    <% end %>
+  </footer>
+</article>

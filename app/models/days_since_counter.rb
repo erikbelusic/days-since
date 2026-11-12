@@ -2,10 +2,14 @@
 # the subscriber's time zone, counted from the last relevant incident's
 # resolution (see README "Counter semantics").
 class DaysSinceCounter
+  ACTIVITY_DAYS = 28
+
   # incident:      the incident the count is based on (nil when no history)
   # min_severity:  the threshold that decided which incidents count
   # ignored_count: newer incidents skipped for being below that threshold
-  Result = Data.define(:state, :days, :incident, :min_severity, :ignored_count) do
+  # activity:      relevant incidents active on each of the last
+  #                ACTIVITY_DAYS days in the user's time zone, oldest first
+  Result = Data.define(:state, :days, :incident, :min_severity, :ignored_count, :activity) do
     def ongoing? = state == :ongoing
     def no_history? = state == :no_history
     def counting? = state == :counting
@@ -19,6 +23,7 @@ class DaysSinceCounter
     @user = subscription.user
     @feed = subscription.feed
     @min_severity = subscription.effective_min_severity
+    @now = now
     @today = now.in_time_zone(@user.zone).to_date
   end
 
@@ -36,7 +41,8 @@ class DaysSinceCounter
 
   private
     def build(state, days, incident)
-      Result.new(state: state, days: days, incident: incident, min_severity: @min_severity, ignored_count: ignored_since(incident))
+      Result.new(state: state, days: days, incident: incident, min_severity: @min_severity,
+                 ignored_count: ignored_since(incident), activity: activity)
     end
 
     def relevant_incidents
@@ -49,7 +55,28 @@ class DaysSinceCounter
       ignored.count
     end
 
+    def activity
+      first_day = @today - (ACTIVITY_DAYS - 1)
+      counts = Array.new(ACTIVITY_DAYS, 0)
+
+      relevant_incidents
+        .where(started_at: ...(@today + 1).in_time_zone(@user.zone))
+        .where("resolved_at IS NULL OR resolved_at >= ?", first_day.in_time_zone(@user.zone))
+        .pluck(:started_at, :resolved_at)
+        .each do |started_at, resolved_at|
+          from = [ local_date(started_at), first_day ].max
+          to = [ local_date(resolved_at || @now), @today ].min
+          (from..to).each { |day| counts[(day - first_day).to_i] += 1 }
+        end
+
+      counts
+    end
+
+    def local_date(time)
+      time.in_time_zone(@user.zone).to_date
+    end
+
     def days_since(time)
-      [ (@today - time.in_time_zone(@user.zone).to_date).to_i, 0 ].max
+      [ (@today - local_date(time)).to_i, 0 ].max
     end
 end

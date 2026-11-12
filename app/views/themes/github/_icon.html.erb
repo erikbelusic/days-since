@@ -1,0 +1,14 @@
+<%# Small generic 16px glyphs in an Octicon-like style (drawn for this app). %>
+<%# locals: (name:, css_class: "h-4 w-4") %>
+<svg class="<%= css_class %>" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+  <% case name %>
+  <% when "check" %>
+    <path d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1Zm0 1.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Zm2.72 2.97a.75.75 0 0 1 .06 1.06l-3.25 3.75a.75.75 0 0 1-1.1.03L4.7 8.58a.75.75 0 1 1 1.06-1.06l1.17 1.17 2.73-3.15a.75.75 0 0 1 1.06-.07Z"/>
+  <% when "alert" %>
+    <path d="M7.13 1.5a1 1 0 0 1 1.74 0l6.5 11.5A1 1 0 0 1 14.5 14.5h-13a1 1 0 0 1-.87-1.5Zm.87 1.75L2.36 13h11.28ZM8 5.25a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0V6A.75.75 0 0 1 8 5.25ZM8 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/>
+  <% when "dash" %>
+    <path d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1Zm0 1.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM4.75 7.25h6.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5Z"/>
+  <% when "pulse" %>
+    <path d="M1.75 8h2.5l1.5-4 3 8 1.5-4h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <% end %>
+</svg>

@@ -1,0 +1,21 @@
+<header class="gh-header border-b border-border">
+  <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <%= link_to root_path, class: "flex items-center gap-2 font-semibold" do %>
+      <span class="flex h-8 w-8 items-center justify-center rounded-full border border-border text-ok">
+        <%= render "themes/github/icon", name: "pulse", css_class: "h-5 w-5" %>
+      </span>
+      <span>days-since</span>
+    <% end %>
+
+    <% if authenticated? %>
+      <div class="flex flex-wrap items-center gap-3 text-sm">
+        <%= render "shared/theme_picker" %>
+        <span class="hidden text-ink-muted lg:inline"><%= Current.user.email_address %></span>
+        <%= link_to "Settings", edit_settings_path, class: "rounded-md border border-border bg-surface-muted px-3 py-1 font-medium hover:bg-surface" %>
+        <% unless SingleUserMode.enabled? %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "cursor-pointer rounded-md border border-border bg-surface-muted px-3 py-1 font-medium hover:bg-surface" %>
+        <% end %>
+      </div>
+    <% end %>
+  </nav>
+</header>
