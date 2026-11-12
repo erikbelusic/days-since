@@ -5,6 +5,7 @@
          class="dd-tile-edge <%= "ds-pulse" if result.ongoing? %> flex flex-col rounded-card border border-border bg-surface">
   <header class="flex items-center gap-2 px-3 pt-3 text-xs">
     <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <%= service_logo(subscription, css_class: "h-6 w-6 rounded", image_class: "bg-white p-0.5", monogram_class: "bg-[#383544] text-white text-xs") %>
     <h2 class="min-w-0 flex-1 truncate font-semibold text-sm">
       <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
             class: "hover:text-accent hover:underline", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>

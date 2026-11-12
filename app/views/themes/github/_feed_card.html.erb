@@ -3,6 +3,7 @@
          class="flex flex-col overflow-hidden rounded-card border bg-surface <%= result.ongoing? ? "ds-pulse border-level" : "border-border" %>">
   <header class="flex items-center gap-2 border-b border-border bg-surface-muted px-4 py-2.5 text-sm">
     <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <%= service_logo(subscription, css_class: "h-5 w-5 rounded-md", monogram_class: "border border-border bg-surface text-ink-muted text-[0.6rem]") %>
     <h2 class="min-w-0 flex-1 truncate font-semibold">
       <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
             class: "text-accent hover:underline", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>

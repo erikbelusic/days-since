@@ -245,3 +245,21 @@ RSpec.describe "Dashboard logos", :single_user_mode do
     end
   end
 end
+
+RSpec.describe "Logos in every theme", :single_user_mode do
+  Theme.keys.each do |key|
+    it "shows the logo or monogram on #{key} cards" do
+      user = SingleUserMode.user
+      user.update!(theme: key)
+      with_logo = create(:subscription, user: user, feed: create(:feed, name: "GitHub"))
+      with_logo.feed.logo.attach(io: StringIO.new(file_fixture("logos/icon.png").binread), filename: "logo.png", content_type: "image/png")
+      without = create(:subscription, user: user, feed: create(:feed, name: "Slack"))
+
+      get root_path
+
+      page = Nokogiri::HTML(response.body)
+      expect(page.at_css("##{ActionView::RecordIdentifier.dom_id(with_logo)} img[data-service-logo]")).to be_present
+      expect(page.at_css("##{ActionView::RecordIdentifier.dom_id(without)} [data-service-logo='monogram']")).to be_present
+    end
+  end
+end

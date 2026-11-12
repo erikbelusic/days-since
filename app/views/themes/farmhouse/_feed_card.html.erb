@@ -4,9 +4,10 @@
          class="fh-wood <%= "ds-pulse" if result.ongoing? %> flex flex-col rounded-card px-6 pt-4 pb-4">
   <header class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] items-center gap-2 font-body text-xs text-[#1d1a17]">
     <span data-sortable-handle class="cursor-grab select-none justify-self-start" title="Drag to reorder" aria-hidden="true">⠿</span>
-    <h2 class="min-w-0 justify-self-center truncate rounded-sm bg-[#fbfaf7]/80 px-2 text-center font-body text-base font-bold tracking-wide shadow-sm">
-      <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
-            class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+    <h2 class="flex min-w-0 items-center justify-self-center gap-1.5 rounded-sm bg-[#fbfaf7]/80 px-2 py-0.5 font-body text-base font-bold tracking-wide shadow-sm">
+      <%= service_logo(subscription, css_class: "h-5 w-5 rounded-sm", image_class: "mix-blend-multiply grayscale brightness-[.6] contrast-[1.8] sepia-[.35]", monogram_class: "bg-[#5a4636] text-[#fbfaf7] text-xs") %>
+      <span class="min-w-0 truncate"><%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+            class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %></span>
     </h2>
     <%= link_to "Edit", edit_subscription_path(subscription), class: "justify-self-end rounded-sm bg-[#fbfaf7]/70 px-1.5 hover:underline", aria: { label: "Edit #{subscription.name}" } %>
   </header>

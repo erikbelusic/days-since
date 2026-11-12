@@ -10,9 +10,10 @@
 
     <header class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] items-center gap-2 px-2">
       <span data-sortable-handle class="cursor-grab select-none justify-self-start text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
-      <h2 class="min-w-0 truncate text-center font-display text-2xl leading-none tracking-wider">
-        <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
-              class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+      <h2 class="flex min-w-0 items-center justify-center gap-2 font-display text-2xl leading-none tracking-wider">
+        <%= service_logo(subscription, css_class: "h-7 w-7 rounded-sm border-2 border-[#111]", image_class: "bg-white p-0.5", monogram_class: "bg-white text-[#111] text-lg") %>
+        <span class="min-w-0 truncate"><%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+              class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %></span>
       </h2>
       <%= link_to "Edit", edit_subscription_path(subscription), class: "justify-self-end font-body text-xs uppercase tracking-wide text-ink-muted hover:text-ink hover:underline", aria: { label: "Edit #{subscription.name}" } %>
     </header>
