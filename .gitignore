@@ -1,0 +1,5 @@
+# Local Lavish review artifacts
+/.lavish/
+
+# macOS
+.DS_Store
