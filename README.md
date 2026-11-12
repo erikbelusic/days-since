@@ -36,8 +36,6 @@ It is **local-first**: run it on your own machine without logging in. It is also
 
 ## Getting started
 
-> The app has not been scaffolded yet, so this section describes the intended setup.
-
 ### Prerequisites
 
 - Ruby **4.0.9**. The version is pinned in `.ruby-version`, and the maintainer uses [mise](https://mise.jdx.dev/).
@@ -49,11 +47,19 @@ It is **local-first**: run it on your own machine without logging in. It is also
 ```sh
 git clone git@github.com:erikbelusic/days-since.git
 cd days-since
-bin/setup              # installs gems, prepares the database
-SINGLE_USER_MODE=true bin/dev
+bin/setup --skip-server          # installs gems, prepares the databases
+bin/rails db:seed                # optional: GitHub, Cloudflare and Slack for the local user
+SINGLE_USER_MODE=true bin/dev    # web server + Solid Queue poller + Tailwind watcher
 ```
 
-Then open <http://localhost:3000>.
+Then open <http://localhost:3000>. New status pages are polled right away, then every 5 minutes.
+
+To try multi-user mode, create an account (there is no public sign-up) and run without the flag:
+
+```sh
+bin/rails users:create EMAIL=you@example.com   # prints a generated password
+bin/dev
+```
 
 ### Running tests and checks
 
