@@ -6,7 +6,7 @@
 </div>
 
 <% if @cards.any? %>
-  <div id="subscriptions" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <div id="subscriptions" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-controller="sortable" data-sortable-handle-value="[data-sortable-handle]">
     <% @cards.each do |subscription, result| %>
       <%= render themed_partial("feed_card"), subscription: subscription, result: result %>
     <% end %>

@@ -1,0 +1,43 @@
+<% content_for :title, "Edit #{@subscription.name} · days-since" %>
+
+<div class="mx-auto max-w-xl">
+  <h1 class="font-display text-3xl font-bold">Edit <%= @subscription.name %></h1>
+  <p class="mt-2 break-all text-sm text-ink-muted"><%= @subscription.feed.url %> (<%= @subscription.feed.statuspage? ? "Atlassian Statuspage" : "RSS / Atom" %>)</p>
+
+  <%= form_with model: @subscription, class: "mt-6 space-y-5 rounded-card border border-border bg-surface p-6" do |form| %>
+    <% if @subscription.errors.any? %>
+      <div id="form_errors" role="alert" class="rounded-md border border-danger bg-danger-surface px-4 py-3 text-danger">
+        <% @subscription.errors.full_messages.each do |message| %>
+          <p><%= message %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :display_name, "Name", class: "block font-medium" %>
+      <%= form.text_field :display_name, placeholder: @subscription.feed.display_name,
+            class: "mt-2 block w-full rounded-md border border-border bg-surface px-3 py-2 shadow-sm focus:outline-accent" %>
+    </div>
+
+    <div>
+      <%= form.label :min_severity, "Reset the counter for", class: "block font-medium" %>
+      <%= form.select :min_severity, severity_options(Current.user), {}, class: "mt-2 block w-full rounded-md border border-border bg-surface px-3 py-2" %>
+      <% if @subscription.feed.rss? %>
+        <p class="mt-1 text-sm text-ink-muted">RSS/Atom feeds don't report severity, so every post counts.</p>
+      <% end %>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <%= form.submit "Save", class: "cursor-pointer rounded-md bg-accent px-4 py-2.5 font-medium text-accent-ink hover:opacity-90" %>
+      <%= link_to "Cancel", root_path, class: "text-ink-muted hover:underline" %>
+    </div>
+  <% end %>
+
+  <div class="mt-8 rounded-card border border-danger/40 p-6">
+    <h2 class="font-semibold">Remove from dashboard</h2>
+    <p class="mt-1 text-sm text-ink-muted">You can add it back any time; incident history is kept.</p>
+    <%= button_to "Remove #{@subscription.name}", subscription_path(@subscription), method: :delete,
+          class: "mt-4 cursor-pointer rounded-md border border-danger px-4 py-2 font-medium text-danger hover:bg-danger-surface",
+          form: { data: { turbo_confirm: "Remove #{@subscription.name} from your dashboard?" } } %>
+  </div>
+</div>

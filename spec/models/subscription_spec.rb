@@ -69,3 +69,38 @@ RSpec.describe Subscription do
     expect(Subscription.exists?(subscription.id)).to be(false)
   end
 end
+
+RSpec.describe Subscription, "#move_to" do
+  let(:user) { create(:user) }
+  let!(:subs) { 4.times.map { create(:subscription, user: user) } }
+
+  def order = user.subscriptions.ordered.to_a
+
+  it "moves a subscription down the list" do
+    subs[0].move_to(2)
+
+    expect(order).to eq([ subs[1], subs[2], subs[0], subs[3] ])
+  end
+
+  it "moves a subscription to the top" do
+    subs[3].move_to(0)
+
+    expect(order).to eq([ subs[3], subs[0], subs[1], subs[2] ])
+  end
+
+  it "clamps out-of-range positions" do
+    subs[1].move_to(99)
+    expect(order.last).to eq(subs[1])
+
+    subs[1].move_to(-5)
+    expect(order.first).to eq(subs[1])
+  end
+
+  it "leaves other users' lists alone" do
+    other = create(:subscription)
+
+    subs[0].move_to(3)
+
+    expect(other.reload.position).to eq(0)
+  end
+end

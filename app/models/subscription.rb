@@ -22,6 +22,16 @@ class Subscription < ApplicationRecord
     min_severity || user.default_min_severity
   end
 
+  # Moves this subscription to +index+ (0-based) in the user's ordered list
+  # and renumbers the rest.
+  def move_to(index)
+    transaction do
+      list = user.subscriptions.ordered.where.not(id: id).to_a
+      list.insert(index.clamp(0, list.size), self)
+      list.each_with_index { |subscription, position| subscription.update_column(:position, position) }
+    end
+  end
+
   private
     def append_to_end
       self.position = (user.subscriptions.maximum(:position) || -1) + 1
