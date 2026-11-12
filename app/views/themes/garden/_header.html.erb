@@ -1,0 +1,26 @@
+<header class="gd-header border-b-2 border-dashed border-border">
+  <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <%= link_to root_path, class: "flex items-center gap-2 font-display text-2xl font-semibold" do %>
+      <svg viewBox="0 0 40 40" class="h-8 w-8" aria-hidden="true">
+        <path d="M20 38 V22" stroke="#5e9e52" stroke-width="3" stroke-linecap="round"/>
+        <path d="M20 30 C13 26 9 29 10 33 C15 34 18 33 20 30Z" fill="#86c266"/>
+        <g transform="translate(20 15)">
+          <% 5.times do |i| %><ellipse cx="0" cy="-6" rx="4" ry="6" fill="#f4a3bd" transform="rotate(<%= i * 72 %>)"/><% end %>
+          <circle r="4" fill="#f7cf4d"/>
+        </g>
+      </svg>
+      <span>days<span class="text-accent">·</span>since</span>
+    <% end %>
+
+    <% if authenticated? %>
+      <div class="flex flex-wrap items-center gap-4 text-lg [&_select]:rounded-full [&_select]:border-2 [&_select]:border-border [&_select]:bg-surface [&_select]:px-3">
+        <%= render "shared/theme_picker" %>
+        <span class="hidden text-ink-muted lg:inline"><%= Current.user.email_address %></span>
+        <%= link_to "Settings", edit_settings_path, class: "hover:underline decoration-wavy" %>
+        <% unless SingleUserMode.enabled? %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "cursor-pointer rounded-full border-2 border-border px-3 py-0.5 hover:bg-surface-muted" %>
+        <% end %>
+      </div>
+    <% end %>
+  </nav>
+</header>

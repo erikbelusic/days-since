@@ -1,0 +1,52 @@
+<%# A hand-drawn plant that grows with the streak. Ground line sits at y=96. %>
+<%# locals: (level:) %>
+<svg viewBox="0 0 100 100" class="h-full w-full overflow-visible" aria-hidden="true">
+  <% stem = "#5e9e52" %>
+  <% leaf = "#86c266" %>
+  <% case level %>
+  <% when "ongoing" %>
+    <%# A wilted sprout under the storm. %>
+    <path d="M50 96 C50 84 52 78 58 74" fill="none" stroke="<%= stem %>" stroke-width="3" stroke-linecap="round"/>
+    <path d="M58 74 C64 72 66 78 62 82 C58 80 57 77 58 74Z" fill="#a9b77a"/>
+    <path d="M52 84 C46 82 42 86 44 90 C48 90 51 88 52 84Z" fill="#a9b77a"/>
+  <% when "day_one" %>
+    <%# A seedling just poking out of the soil, two round baby leaves. %>
+    <g class="gd-sway">
+      <path d="M50 96 C50 88 49 80 50 72" fill="none" stroke="<%= stem %>" stroke-width="4" stroke-linecap="round"/>
+      <path d="M50 76 C38 62 22 68 26 80 C36 84 45 82 50 76Z" fill="<%= leaf %>" stroke="<%= stem %>" stroke-width="1.5"/>
+      <path d="M50 74 C62 60 78 66 74 78 C64 82 55 80 50 74Z" fill="#9fd37f" stroke="<%= stem %>" stroke-width="1.5"/>
+    </g>
+  <% when "short_streak" %>
+    <%# A leafy sprout reaching up. %>
+    <g class="gd-sway">
+      <path d="M50 96 C48 80 52 62 50 40" fill="none" stroke="<%= stem %>" stroke-width="4" stroke-linecap="round"/>
+      <path d="M50 82 C36 70 22 76 26 86 C36 90 45 88 50 82Z" fill="<%= leaf %>" stroke="<%= stem %>" stroke-width="1.5"/>
+      <path d="M50 68 C64 56 78 62 74 72 C64 76 55 74 50 68Z" fill="<%= leaf %>" stroke="<%= stem %>" stroke-width="1.5"/>
+      <path d="M50 52 C40 40 28 44 30 52 C38 56 46 56 50 52Z" fill="#9fd37f" stroke="<%= stem %>" stroke-width="1.5"/>
+      <path d="M50 42 C56 30 68 32 66 40 C60 45 54 45 50 42Z" fill="#9fd37f" stroke="<%= stem %>" stroke-width="1.5"/>
+    </g>
+  <% when "long_streak" %>
+    <%# A flower in bloom. %>
+    <g class="gd-sway">
+      <path d="M50 96 C49 80 51 62 50 46" fill="none" stroke="<%= stem %>" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M50 82 C38 72 28 76 30 84 C38 88 45 87 50 82Z" fill="<%= leaf %>"/>
+      <path d="M50 70 C62 60 72 64 70 72 C62 76 55 75 50 70Z" fill="<%= leaf %>"/>
+      <g transform="translate(50 38)">
+        <% 6.times do |i| %>
+          <ellipse cx="0" cy="-11" rx="7" ry="10" fill="#f4a3bd" stroke="#d9668a" stroke-width="1.2" transform="rotate(<%= i * 60 %>)"/>
+        <% end %>
+        <circle r="7" fill="#f7cf4d" stroke="#d9a520" stroke-width="1.2"/>
+      </g>
+    </g>
+  <% else %>
+    <%# A sturdy old oak with apples. %>
+    <path d="M45 96 C47 80 46 66 44 56 L56 56 C54 66 53 80 55 96Z" fill="#9b6b43" stroke="#7a5233" stroke-width="1.5"/>
+    <circle cx="50" cy="34" r="24" fill="#5c9a58"/>
+    <circle cx="32" cy="44" r="16" fill="#69a964"/>
+    <circle cx="68" cy="44" r="16" fill="#69a964"/>
+    <circle cx="50" cy="22" r="15" fill="#78b971"/>
+    <circle cx="38" cy="30" r="3.5" fill="#e0574f"/>
+    <circle cx="62" cy="38" r="3.5" fill="#e0574f"/>
+    <circle cx="54" cy="18" r="3.5" fill="#e0574f"/>
+  <% end %>
+</svg>

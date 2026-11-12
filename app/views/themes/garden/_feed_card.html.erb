@@ -1,0 +1,88 @@
+<%# locals: (subscription:, result:) %>
+<% storm = result.ongoing? %>
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="<%= "ds-pulse" if storm %> gd-card flex flex-col overflow-hidden border-2 border-border bg-surface shadow-[0_6px_0_rgb(244_179_209)]">
+  <header class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] items-center gap-2 px-4 pt-3">
+    <span data-sortable-handle class="cursor-grab select-none justify-self-start text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <h2 class="flex min-w-0 items-center justify-center gap-2 font-display text-xl font-semibold">
+      <%= service_logo(subscription, css_class: "h-7 w-7 rounded-full", image_class: "bg-white p-1 ring-2 ring-border", monogram_class: "bg-surface-muted text-ink text-sm ring-2 ring-border") %>
+      <span class="min-w-0 truncate">
+        <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+              class: "hover:underline underline-offset-4 decoration-wavy", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+      </span>
+    </h2>
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "justify-self-end text-sm text-ink-muted hover:text-ink hover:underline", aria: { label: "Edit #{subscription.name}" } %>
+  </header>
+
+  <div class="<%= storm ? "gd-sky-storm" : "gd-sky" %> gd-scene relative mx-4 mt-3 h-48 overflow-hidden" data-garden-scene>
+    <% if storm %>
+      <%# A grumpy raincloud. %>
+      <svg viewBox="0 0 120 64" class="gd-bob absolute top-2 left-1/2 h-20 w-36 -translate-x-1/2" aria-hidden="true">
+        <g fill="#8e99ab"><circle cx="40" cy="28" r="14"/><circle cx="60" cy="21" r="18"/><circle cx="80" cy="29" r="13"/><rect x="28" y="28" width="64" height="14" rx="7"/></g>
+        <path d="M48 26 l7 3 M72 26 l-7 3" stroke="#3d4656" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="53" cy="32" r="1.8" fill="#3d4656"/><circle cx="67" cy="32" r="1.8" fill="#3d4656"/>
+        <path d="M54 39 Q60 35 66 39" fill="none" stroke="#3d4656" stroke-width="2" stroke-linecap="round"/>
+        <g class="gd-rain" stroke="#6f8fbf" stroke-width="2.5" stroke-linecap="round">
+          <line x1="38" y1="48" x2="35" y2="56"/><line x1="50" y1="48" x2="47" y2="56"/><line x1="62" y1="48" x2="59" y2="56"/><line x1="74" y1="48" x2="71" y2="56"/><line x1="86" y1="48" x2="83" y2="56"/>
+        </g>
+      </svg>
+    <% else %>
+      <%# A smiling sun and a butterfly. %>
+      <svg viewBox="0 0 48 48" class="gd-bob absolute top-2 right-3 h-14 w-14" aria-hidden="true">
+        <g stroke="#f5c242" stroke-width="3" stroke-linecap="round">
+          <% 8.times do |i| %><line x1="24" y1="3" x2="24" y2="8" transform="rotate(<%= i * 45 %> 24 24)"/><% end %>
+        </g>
+        <circle cx="24" cy="24" r="11" fill="#f7cf4d" stroke="#e8b52e" stroke-width="1.5"/>
+        <path d="M18.5 22.5 q2 -2 4 0 M25.5 22.5 q2 -2 4 0" fill="none" stroke="#7a5a16" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M19 27 Q24 32 29 27" fill="none" stroke="#7a5a16" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="16.5" cy="27" r="2" fill="#f4a3bd" opacity="0.8"/><circle cx="31.5" cy="27" r="2" fill="#f4a3bd" opacity="0.8"/>
+      </svg>
+      <svg viewBox="0 0 30 24" class="gd-flutter absolute top-8 left-6 h-6 w-8" aria-hidden="true">
+        <ellipse cx="9" cy="9" rx="7" ry="6" fill="#c9a6f2"/><ellipse cx="21" cy="9" rx="7" ry="6" fill="#c9a6f2"/>
+        <ellipse cx="10" cy="17" rx="5" ry="4" fill="#e7d4fb"/><ellipse cx="20" cy="17" rx="5" ry="4" fill="#e7d4fb"/>
+        <rect x="14" y="5" width="2" height="15" rx="1" fill="#5b4a6b"/>
+      </svg>
+    <% end %>
+    <div class="gd-hill absolute inset-x-[-10%] bottom-[-38%] h-[70%] rounded-[50%]"></div>
+    <%# Wildflowers dotting the hill. %>
+    <svg viewBox="0 0 200 20" class="absolute inset-x-0 bottom-1 h-5 w-full" preserveAspectRatio="none" aria-hidden="true">
+      <% [ [ 12, "#fff3a8" ], [ 40, "#f4a3bd" ], [ 92, "#ffffff" ], [ 150, "#f4a3bd" ], [ 186, "#fff3a8" ] ].each do |x, color| %>
+        <circle cx="<%= x %>" cy="12" r="3" fill="<%= color %>"/><circle cx="<%= x %>" cy="12" r="1.2" fill="#f2b234"/>
+      <% end %>
+    </svg>
+    <div class="absolute bottom-[12%] left-[10%] h-32 w-32"><%= render "themes/garden/plant", level: result.level %></div>
+    <div class="absolute right-[10%] bottom-[8%] flex -rotate-3 flex-col items-center">
+      <div class="gd-stake rounded-xl px-4 py-1 text-center">
+        <p class="font-display text-5xl font-bold leading-none text-[#4a3014] tabular-nums" data-days><%= result.infinite? ? "∞" : result.days %></p>
+      </div>
+      <div class="gd-stake h-8 w-2.5 rounded-b"></div>
+    </div>
+  </div>
+
+  <div class="mt-3 flex flex-wrap items-center justify-center gap-2 px-4 text-center">
+    <span class="rounded-full bg-level px-3 py-0.5 font-display text-sm font-semibold text-white" data-level-label><%= stability_label(result.level) %></span>
+    <span class="text-lg text-ink-muted">
+      <% if storm %>it's raining right now
+      <% elsif result.infinite? %>always sunny so far
+      <% elsif result.no_history? %><%= "day".pluralize(result.days) %> of sunshine since we planted it
+      <% else %><%= "day".pluralize(result.days) %> of sunshine<% end %>
+    </span>
+  </div>
+
+  <footer class="mt-auto space-y-0.5 px-5 pt-2 pb-4 text-center text-base text-ink-muted">
+    <% if result.incident %>
+      <p class="truncate">
+        <%= storm ? "Storm:" : "Last storm:" %>
+        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:underline", target: "_blank", rel: "noopener" %>
+      </p>
+    <% end %>
+    <% if result.ignored_count.positive? %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>"><%= ignored_incidents_note(result) %></p>
+    <% end %>
+    <% if subscription.feed.failing? %>
+      <p class="truncate text-danger" title="<%= subscription.feed.last_error %>">Can't reach the garden gate: <%= subscription.feed.last_error %></p>
+    <% elsif subscription.feed.last_success_at.nil? %>
+      <p>Waiting for the first weather report…</p>
+    <% end %>
+  </footer>
+</article>
