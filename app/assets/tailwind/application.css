@@ -7,6 +7,7 @@
 @import "./themes/worksite.css";
 @import "./themes/farmhouse.css";
 @import "./themes/github.css";
+@import "./themes/datadog.css";
 
 /*
  * Semantic tokens: views use these utilities (bg-surface, text-ink,

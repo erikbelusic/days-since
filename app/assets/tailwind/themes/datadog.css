@@ -1,0 +1,42 @@
+/*
+ * Datadog-inspired: a dark monitoring dashboard (TV-mode feel) with a purple
+ * nav, dense metric tiles, monitor-status badges, and timeseries bars.
+ * Single (dark) mode. Not affiliated with Datadog; uses no Datadog marks.
+ */
+[data-theme="datadog"] {
+  --ds-canvas: #17161d;
+  --ds-surface: #222029;
+  --ds-surface-muted: #2c2a35;
+  --ds-ink: #ecebf2;
+  --ds-ink-muted: #9b98aa;
+  --ds-border: #383544;
+  --ds-accent: #9a6cdc;
+  --ds-accent-ink: #ffffff;
+  --ds-ok: #3ec46d;
+  --ds-danger: #f2475a;
+  --ds-danger-surface: #3a1d26;
+  --ds-font-body: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --ds-font-display: var(--ds-font-body);
+  --ds-radius-card: 0.25rem;
+  color-scheme: dark;
+
+  --dd-nav: #632ca6;
+  --dd-warn: #f5a623;
+  --dd-nodata: #6d6a7c;
+  --dd-mono: ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, monospace;
+
+  .dd-nav { background: var(--dd-nav); }
+  .dd-mono { font-family: var(--dd-mono); }
+  .dd-badge-ok { background: var(--ds-ok); color: #0d2716; }
+  .dd-badge-alert { background: var(--ds-danger); color: #fff; }
+  .dd-badge-nodata { background: var(--dd-nodata); color: #fff; }
+  .dd-value-ok { color: var(--ds-ok); }
+  .dd-value-alert { color: var(--ds-danger); }
+  .dd-value-nodata { color: var(--ds-ink-muted); }
+  .dd-tile-alert { box-shadow: inset 0 3px 0 var(--ds-danger); }
+  .dd-tile-ok { box-shadow: inset 0 3px 0 var(--ds-ok); }
+  .dd-tile-nodata { box-shadow: inset 0 3px 0 var(--dd-nodata); }
+  .dd-bar { background: var(--ds-danger); }
+  .dd-bar-clear { background: color-mix(in oklab, var(--ds-ok) 45%, transparent); }
+  .dd-gridline { background-image: linear-gradient(to top, var(--ds-border) 1px, transparent 1px); background-size: 100% 25%; }
+}
