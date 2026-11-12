@@ -2,21 +2,6 @@
 
 Ideas to pick up **after the MVP is complete** (after phase H and the final checkpoint). Nothing here is decided yet. Each item needs a design discussion before we build it.
 
-## Card clarity and color
-
-### Color thresholds (red / yellow / green)
-- Color each card by how recently the service had an incident, so you can see at a glance which services are incident-prone right now.
-- Ship sensible **defaults**, for example red for 0–1 days, yellow for 2–6 days and green for 7+ days.
-- Let each user **customize** the thresholds in Settings. Maybe allow per-subscription overrides too, like the severity override.
-- Open questions:
-  - Where do theme colors stop and threshold colors start?
-  - How does each structural theme (Worksite, Farmhouse, …) show the levels?
-  - Should "∞ / no incidents" always count as green?
-
-### Make "0 days" look urgent even when nothing is ongoing
-- Today a card only gets a red outline while an incident is **ongoing**. A card at **0 days** because something was resolved today looks calm, with no outline, even though the service just had an incident.
-- The color thresholds above would cover this: 0 days should always show the most severe color.
-
 ## Logos
 
 ### Service logos on cards
