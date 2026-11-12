@@ -27,7 +27,7 @@ Ruby is pinned in `.ruby-version` and managed with mise.
 - **Atomic commits.** Each commit is one focused step, such as "Add Feed model" or "Add Statuspage provider". Don't mix unrelated changes, like setup with features or refactors with behavior changes.
 - **Message style:** a plain imperative subject line of 72 characters or fewer, with no Conventional Commits prefix. Example: `Add exponential backoff to feed polling`. Add a body when the *why* isn't obvious.
 - **Trailer:** end every commit message with `Co-Authored-By: Claude <model> <noreply@anthropic.com>`.
-- **Branching:** the MVP is complete, so per decision 9b new work goes on feature branches. Check with the user before committing directly to `main`.
+- **Branching:** work directly on `main` for now; no pull requests yet. Use a feature branch only when the user asks for one.
 - **Remote:** `origin` is `git@github.com:erikbelusic/days-since.git`.
 - Before committing, run `bundle exec rspec` and `bin/rubocop`, and both must pass. Never commit a red suite.
 - `.lavish/` holds local review artifacts. It is gitignored, so never commit it.

@@ -170,7 +170,7 @@ Post-MVP ideas are tracked in [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Contributing
 
-- The MVP is complete, so new work happens on feature branches.
+- Work happens directly on `main` for now; pull requests come later.
 - Commits are small and atomic, with plain imperative messages (`Add Statuspage provider`).
 - New behavior comes with specs. See [`CLAUDE.md`](CLAUDE.md) for coding, testing and theming conventions.
 
