@@ -1,25 +1,22 @@
 <%# locals: (subscription:, result:) %>
-<% status = result.ongoing? ? "alert" : (result.no_history? ? "nodata" : "ok") %>
 <% metric = "days_since{service:#{subscription.name.parameterize(separator: "_")}}" %>
 <% peak = [ result.activity.max.to_i, 1 ].max %>
-<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>"
-         class="dd-tile-<%= status %> flex flex-col rounded-card border border-border bg-surface">
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="dd-tile-edge <%= "ds-pulse" if result.ongoing? %> flex flex-col rounded-card border border-border bg-surface">
   <header class="flex items-center gap-2 px-3 pt-3 text-xs">
     <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
     <h2 class="min-w-0 flex-1 truncate font-semibold text-sm">
       <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
             class: "hover:text-accent hover:underline", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
     </h2>
-    <span class="dd-badge-<%= status %> rounded-sm px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider" data-monitor-status>
-      <%= { "ok" => "OK", "alert" => "Alert", "nodata" => "No data" }.fetch(status) %>
-    </span>
+    <span class="dd-level-fill rounded-sm px-1.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider" data-monitor-status data-level-label><%= stability_label(result.level) %></span>
     <%= link_to "Edit", edit_subscription_path(subscription), class: "text-ink-muted hover:text-accent hover:underline", aria: { label: "Edit #{subscription.name}" } %>
   </header>
   <p class="dd-mono truncate px-3 pt-1 text-[0.7rem] text-ink-muted" title="<%= metric %>"><%= metric %></p>
 
-  <div class="flex items-baseline gap-2 px-3 pt-3">
-    <p class="dd-value-<%= status %> text-6xl font-light tabular-nums leading-none" data-days><%= result.infinite? ? "∞" : result.days %></p>
-    <p class="text-sm text-ink-muted"><%= result.infinite? ? "days" : "day".pluralize(result.days) %><%= " · incident active" if result.ongoing? %></p>
+  <div class="mx-3 mt-3 flex items-baseline gap-2 rounded-sm px-3 py-2 dd-level-fill">
+    <p class="text-6xl font-light tabular-nums leading-none" data-days><%= result.infinite? ? "∞" : result.days %></p>
+    <p class="text-sm opacity-80"><%= result.infinite? ? "days" : "day".pluralize(result.days) %><%= " · incident active" if result.ongoing? %></p>
   </div>
 
   <div class="px-3 pt-4">

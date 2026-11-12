@@ -23,7 +23,8 @@ class Theme < Data.define(:key, :name, :description, :level_labels)
         level_labels: { "ongoing" => "Trouble now", "day_one" => "Starting over", "short_streak" => "Good stretch", "long_streak" => "Long stretch", "solid_streak" => "Solid ground" }),
     new(key: "github", name: "GitHub-inspired", description: "Primer-style boxes, status labels, and a contribution-style activity grid. Light and dark.",
         level_labels: { "ongoing" => "Failing", "day_one" => "Flaky", "short_streak" => "Passing", "long_streak" => "Green", "solid_streak" => "LTS" }),
-    new(key: "datadog", name: "Datadog-inspired", description: "A dark monitoring dashboard: metric tiles, monitor badges, and timeseries bars.")
+    new(key: "datadog", name: "Datadog-inspired", description: "A dark monitoring dashboard: metric tiles, monitor badges, and timeseries bars.",
+        level_labels: { "ongoing" => "Alert", "day_one" => "Warn", "short_streak" => "Watch", "long_streak" => "OK", "solid_streak" => "SLO met" })
   ].freeze
 
   class << self

@@ -18,24 +18,23 @@
   --ds-font-body: "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   --ds-font-display: var(--ds-font-body);
   --ds-radius-card: 0.25rem;
+  --ds-level-ongoing: #f2475a;       /* alert */
+  --ds-level-day-one: #f57c2a;       /* warn */
+  --ds-level-short-streak: #f5b82e;  /* watch */
+  --ds-level-long-streak: #3ec46d;   /* ok */
+  --ds-level-solid-streak: #a77ae6;  /* SLO met */
   color-scheme: dark;
 
   --dd-nav: #632ca6;
-  --dd-warn: #f5a623;
-  --dd-nodata: #6d6a7c;
   --dd-mono: ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, monospace;
 
   .dd-nav { background: var(--dd-nav); }
   .dd-mono { font-family: var(--dd-mono); }
-  .dd-badge-ok { background: var(--ds-ok); color: #0d2716; }
-  .dd-badge-alert { background: var(--ds-danger); color: #fff; }
-  .dd-badge-nodata { background: var(--dd-nodata); color: #fff; }
-  .dd-value-ok { color: var(--ds-ok); }
-  .dd-value-alert { color: var(--ds-danger); }
-  .dd-value-nodata { color: var(--ds-ink-muted); }
-  .dd-tile-alert { box-shadow: inset 0 3px 0 var(--ds-danger); }
-  .dd-tile-ok { box-shadow: inset 0 3px 0 var(--ds-ok); }
-  .dd-tile-nodata { box-shadow: inset 0 3px 0 var(--dd-nodata); }
+  /* Monitor badge and conditional formatting: filled with the level color. */
+  .dd-level-fill { background: var(--level); color: #fff; }
+  [data-level="short_streak"] .dd-level-fill,
+  [data-level="long_streak"] .dd-level-fill { color: #14131a; }
+  .dd-tile-edge { box-shadow: inset 0 3px 0 var(--level); }
   .dd-bar { background: var(--ds-danger); }
   .dd-bar-clear { background: color-mix(in oklab, var(--ds-ok) 45%, transparent); }
   .dd-gridline { background-image: linear-gradient(to top, var(--ds-border) 1px, transparent 1px); background-size: 100% 25%; }
