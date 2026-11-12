@@ -14,7 +14,7 @@ RSpec.describe "Sessions" do
 
     expect(response).to redirect_to(root_url)
     follow_redirect!
-    expect(response.body).to include("Signed in as #{user.email_address}")
+    expect(response.body).to include(user.email_address)
   end
 
   it "rejects an invalid password" do

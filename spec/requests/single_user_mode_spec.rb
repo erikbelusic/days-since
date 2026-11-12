@@ -6,7 +6,7 @@ RSpec.describe "SINGLE_USER_MODE" do
       get root_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Signed in as #{SingleUserMode::LOCAL_EMAIL_ADDRESS}")
+      expect(response.body).to include(SingleUserMode::LOCAL_EMAIL_ADDRESS)
     end
 
     it "reuses the same local user across requests" do

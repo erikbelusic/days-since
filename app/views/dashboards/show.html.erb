@@ -1,7 +1,18 @@
-<div class="mx-auto max-w-3xl p-6 space-y-4">
-  <h1 class="text-2xl font-bold">days-since</h1>
-  <p>Signed in as <%= Current.user.email_address %>.</p>
-  <% unless SingleUserMode.enabled? %>
-    <%= button_to "Sign out", session_path, method: :delete, class: "rounded border px-3 py-1" %>
-  <% end %>
+<% content_for :title, "Dashboard · days-since" %>
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+  <h1 class="font-display text-3xl font-bold">Days since…</h1>
 </div>
+
+<% if @cards.any? %>
+  <div id="subscriptions" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <% @cards.each do |subscription, result| %>
+      <%= render themed_partial("feed_card"), subscription: subscription, result: result %>
+    <% end %>
+  </div>
+<% else %>
+  <div id="empty_state" class="rounded-card border border-dashed border-border bg-surface p-10 text-center">
+    <p class="font-display text-2xl font-semibold">No status pages yet</p>
+    <p class="mt-2 text-ink-muted">Add a status page like githubstatus.com to start counting.</p>
+  </div>
+<% end %>
