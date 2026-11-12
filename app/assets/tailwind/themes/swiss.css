@@ -1,0 +1,33 @@
+/*
+ * Swiss Report: the international typographic style. White page, Helvetica,
+ * strict alignment, thick black rules, one signal red. Single (light) mode.
+ * Tokens are scoped to <body data-theme="swiss">.
+ */
+[data-theme="swiss"] {
+  --ds-canvas: #ffffff;
+  --ds-surface: #ffffff;
+  --ds-surface-muted: #f2f2f2;
+  --ds-ink: #111111;
+  --ds-ink-muted: #6b6b6b;
+  --ds-border: #111111;
+  --ds-accent: #e30613;          /* signal red */
+  --ds-accent-ink: #ffffff;
+  --ds-ok: #111111;
+  --ds-danger: #e30613;
+  --ds-danger-surface: #fde7e8;
+  --ds-font-body: "Helvetica Neue", Helvetica, Arial, "Nimbus Sans", sans-serif;
+  --ds-font-display: var(--ds-font-body);
+  --ds-radius-card: 0;
+  --ds-level-ongoing: #e30613;       /* signal red */
+  --ds-level-day-one: #f25c05;       /* signal orange */
+  --ds-level-short-streak: #c99400;  /* ochre */
+  --ds-level-long-streak: #111111;   /* black */
+  --ds-level-solid-streak: #0055a4;  /* blue */
+  color-scheme: light;
+
+  .sw-tight { letter-spacing: -0.045em; }
+  .sw-caps { text-transform: uppercase; letter-spacing: 0.12em; }
+
+  /* No rounded corners anywhere, including shared buttons and pills. */
+  :is(.rounded, .rounded-sm, .rounded-md, .rounded-lg, .rounded-full) { border-radius: 0; }
+}

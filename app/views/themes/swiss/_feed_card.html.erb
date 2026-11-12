@@ -1,0 +1,45 @@
+<%# locals: (subscription:, result:) %>
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="<%= "ds-pulse" if result.ongoing? %> flex flex-col border-t-4 border-ink bg-surface pt-3 pb-1">
+  <header class="flex items-center gap-2">
+    <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <%= service_logo(subscription, css_class: "h-5 w-5", image_class: "grayscale contrast-125", monogram_class: "bg-ink text-surface text-[0.6rem]") %>
+    <h2 class="min-w-0 flex-1 truncate text-base font-bold">
+      <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+            class: "hover:text-accent", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+    </h2>
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "sw-caps text-[0.65rem] text-ink-muted hover:text-accent", aria: { label: "Edit #{subscription.name}" } %>
+  </header>
+
+  <p class="sw-tight mt-4 text-[6rem] font-bold leading-[0.82] tabular-nums <%= result.ongoing? ? "text-accent" : "text-ink" %>" data-days>
+    <%= result.infinite? ? "∞" : result.days %>
+  </p>
+  <p class="mt-2 text-sm text-ink-muted">
+    <% if result.ongoing? %>Incident in progress
+    <% elsif result.infinite? %>No incidents on record
+    <% elsif result.no_history? %><%= "Day".pluralize(result.days) %> since tracking began
+    <% else %><%= "Day".pluralize(result.days) %> without an incident<% end %>
+  </p>
+
+  <p class="sw-caps mt-4 flex items-center gap-2 text-[0.7rem] font-bold">
+    <span class="h-3 w-3 bg-level" aria-hidden="true"></span>
+    <span data-level-label><%= stability_label(result.level) %></span>
+  </p>
+
+  <footer class="mt-auto space-y-1 border-t border-ink/20 pt-2 mt-4 text-xs text-ink-muted">
+    <% if result.incident %>
+      <p class="flex gap-3">
+        <span class="shrink-0 tabular-nums"><%= (result.incident.resolved_at || result.incident.started_at).in_time_zone(Current.user.zone).to_date.iso8601 %></span>
+        <span class="min-w-0 truncate"><%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent", target: "_blank", rel: "noopener" %></span>
+      </p>
+    <% end %>
+    <% if result.ignored_count.positive? %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>"><%= ignored_incidents_note(result) %></p>
+    <% end %>
+    <% if subscription.feed.failing? %>
+      <p class="truncate text-accent" title="<%= subscription.feed.last_error %>">Source unreachable: <%= subscription.feed.last_error %></p>
+    <% elsif subscription.feed.last_success_at.nil? %>
+      <p>Awaiting first report</p>
+    <% end %>
+  </footer>
+</article>

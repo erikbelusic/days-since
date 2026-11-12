@@ -26,7 +26,9 @@ class Theme < Data.define(:key, :name, :description, :level_labels)
     new(key: "datadog", name: "Datadog-inspired", description: "A dark monitoring dashboard: metric tiles, monitor badges, and timeseries bars.",
         level_labels: { "ongoing" => "Alert", "day_one" => "Warn", "short_streak" => "Watch", "long_streak" => "OK", "solid_streak" => "SLO met" }),
     new(key: "garden", name: "Little Garden", description: "A whimsical storybook garden: the plant grows with every incident-free day.",
-        level_labels: { "ongoing" => "Storm's here", "day_one" => "Just planted", "short_streak" => "Sprouting", "long_streak" => "In bloom", "solid_streak" => "Mighty oak" })
+        level_labels: { "ongoing" => "Storm's here", "day_one" => "Just planted", "short_streak" => "Sprouting", "long_streak" => "In bloom", "solid_streak" => "Mighty oak" }),
+    new(key: "swiss", name: "Swiss Report", description: "Serious and minimal: Helvetica, strict grid, black rules, one signal red.",
+        level_labels: { "ongoing" => "Active incident", "day_one" => "Recent", "short_streak" => "Moderate", "long_streak" => "Established", "solid_streak" => "Sustained" })
   ].freeze
 
   class << self
