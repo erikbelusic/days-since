@@ -5,13 +5,13 @@
     <span class="ws-bolt absolute top-2 left-2 h-2.5 w-2.5 rounded-full" aria-hidden="true"></span>
     <span class="ws-bolt absolute top-2 right-2 h-2.5 w-2.5 rounded-full" aria-hidden="true"></span>
 
-    <header class="flex items-center justify-between gap-2 px-2">
-      <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <header class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] items-center gap-2 px-2">
+      <span data-sortable-handle class="cursor-grab select-none justify-self-start text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
       <h2 class="min-w-0 truncate text-center font-display text-2xl leading-none tracking-wider">
         <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
               class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
       </h2>
-      <%= link_to "Edit", edit_subscription_path(subscription), class: "font-body text-xs uppercase tracking-wide text-ink-muted hover:text-ink hover:underline", aria: { label: "Edit #{subscription.name}" } %>
+      <%= link_to "Edit", edit_subscription_path(subscription), class: "justify-self-end font-body text-xs uppercase tracking-wide text-ink-muted hover:text-ink hover:underline", aria: { label: "Edit #{subscription.name}" } %>
     </header>
 
     <div class="ws-panel mx-auto mt-3 flex w-full items-center justify-center rounded-lg py-2">
