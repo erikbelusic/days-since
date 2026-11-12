@@ -1,0 +1,7 @@
+<%= form_with url: theme_path, method: :patch, data: { controller: "auto-submit", turbo_action: "replace" }, class: "flex items-center gap-2" do |form| %>
+  <%= form.label :theme, "Theme", class: "text-ink-muted" %>
+  <%= form.select :theme, Theme.all.map { |theme| [ theme.name, theme.key ] }, { selected: current_theme.key },
+        data: { action: "change->auto-submit#submit" },
+        class: "rounded-md border border-border bg-surface px-2 py-1 text-sm text-ink" %>
+  <noscript><%= form.submit "Apply" %></noscript>
+<% end %>

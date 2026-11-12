@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   resource :settings, only: %i[ edit update ]
   resource :dashboard_layout, only: :update
+  resource :theme, only: :update
 
   root "dashboards#show"
 end

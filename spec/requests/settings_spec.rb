@@ -17,21 +17,20 @@ RSpec.describe "Settings", :single_user_mode do
     page = Nokogiri::HTML(response.body)
     expect(page.at_css("select#user_time_zone option[selected]")["value"]).to eq("Central Time (US & Canada)")
     expect(page.at_css("input#user_no_incident_display_since_tracking")["checked"]).to be_present
-    expect(page.at_css("input#user_theme_default")["checked"]).to be_present
   end
 
-  it "saves time zone, default severity, no-incident display, and theme" do
-    patch settings_path, params: { user: { time_zone: "Pacific Time (US & Canada)", default_min_severity: "major", no_incident_display: "since_tracking", theme: "default" } }
+  it "saves time zone, default severity, and no-incident display" do
+    patch settings_path, params: { user: { time_zone: "Pacific Time (US & Canada)", default_min_severity: "major", no_incident_display: "since_tracking" } }
 
     expect(response).to redirect_to(root_path)
     expect(user.reload).to have_attributes(time_zone: "Pacific Time (US & Canada)", default_min_severity: "major", no_incident_display: "since_tracking")
   end
 
   it "rejects invalid values" do
-    patch settings_path, params: { user: { time_zone: "Nowhere/Land", theme: "neon" } }
+    patch settings_path, params: { user: { time_zone: "Nowhere/Land" } }
 
     expect(response).to have_http_status(:unprocessable_content)
-    expect(user.reload).to have_attributes(time_zone: "UTC", theme: "default")
+    expect(user.reload.time_zone).to eq("UTC")
   end
 
   it "ignores attempts to change the email address" do

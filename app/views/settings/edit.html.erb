@@ -12,21 +12,6 @@
       </div>
     <% end %>
 
-    <fieldset>
-      <legend class="font-semibold">Theme</legend>
-      <div class="mt-3 grid gap-3 sm:grid-cols-2">
-        <% Theme.all.each do |theme| %>
-          <label class="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 has-[:checked]:border-accent has-[:checked]:bg-surface-muted">
-            <%= form.radio_button :theme, theme.key, class: "mt-1" %>
-            <span>
-              <span class="block font-medium"><%= theme.name %></span>
-              <span class="block text-sm text-ink-muted"><%= theme.description %></span>
-            </span>
-          </label>
-        <% end %>
-      </div>
-    </fieldset>
-
     <div>
       <%= form.label :time_zone, "Time zone", class: "block font-semibold" %>
       <p class="text-sm text-ink-muted">Day counts roll over at midnight in this time zone.</p>
