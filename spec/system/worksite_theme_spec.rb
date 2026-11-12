@@ -34,6 +34,25 @@ RSpec.describe "Worksite Safety Sign theme", :single_user_mode do
     end
   end
 
+  it "headlines each card with a safety-sign word for its stability level" do
+    words = { nil => "Danger", 3 => "Warning", 14 => "Caution", 45 => "Safe", 120 => "★ Safety record ★" }
+    subscriptions = words.keys.to_h do |days|
+      sub = create(:subscription, user: user)
+      if days
+        create(:incident, feed: sub.feed, impact: "major", started_at: days.days.ago - 1.hour, resolved_at: days.days.ago)
+      else
+        create(:incident, :ongoing, feed: sub.feed)
+      end
+      [ days, sub ]
+    end
+
+    visit root_path
+
+    words.each do |days, word|
+      expect(page).to have_css("##{ActionView::RecordIdentifier.dom_id(subscriptions[days])} [data-level-label]", exact_text: word)
+    end
+  end
+
   it "can be chosen from the navigation bar" do
     SingleUserMode.user
 

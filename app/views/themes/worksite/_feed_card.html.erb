@@ -1,7 +1,11 @@
 <%# locals: (subscription:, result:) %>
-<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>"
-         class="<%= result.ongoing? ? "ws-hazard-red" : "ws-hazard" %> flex flex-col rounded-card p-4 shadow-[0_6px_0_rgb(0_0_0/0.35)]">
+<% sign = { "ongoing" => [ "Danger", "bg-[#c62828] text-white" ], "unstable" => [ "Warning", "bg-[#e8590c] text-[#111]" ],
+            "recovering" => [ "Caution", "bg-[#111] text-[#f5c400]" ], "stable" => [ "Safe", "bg-[#1e7a34] text-white" ],
+            "rock_solid" => [ "★ Safety record ★", "bg-[#1e7a34] text-white" ] }.fetch(result.level) %>
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="<%= result.ongoing? ? "ws-hazard-red ds-pulse" : "ws-hazard" %> flex flex-col rounded-card p-4 shadow-[0_6px_0_rgb(0_0_0/0.35)]">
   <div class="relative flex flex-1 flex-col bg-surface px-5 pt-4 pb-3 text-ink">
+    <p class="-mx-5 -mt-4 mb-3 border-b-4 border-[#111] py-1 text-center font-display text-3xl leading-none tracking-[0.15em] uppercase <%= sign.last %>" data-level-label><%= sign.first %></p>
     <span class="ws-bolt absolute top-2 left-2 h-2.5 w-2.5 rounded-full" aria-hidden="true"></span>
     <span class="ws-bolt absolute top-2 right-2 h-2.5 w-2.5 rounded-full" aria-hidden="true"></span>
 
