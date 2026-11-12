@@ -1,0 +1,20 @@
+<header class="bg-[#111] text-[#f5c400]">
+  <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <%= link_to root_path, class: "flex items-center gap-3" do %>
+      <%= render "themes/worksite/hard_hat", css_class: "h-9 w-12" %>
+      <span class="font-display text-3xl leading-none tracking-wider">Days-Since</span>
+    <% end %>
+
+    <% if authenticated? %>
+      <div class="flex flex-wrap items-center gap-4 text-sm uppercase tracking-wide [&_select]:border-[#f5c400] [&_select]:bg-[#111] [&_select]:text-[#f5c400] [&_label]:text-[#f5c400]/80">
+        <%= render "shared/theme_picker" %>
+        <span class="hidden text-[#f5c400]/70 lg:inline"><%= Current.user.email_address %></span>
+        <%= link_to "Settings", edit_settings_path, class: "hover:underline" %>
+        <% unless SingleUserMode.enabled? %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "cursor-pointer border-2 border-[#f5c400] px-3 py-1 uppercase hover:bg-[#f5c400] hover:text-[#111]" %>
+        <% end %>
+      </div>
+    <% end %>
+  </nav>
+  <div class="ws-hazard-thin h-3" aria-hidden="true"></div>
+</header>

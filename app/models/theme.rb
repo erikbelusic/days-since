@@ -3,7 +3,8 @@
 # and may override partials in app/views/themes/<key>/.
 class Theme < Data.define(:key, :name, :description)
   REGISTRY = [
-    new(key: "default", name: "Default", description: "Clean Tailwind look with automatic light and dark mode.")
+    new(key: "default", name: "Default", description: "Clean Tailwind look with automatic light and dark mode."),
+    new(key: "worksite", name: "Worksite Safety Sign", description: "Hazard stripes and a \"DAYS SINCE LAST INCIDENT\" site board.")
   ].freeze
 
   class << self
