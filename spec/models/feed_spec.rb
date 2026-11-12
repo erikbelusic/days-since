@@ -110,3 +110,70 @@ RSpec.describe Feed, ".resolve!" do
     expect(Feed.resolve!("githubstatus.com", provider: "rss", detector: detector)).to have_attributes(provider: "rss")
   end
 end
+
+RSpec.describe Feed, "polling" do
+  let(:feed) { create(:feed, url: "https://www.githubstatus.com/api/v2/incidents.json", name: nil) }
+  let(:now) { Time.utc(2026, 3, 10, 12) }
+
+  def stub_feed(**response)
+    stub_request(:get, feed.url).to_return(**response)
+  end
+
+  describe "#poll!" do
+    it "stores incidents and schedules the next poll on success" do
+      stub_feed(status: 200, body: file_fixture("statuspage/incidents.json").read, headers: { "ETag" => '"v1"' })
+
+      expect(feed.poll!(now: now)).to be(true)
+
+      expect(feed.incidents.count).to eq(4)
+      expect(feed.reload).to have_attributes(
+        name: "GitHub", etag: '"v1"', last_polled_at: now, last_success_at: now,
+        consecutive_failures: 0, last_error: nil, next_poll_at: now + 5.minutes
+      )
+    end
+
+    it "keeps existing incidents when the source is unchanged" do
+      create(:incident, feed: feed)
+      feed.update!(etag: '"v1"')
+      stub_feed(status: 304)
+
+      feed.poll!(now: now)
+
+      expect(feed.incidents.count).to eq(1)
+      expect(feed.reload).to have_attributes(last_success_at: now, next_poll_at: now + 5.minutes)
+    end
+
+    it "records failures and backs off exponentially, capped at an hour" do
+      stub_feed(status: 503)
+
+      delays = 6.times.map do
+        feed.poll!(now: now)
+        feed.reload.next_poll_at - now
+      end
+
+      expect(delays).to eq([ 5, 10, 20, 40, 60, 60 ].map(&:minutes))
+      expect(feed).to have_attributes(consecutive_failures: 6, last_error: "HTTP 503", last_polled_at: now)
+      expect(feed).to be_failing
+    end
+
+    it "recovers after a failure" do
+      feed.update!(consecutive_failures: 3, last_error: "HTTP 503")
+      stub_feed(status: 200, body: file_fixture("statuspage/incidents.json").read)
+
+      feed.poll!(now: now)
+
+      expect(feed.reload).to have_attributes(consecutive_failures: 0, last_error: nil, next_poll_at: now + 5.minutes)
+    end
+  end
+
+  describe ".due" do
+    it "includes subscribed feeds that have never been polled or whose poll time has passed" do
+      never = create(:subscription).feed
+      overdue = create(:subscription, feed: create(:feed, next_poll_at: now - 1.minute)).feed
+      create(:subscription, feed: create(:feed, next_poll_at: now + 1.minute))
+      create(:feed, next_poll_at: nil) # dormant: no subscribers
+
+      expect(Feed.due(now)).to contain_exactly(never, overdue)
+    end
+  end
+end
