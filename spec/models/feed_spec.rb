@@ -30,3 +30,45 @@ RSpec.describe Feed do
     expect(build(:feed, name: nil, url: "https://www.githubstatus.com/api/v2/incidents.json").display_name).to eq("www.githubstatus.com")
   end
 end
+
+RSpec.describe Feed, "#apply_fetch!" do
+  let(:feed) { create(:feed, name: nil, site_url: nil) }
+
+  def entry(**attrs)
+    FeedProviders::Entry.new(external_id: "inc-1", title: "Outage", impact: "major", status: "investigating",
+                             url: "https://stspg.io/1", started_at: Time.utc(2026, 3, 1), resolved_at: nil, **attrs)
+  end
+
+  def fetch(entries, **attrs)
+    FeedProviders::Fetch.new(entries: entries, name: "GitHub", site_url: "https://www.githubstatus.com", etag: '"e1"', last_modified: nil, **attrs)
+  end
+
+  it "stores new incidents and the page details" do
+    feed.apply_fetch!(fetch([ entry ]))
+
+    expect(feed.incidents.sole).to have_attributes(external_id: "inc-1", impact: "major", resolved_at: nil)
+    expect(feed.reload).to have_attributes(name: "GitHub", site_url: "https://www.githubstatus.com", etag: '"e1"')
+  end
+
+  it "updates an existing incident instead of duplicating it" do
+    feed.apply_fetch!(fetch([ entry ]))
+    feed.apply_fetch!(fetch([ entry(status: "resolved", resolved_at: Time.utc(2026, 3, 1, 2)) ]))
+
+    expect(feed.incidents.sole).to have_attributes(status: "resolved", resolved_at: Time.utc(2026, 3, 1, 2))
+  end
+
+  it "keeps incidents that drop out of the source's recent list" do
+    feed.apply_fetch!(fetch([ entry ]))
+    feed.apply_fetch!(fetch([ entry(external_id: "inc-2") ]))
+
+    expect(feed.incidents.pluck(:external_id)).to contain_exactly("inc-1", "inc-2")
+  end
+
+  it "does not overwrite a name that is already set" do
+    feed.update!(name: "My Git Host")
+
+    feed.apply_fetch!(fetch([]))
+
+    expect(feed.reload.name).to eq("My Git Host")
+  end
+end

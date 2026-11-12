@@ -17,6 +17,23 @@ class Feed < ApplicationRecord
     subscriptions.exists?
   end
 
+  # Applies a provider fetch: records caching headers, fills in the page name
+  # and site URL, and upserts every incident entry by its external id.
+  def apply_fetch!(fetch)
+    transaction do
+      self.etag = fetch.etag
+      self.last_modified = fetch.last_modified
+      self.name = fetch.name if name.blank? && fetch.name.present?
+      self.site_url = fetch.site_url if site_url.blank? && fetch.site_url.present?
+      save!
+
+      Array(fetch.entries).each do |entry|
+        incident = incidents.find_or_initialize_by(external_id: entry.external_id)
+        incident.update!(entry.to_h.except(:external_id))
+      end
+    end
+  end
+
   def display_name
     name.presence || URI.parse(url).host
   end

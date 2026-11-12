@@ -1,0 +1,67 @@
+{
+  "page": {
+    "id": "kctbh9vrtdwd",
+    "name": "GitHub",
+    "url": "https://www.githubstatus.com",
+    "time_zone": "Etc/UTC",
+    "updated_at": "2026-03-10T12:00:00.000Z"
+  },
+  "incidents": [
+    {
+      "id": "ongoing1",
+      "name": "Elevated error rates for Actions",
+      "status": "identified",
+      "impact": "minor",
+      "created_at": "2026-03-10T09:00:05.000Z",
+      "started_at": "2026-03-10T09:00:00.000Z",
+      "monitoring_at": null,
+      "resolved_at": null,
+      "shortlink": "https://stspg.io/ongoing1",
+      "scheduled_for": null
+    },
+    {
+      "id": "maint1",
+      "name": "Scheduled database maintenance",
+      "status": "completed",
+      "impact": "maintenance",
+      "created_at": "2026-03-08T01:00:00.000Z",
+      "started_at": "2026-03-08T02:00:00.000Z",
+      "resolved_at": "2026-03-08T03:00:00.000Z",
+      "shortlink": "https://stspg.io/maint1",
+      "scheduled_for": "2026-03-08T02:00:00.000Z"
+    },
+    {
+      "id": "major1",
+      "name": "Incident with Git operations",
+      "status": "resolved",
+      "impact": "major",
+      "created_at": "2026-03-05T14:02:00.000Z",
+      "started_at": "2026-03-05T14:00:00.000Z",
+      "resolved_at": "2026-03-05T15:30:00.000Z",
+      "shortlink": "https://stspg.io/major1",
+      "scheduled_for": null
+    },
+    {
+      "id": "postmortem1",
+      "name": "Disruption with Pages",
+      "status": "postmortem",
+      "impact": "critical",
+      "created_at": "2026-02-20T10:00:00.000Z",
+      "started_at": null,
+      "resolved_at": "2026-02-20T11:00:00.000Z",
+      "shortlink": "https://stspg.io/postmortem1",
+      "scheduled_for": null
+    },
+    {
+      "id": "none1",
+      "name": "Delayed notifications",
+      "status": "resolved",
+      "impact": "none",
+      "created_at": "2026-02-15T08:00:00.000Z",
+      "started_at": "2026-02-15T08:00:00.000Z",
+      "resolved_at": "2026-02-15T08:45:00.000Z",
+      "shortlink": "https://stspg.io/none1",
+      "scheduled_for": null
+    }
+  ]
+}
