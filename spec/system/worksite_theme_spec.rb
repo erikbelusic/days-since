@@ -13,7 +13,7 @@ RSpec.describe "Worksite Safety Sign theme", :single_user_mode do
 
       visit root_path
 
-      expect(page).to have_css("html[data-theme='worksite']")
+      expect(page).to have_css("body[data-theme='worksite']")
       expect(page).to have_css("header .ws-hazard-thin")
 
       within("##{ActionView::RecordIdentifier.dom_id(counting)}.ws-hazard") do

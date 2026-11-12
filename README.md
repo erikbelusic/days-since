@@ -142,7 +142,7 @@ HTTP goes through **Faraday**, and RSS/Atom is parsed with **Feedjira**.
 Themes are defined in code and added by pull request. There is no theme table in the database.
 
 - **Registry:** `Theme.all` lists the available themes, and `User#theme` is validated against it.
-- **Color and typography:** each theme defines CSS custom properties in `app/assets/tailwind/themes/<theme>.css`, scoped by `<html data-theme="<theme>">`. Tailwind utilities such as `bg-surface` and `text-accent` map to those properties.
+- **Color and typography:** each theme defines CSS custom properties in `app/assets/tailwind/themes/<theme>.css`, scoped by `<body data-theme="<theme>">`. Tailwind utilities such as `bg-surface` and `text-accent` map to those properties.
 - **Structure and graphics:** themes can provide their own partials, for example `app/views/themes/<theme>/_feed_card.html.erb`. A theme that doesn't provide a partial falls back to the `default` theme's version.
 - **Scope:** a theme controls the whole page: header, background, fonts and cards.
 - **Fonts:** fonts are self-hosted under OFL licensing (for example an industrial face such as Oswald or Bebas Neue for Worksite). The app never loads fonts from a third-party CDN.

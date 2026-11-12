@@ -1,7 +1,7 @@
 /*
  * Worksite Safety Sign: a parody "DAYS SINCE LAST INCIDENT" site board.
  * Safety yellow boards with hazard-stripe borders on a concrete background.
- * Single (light) mode.
+ * Single (light) mode. Tokens are scoped to <body data-theme="worksite">.
  */
 [data-theme="worksite"] {
   --ds-canvas: #cfcbc2;          /* concrete */
@@ -24,7 +24,8 @@
   --ws-stripe-black: #111111;
   --ws-panel: #ffffff;
 
-  body {
+  /* The theme attribute sits on <body>, so this textures the page itself. */
+  &:is(body) {
     background-image:
       radial-gradient(circle at 20% 30%, rgb(0 0 0 / 0.035) 0 1px, transparent 1.5px),
       radial-gradient(circle at 70% 80%, rgb(255 255 255 / 0.06) 0 1px, transparent 1.5px);

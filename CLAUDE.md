@@ -65,7 +65,7 @@ Themes are code. To add one, open a pull request. There is no theme table in the
 ### Adding a theme
 
 1. **Register it** in `Theme::REGISTRY` (`app/models/theme.rb`) with its key, display name and description.
-2. **Define tokens** in `app/assets/tailwind/themes/<key>.css`, scoped to `[data-theme="<key>"]`, and add `@import "./themes/<key>.css";` to `app/assets/tailwind/application.css`. Tokens are `--ds-*` custom properties (`--ds-canvas`, `--ds-surface`, `--ds-ink`, `--ds-accent`, `--ds-danger`, `--ds-font-display`, …). See `themes/default.css` for the full set. The default values are also the `:root` fallback, so a missing token falls back to the default theme rather than breaking. `application.css` maps the tokens to Tailwind utilities (`bg-surface`, `text-ink`, `font-display`, `rounded-card`, …).
+2. **Define tokens** in `app/assets/tailwind/themes/<key>.css`, scoped to `[data-theme="<key>"]` (the attribute sits on `<body>` so Turbo swaps it on every visit), and add `@import "./themes/<key>.css";` to `app/assets/tailwind/application.css`. Tokens are `--ds-*` custom properties (`--ds-canvas`, `--ds-surface`, `--ds-ink`, `--ds-accent`, `--ds-danger`, `--ds-font-display`, …). See `themes/default.css` for the full set. The default values are also the `:root` fallback, so a missing token falls back to the default theme rather than breaking. `application.css` maps the tokens to Tailwind utilities (`bg-surface`, `text-ink`, `font-display`, `rounded-card`, …).
 3. **Optionally override partials** in `app/views/themes/<key>/`, for example `_feed_card.html.erb`. Any partial a theme doesn't provide falls back to `app/views/themes/default/`. Partials receive the same locals as the default version, so keep the locals interface stable.
 4. **Fonts** must be OFL or similarly licensed and **self-hosted** under `app/assets/fonts/`. Commit the license file next to the font.
 5. **SVG/graphics** (hazard stripes, signage) go inline in partials or under `app/assets/images/themes/<key>/`.
@@ -74,6 +74,6 @@ Themes are code. To add one, open a pull request. There is no theme table in the
 ### Rules
 
 - Views and components use **semantic Tailwind tokens** (`bg-surface`, `text-accent`). Hard-coded palette classes like `bg-yellow-400` belong only inside a theme's own partials.
-- The theme key appears on `<html data-theme="…">`. Don't make theme decisions in Ruby beyond choosing which partial to render.
+- The theme key appears on `<body data-theme="…">` (not `<html>`: Turbo never updates `<html>` attributes, so a theme change would only half-apply). Don't make theme decisions in Ruby beyond choosing which partial to render.
 - The default theme supports light and dark modes through `prefers-color-scheme`. Other themes may be single-mode.
 - Theme partials stay presentational: they get the counter state (days, ongoing, no-history) already computed and never query the database.

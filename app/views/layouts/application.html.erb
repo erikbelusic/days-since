@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="<%= current_theme.key %>">
+<html>
   <head>
     <title><%= content_for(:title) || "days-since" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,7 +19,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen">
+  <body class="min-h-screen" data-theme="<%= current_theme.key %>">
     <%= render themed_partial("header") %>
 
     <main class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
