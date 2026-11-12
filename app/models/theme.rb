@@ -21,7 +21,8 @@ class Theme < Data.define(:key, :name, :description, :level_labels)
         level_labels: { "ongoing" => "Danger", "day_one" => "Warning", "short_streak" => "Caution", "long_streak" => "Safe", "solid_streak" => "★ Safety record ★" }),
     new(key: "farmhouse", name: "Farmhouse", description: "A hand-lettered barn-wood sign with hanging flip-card numbers.",
         level_labels: { "ongoing" => "Trouble now", "day_one" => "Starting over", "short_streak" => "Good stretch", "long_streak" => "Long stretch", "solid_streak" => "Solid ground" }),
-    new(key: "github", name: "GitHub-inspired", description: "Primer-style boxes, status labels, and a contribution-style activity grid. Light and dark."),
+    new(key: "github", name: "GitHub-inspired", description: "Primer-style boxes, status labels, and a contribution-style activity grid. Light and dark.",
+        level_labels: { "ongoing" => "Failing", "day_one" => "Flaky", "short_streak" => "Passing", "long_streak" => "Green", "solid_streak" => "LTS" }),
     new(key: "datadog", name: "Datadog-inspired", description: "A dark monitoring dashboard: metric tiles, monitor badges, and timeseries bars.")
   ].freeze
 

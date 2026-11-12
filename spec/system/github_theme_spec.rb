@@ -16,7 +16,7 @@ RSpec.describe "GitHub-inspired theme", :single_user_mode do
       expect(page).to have_css("body[data-theme='github'] header.gh-header")
 
       within("##{ActionView::RecordIdentifier.dom_id(healthy)}") do
-        expect(page).to have_text("Operational")
+        expect(page).to have_css("[data-level-label]", exact_text: "Passing")
         expect(page).to have_css("[data-days]", text: "7")
         expect(page).to have_css("[data-activity-grid] .gh-cell", count: 28)
         expect(page).to have_css("[data-activity-grid] .gh-cell-incident", count: 2)
@@ -24,13 +24,13 @@ RSpec.describe "GitHub-inspired theme", :single_user_mode do
       end
 
       within("##{ActionView::RecordIdentifier.dom_id(ongoing)}") do
-        expect(page).to have_text("Incident")
+        expect(page).to have_css("[data-level-label]", exact_text: "Failing")
         expect(page).to have_text("DNS trouble")
         expect(page).to have_css("[data-activity-grid] .gh-cell:last-child.gh-cell-incident")
       end
 
       within("##{ActionView::RecordIdentifier.dom_id(quiet)}") do
-        expect(page).to have_text("No history")
+        expect(page).to have_css("[data-level-label]", exact_text: "Green")
         expect(page).to have_css("[data-days]", text: "∞")
       end
     end

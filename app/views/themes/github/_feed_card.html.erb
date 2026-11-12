@@ -1,29 +1,22 @@
 <%# locals: (subscription:, result:) %>
-<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>"
-         class="flex flex-col overflow-hidden rounded-card border bg-surface <%= result.ongoing? ? "border-danger" : "border-border" %>">
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="flex flex-col overflow-hidden rounded-card border bg-surface <%= result.ongoing? ? "ds-pulse border-level" : "border-border" %>">
   <header class="flex items-center gap-2 border-b border-border bg-surface-muted px-4 py-2.5 text-sm">
     <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
     <h2 class="min-w-0 flex-1 truncate font-semibold">
       <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
             class: "text-accent hover:underline", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
     </h2>
-    <% if result.ongoing? %>
-      <span class="inline-flex items-center gap-1 rounded-full border border-danger px-2 py-0.5 text-xs font-medium text-danger">
-        <%= render "themes/github/icon", name: "alert", css_class: "h-3 w-3" %> Incident
-      </span>
-    <% elsif result.no_history? %>
-      <span class="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-ink-muted">No history</span>
-    <% else %>
-      <span class="inline-flex items-center gap-1 rounded-full border border-ok px-2 py-0.5 text-xs font-medium text-ok">
-        <%= render "themes/github/icon", name: "check", css_class: "h-3 w-3" %> Operational
-      </span>
-    <% end %>
+    <span class="inline-flex items-center gap-1 rounded-full border border-level px-2 py-0.5 text-xs font-medium text-level" data-level-label-wrapper>
+      <%= render "themes/github/icon", name: { "ongoing" => "alert", "long_streak" => "check", "solid_streak" => "check" }.fetch(result.level, "dash"), css_class: "h-3 w-3" %>
+      <span data-level-label><%= stability_label(result.level) %></span>
+    </span>
     <%= link_to "Edit", edit_subscription_path(subscription), class: "text-xs text-ink-muted hover:text-accent hover:underline", aria: { label: "Edit #{subscription.name}" } %>
   </header>
 
   <div class="flex items-end justify-between gap-4 px-4 pt-4">
     <div>
-      <p class="text-5xl font-semibold tabular-nums <%= result.ongoing? ? "text-danger" : "" %>" data-days><%= result.infinite? ? "∞" : result.days %></p>
+      <p class="text-5xl font-semibold tabular-nums text-level" data-days><%= result.infinite? ? "∞" : result.days %></p>
       <p class="mt-1 text-sm text-ink-muted"><%= counter_caption(result) %></p>
     </div>
     <%= render "themes/github/activity_grid", activity: result.activity %>
