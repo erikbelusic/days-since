@@ -1,0 +1,105 @@
+require "rails_helper"
+
+RSpec.describe DaysSinceCounter do
+  let(:user) { create(:user, time_zone: "UTC", default_min_severity: "minor") }
+  let(:feed) { create(:feed, created_at: Time.utc(2026, 1, 1, 12)) }
+  let(:subscription) { create(:subscription, user: user, feed: feed) }
+  let(:now) { Time.utc(2026, 3, 10, 12) }
+
+  def result(at: now)
+    described_class.new(subscription.reload, now: at).result
+  end
+
+  def incident(**attrs)
+    create(:incident, feed: feed, impact: "major", started_at: Time.utc(2026, 3, 1, 8), resolved_at: Time.utc(2026, 3, 1, 10), **attrs)
+  end
+
+  it "counts calendar days since the last relevant incident was resolved" do
+    incident(started_at: Time.utc(2026, 2, 27), resolved_at: Time.utc(2026, 3, 1, 23, 30))
+
+    expect(result).to have_attributes(state: :counting, days: 9)
+  end
+
+  it "counts from the most recent resolution" do
+    incident(resolved_at: Time.utc(2026, 3, 1, 10))
+    latest = incident(started_at: Time.utc(2026, 3, 5), resolved_at: Time.utc(2026, 3, 7, 10))
+
+    expect(result).to have_attributes(days: 3, incident: latest)
+  end
+
+  it "shows 0 and ONGOING while a relevant incident is unresolved" do
+    incident(resolved_at: Time.utc(2026, 3, 1))
+    ongoing = incident(started_at: Time.utc(2026, 3, 10, 9), resolved_at: nil)
+
+    expect(result).to have_attributes(state: :ongoing, days: 0, incident: ongoing)
+    expect(result).to be_ongoing
+  end
+
+  it "ignores incidents below the effective minimum severity" do
+    incident(impact: "major", resolved_at: Time.utc(2026, 3, 1, 10))
+    incident(impact: "none", started_at: Time.utc(2026, 3, 9), resolved_at: Time.utc(2026, 3, 9, 1))
+    incident(impact: "minor", started_at: Time.utc(2026, 3, 10, 9), resolved_at: nil)
+
+    subscription.update!(min_severity: "major")
+
+    expect(result).to have_attributes(state: :counting, days: 9)
+  end
+
+  it "falls back to the user's default severity" do
+    incident(impact: "minor", started_at: Time.utc(2026, 3, 10, 9), resolved_at: nil)
+
+    user.update!(default_min_severity: "critical")
+    expect(result).to have_attributes(state: :no_history)
+
+    user.update!(default_min_severity: "minor")
+    expect(result).to have_attributes(state: :ongoing)
+  end
+
+  it "always counts incidents with unknown severity (RSS)" do
+    subscription.update!(min_severity: "critical")
+    incident(impact: "unknown", resolved_at: Time.utc(2026, 3, 8, 10))
+
+    expect(result).to have_attributes(days: 2)
+  end
+
+  it "shows infinity when there is no relevant history by default" do
+    expect(result).to have_attributes(state: :no_history, days: nil)
+    expect(result).to be_infinite
+  end
+
+  it "counts from when tracking started when the user prefers it" do
+    user.update!(no_incident_display: "since_tracking")
+
+    expect(result).to have_attributes(state: :no_history, days: 68)
+  end
+
+  it "shows 0 on the day an incident is resolved" do
+    incident(resolved_at: Time.utc(2026, 3, 10, 1))
+
+    expect(result).to have_attributes(state: :counting, days: 0)
+  end
+
+  describe "time zones" do
+    it "rolls over at midnight in the user's time zone, not UTC" do
+      user.update!(time_zone: "America/Chicago") # UTC-6 in early March
+      incident(resolved_at: Time.utc(2026, 3, 1, 20)) # 2pm Mar 1 in Chicago
+
+      expect(result(at: Time.utc(2026, 3, 2, 5, 59))).to have_attributes(days: 0) # 11:59pm Mar 1 Chicago
+      expect(result(at: Time.utc(2026, 3, 2, 6, 0))).to have_attributes(days: 1)  # midnight Mar 2 Chicago
+    end
+
+    it "attributes a resolution to the user's local date" do
+      user.update!(time_zone: "Asia/Tokyo") # UTC+9
+      incident(resolved_at: Time.utc(2026, 3, 1, 16)) # 1am Mar 2 in Tokyo
+
+      expect(result(at: Time.utc(2026, 3, 2, 3))).to have_attributes(days: 0) # noon Mar 2 Tokyo
+    end
+
+    it "counts calendar days across a DST change" do
+      user.update!(time_zone: "America/New_York") # DST starts Mar 8, 2026
+      incident(resolved_at: Time.utc(2026, 3, 7, 17)) # noon Mar 7 local
+
+      expect(result(at: Time.utc(2026, 3, 9, 4, 30))).to have_attributes(days: 2) # 12:30am Mar 9 local
+    end
+  end
+end
