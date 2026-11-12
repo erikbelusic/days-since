@@ -64,8 +64,8 @@ Themes are code. To add one, open a pull request. There is no theme table in the
 
 ### Adding a theme
 
-1. **Register it** in the `Theme` registry (`Theme.all`) with its key, display name and description.
-2. **Define tokens** in `app/assets/tailwind/themes/<key>.css`, scoped to `[data-theme="<key>"]`. Every theme must define the **full token set** used by the default theme: surface, text, accent, border, danger/ongoing, font families and so on. Missing tokens must never fall through to broken styles.
+1. **Register it** in `Theme::REGISTRY` (`app/models/theme.rb`) with its key, display name and description.
+2. **Define tokens** in `app/assets/tailwind/themes/<key>.css`, scoped to `[data-theme="<key>"]`, and add `@import "./themes/<key>.css";` to `app/assets/tailwind/application.css`. Tokens are `--ds-*` custom properties (`--ds-canvas`, `--ds-surface`, `--ds-ink`, `--ds-accent`, `--ds-danger`, `--ds-font-display`, …). See `themes/default.css` for the full set. The default values are also the `:root` fallback, so a missing token falls back to the default theme rather than breaking. `application.css` maps the tokens to Tailwind utilities (`bg-surface`, `text-ink`, `font-display`, `rounded-card`, …).
 3. **Optionally override partials** in `app/views/themes/<key>/`, for example `_feed_card.html.erb`. Any partial a theme doesn't provide falls back to `app/views/themes/default/`. Partials receive the same locals as the default version, so keep the locals interface stable.
 4. **Fonts** must be OFL or similarly licensed and **self-hosted** under `app/assets/fonts/`. Commit the license file next to the font.
 5. **SVG/graphics** (hazard stripes, signage) go inline in partials or under `app/assets/images/themes/<key>/`.

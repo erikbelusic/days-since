@@ -1,0 +1,40 @@
+/*
+ * Default theme: plain Tailwind look (slate + indigo), light and dark.
+ * These values are also the :root fallback, so every theme gets the full
+ * token set even if it only overrides some of it.
+ */
+:root,
+[data-theme="default"] {
+  --ds-canvas: #f8fafc;          /* slate-50 */
+  --ds-surface: #ffffff;
+  --ds-surface-muted: #f1f5f9;   /* slate-100 */
+  --ds-ink: #0f172a;             /* slate-900 */
+  --ds-ink-muted: #64748b;       /* slate-500 */
+  --ds-border: #e2e8f0;          /* slate-200 */
+  --ds-accent: #4f46e5;          /* indigo-600 */
+  --ds-accent-ink: #ffffff;
+  --ds-ok: #059669;              /* emerald-600 */
+  --ds-danger: #dc2626;          /* red-600 */
+  --ds-danger-surface: #fef2f2;  /* red-50 */
+  --ds-font-body: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --ds-font-display: var(--ds-font-body);
+  --ds-radius-card: 0.75rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="default"] {
+    --ds-canvas: #020617;          /* slate-950 */
+    --ds-surface: #0f172a;         /* slate-900 */
+    --ds-surface-muted: #1e293b;   /* slate-800 */
+    --ds-ink: #f1f5f9;             /* slate-100 */
+    --ds-ink-muted: #94a3b8;       /* slate-400 */
+    --ds-border: #1e293b;          /* slate-800 */
+    --ds-accent: #818cf8;          /* indigo-400 */
+    --ds-accent-ink: #020617;
+    --ds-ok: #34d399;              /* emerald-400 */
+    --ds-danger: #f87171;          /* red-400 */
+    --ds-danger-surface: #450a0a;  /* red-950 */
+    color-scheme: dark;
+  }
+}

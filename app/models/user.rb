@@ -10,6 +10,7 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true
   validates :default_min_severity, inclusion: { in: Severity::LEVELS }
+  validates :theme, inclusion: { in: ->(_) { Theme.keys } }
   validate :time_zone_must_exist
 
   # Accounts are created by an admin (there is no public sign-up). Returns the

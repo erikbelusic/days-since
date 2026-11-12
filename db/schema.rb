@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_043220) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_044010) do
   create_table "feeds", force: :cascade do |t|
     t.string "url", null: false
     t.string "provider", null: false
@@ -76,6 +76,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_043220) do
     t.string "time_zone", default: "UTC", null: false
     t.string "default_min_severity", default: "minor", null: false
     t.string "no_incident_display", default: "infinity", null: false
+    t.string "theme", default: "default", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 

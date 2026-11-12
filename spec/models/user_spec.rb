@@ -48,3 +48,10 @@ RSpec.describe User, "preferences" do
     end
   end
 end
+
+RSpec.describe User, "theme" do
+  it "defaults to the default theme and only accepts registered themes" do
+    expect(create(:user).theme).to eq("default")
+    expect(build(:user, theme: "not-a-theme")).not_to be_valid
+  end
+end

@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* Theme token values. Add one import per theme (see CLAUDE.md). */
+@import "./themes/default.css";
+
+/*
+ * Semantic tokens: views use these utilities (bg-surface, text-ink,
+ * border-border, text-accent, font-display, rounded-card, ...) and each theme
+ * supplies the values through --ds-* custom properties.
+ */
+@theme inline {
+  --color-canvas: var(--ds-canvas);
+  --color-surface: var(--ds-surface);
+  --color-surface-muted: var(--ds-surface-muted);
+  --color-ink: var(--ds-ink);
+  --color-ink-muted: var(--ds-ink-muted);
+  --color-border: var(--ds-border);
+  --color-accent: var(--ds-accent);
+  --color-accent-ink: var(--ds-accent-ink);
+  --color-ok: var(--ds-ok);
+  --color-danger: var(--ds-danger);
+  --color-danger-surface: var(--ds-danger-surface);
+  --font-body: var(--ds-font-body);
+  --font-display: var(--ds-font-display);
+  --radius-card: var(--ds-radius-card);
+}
+
+@layer base {
+  body {
+    @apply bg-canvas text-ink font-body antialiased;
+  }
+}
