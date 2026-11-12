@@ -55,3 +55,12 @@ RSpec.describe "Dashboard", :single_user_mode do
     expect(response.body).not_to include("Someone Else's Feed")
   end
 end
+
+RSpec.describe "Dashboard live updates", :single_user_mode do
+  it "subscribes the page to the user's refresh stream and morphs on refresh" do
+    get root_path
+
+    expect(response.body).to include("turbo-cable-stream-source")
+    expect(response.body).to include('<meta name="turbo-refresh-method" content="morph">')
+  end
+end

@@ -177,3 +177,44 @@ RSpec.describe Feed, "polling" do
     end
   end
 end
+
+RSpec.describe Feed, "live dashboard refreshes" do
+  let(:feed) { create(:feed, url: "https://www.githubstatus.com/api/v2/incidents.json", name: "GitHub") }
+  let!(:subscribers) { create_list(:subscription, 2, feed: feed).map(&:user) }
+  let(:body) { file_fixture("statuspage/incidents.json").read }
+
+  let(:refreshes) { [] }
+
+  before do
+    allow(Turbo::StreamsChannel).to receive(:broadcast_refresh_later_to) { |*args| refreshes << args }
+  end
+
+  it "refreshes every subscriber's dashboard when incidents change" do
+    stub_request(:get, feed.url).to_return(status: 200, body: body)
+
+    feed.poll!
+
+    expect(refreshes).to contain_exactly(*subscribers.map { |user| [ user, :dashboard ] })
+  end
+
+  it "does not refresh when nothing changed" do
+    stub_request(:get, feed.url).to_return(status: 200, body: body)
+    feed.poll!
+    refreshes.clear
+
+    feed.poll!
+
+    expect(refreshes).to be_empty
+  end
+
+  it "refreshes when the status page starts failing, but not on every repeated failure" do
+    feed.update!(last_success_at: 1.hour.ago)
+    stub_request(:get, feed.url).to_return(status: 503)
+
+    feed.poll!
+    expect(refreshes.size).to eq(2)
+
+    feed.poll!
+    expect(refreshes.size).to eq(2)
+  end
+end

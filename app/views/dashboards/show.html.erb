@@ -1,4 +1,9 @@
 <% content_for :title, "Dashboard · days-since" %>
+<% content_for :head do %>
+  <%= turbo_refreshes_with method: :morph, scroll: :preserve %>
+<% end %>
+<%= turbo_stream_from Current.user, :dashboard %>
+<div data-controller="auto-refresh" hidden></div>
 
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <h1 class="font-display text-3xl font-bold">Days since…</h1>

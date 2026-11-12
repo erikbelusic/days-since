@@ -40,18 +40,24 @@ class Feed < ApplicationRecord
 
   # Applies a provider fetch: records caching headers, fills in the page name
   # and site URL, and upserts every incident entry by its external id.
+  # Returns true when anything a subscriber would see changed.
   def apply_fetch!(fetch)
     transaction do
       self.etag = fetch.etag
       self.last_modified = fetch.last_modified
       self.name = fetch.name if name.blank? && fetch.name.present?
       self.site_url = fetch.site_url if site_url.blank? && fetch.site_url.present?
+      visible_change = name_changed?
       save!
 
       Array(fetch.entries).each do |entry|
         incident = incidents.find_or_initialize_by(external_id: entry.external_id)
-        incident.update!(entry.to_h.except(:external_id))
+        incident.assign_attributes(entry.to_h.except(:external_id))
+        visible_change = true if incident.changed?
+        incident.save!
       end
+
+      visible_change
     end
   end
 
@@ -59,14 +65,25 @@ class Feed < ApplicationRecord
   # raise: they're stored on the feed and push the next poll out with
   # exponential backoff (5m, 10m, 20m, 40m, then capped at 1h).
   def poll!(now: Time.current)
+    status_before = card_status
     fetch = FeedProviders.for(self).fetch(self)
-    apply_fetch!(fetch) unless fetch.not_modified?
+    incidents_changed = fetch.not_modified? ? false : apply_fetch!(fetch)
     update!(last_polled_at: now, last_success_at: now, consecutive_failures: 0, last_error: nil, next_poll_at: now + POLL_INTERVAL)
+    refresh_subscriber_dashboards if incidents_changed || card_status != status_before
     true
   rescue FeedProviders::FetchError => e
     failures = consecutive_failures + 1
     update!(last_polled_at: now, consecutive_failures: failures, last_error: e.message.truncate(500), next_poll_at: now + backoff_after(failures))
+    refresh_subscriber_dashboards if card_status != status_before
     false
+  end
+
+  # Asks every subscriber's open dashboard to refresh (Turbo morph), so each
+  # user re-renders cards in their own theme, time zone, and thresholds.
+  def refresh_subscriber_dashboards
+    User.where(id: subscriptions.select(:user_id)).find_each do |user|
+      Turbo::StreamsChannel.broadcast_refresh_later_to(user, :dashboard)
+    end
   end
 
   def failing?
@@ -78,6 +95,11 @@ class Feed < ApplicationRecord
   end
 
   private
+    # The feed-level state shown on cards (waiting / failing / ok).
+    def card_status
+      [ last_success_at.nil?, failing?, last_error ]
+    end
+
     def backoff_after(failures)
       [ POLL_INTERVAL * (2**(failures - 1)), MAX_BACKOFF ].min
     end
