@@ -7,6 +7,7 @@ class Feed < ApplicationRecord
   enum :provider, { statuspage: "statuspage", rss: "rss" }, validate: true
   has_many :incidents, dependent: :delete_all
   has_many :subscriptions, dependent: :restrict_with_error
+  has_one_attached :logo
 
   # Feeds nobody subscribes to keep their history but are not polled.
   scope :subscribed, -> { where(id: Subscription.select(:feed_id)) }

@@ -218,3 +218,13 @@ RSpec.describe Feed, "live dashboard refreshes" do
     expect(refreshes.size).to eq(2)
   end
 end
+
+RSpec.describe Feed, "logo storage" do
+  it "stores one logo per feed and removes it with the feed" do
+    feed = create(:feed)
+    feed.logo.attach(io: StringIO.new(file_fixture("logos/icon.png").binread), filename: "logo.png", content_type: "image/png")
+
+    expect(feed.logo).to be_attached
+    expect { feed.destroy }.to change(ActiveStorage::Attachment, :count).by(-1)
+  end
+end
