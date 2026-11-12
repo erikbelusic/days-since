@@ -1,6 +1,8 @@
 module DashboardsHelper
   SEVERITY_SHORT_LABELS = { "none" => "any severity", "minor" => "minor+", "major" => "major+", "critical" => "critical only" }.freeze
 
+  STABILITY_LABELS = { "ongoing" => "Ongoing", "unstable" => "Unstable", "recovering" => "Recovering", "stable" => "Stable", "rock_solid" => "Rock solid" }.freeze
+
   def counter_caption(result)
     case result.state
     when :ongoing then "incident in progress"
@@ -20,5 +22,10 @@ module DashboardsHelper
   def ignored_incidents_note(result)
     where = result.incident ? "since" : "on record"
     "+#{pluralize(result.ignored_count, "lower-severity incident")} #{where}, not counted"
+  end
+
+  # Default wording for a stability level; themes may use their own words.
+  def stability_label(level)
+    STABILITY_LABELS.fetch(level.to_s, level.to_s.humanize)
   end
 end

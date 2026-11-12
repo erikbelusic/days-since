@@ -30,10 +30,36 @@
   --font-display: var(--ds-font-display);
   --font-numeric: var(--ds-font-numeric, var(--ds-font-display));
   --radius-card: var(--ds-radius-card);
+  --color-level: var(--level);
 }
 
 @layer base {
   body {
     @apply bg-canvas text-ink font-body antialiased;
   }
+}
+
+/*
+ * Stability levels: cards and rows carry data-level="ongoing|unstable|
+ * recovering|stable|rock_solid". Each theme supplies --ds-level-* colors;
+ * views use text-level / border-level / bg-level for "this card's level".
+ */
+[data-level="ongoing"] { --level: var(--ds-level-ongoing, var(--ds-danger)); }
+[data-level="unstable"] { --level: var(--ds-level-unstable); }
+[data-level="recovering"] { --level: var(--ds-level-recovering); }
+[data-level="stable"] { --level: var(--ds-level-stable); }
+[data-level="rock_solid"] { --level: var(--ds-level-rock-solid); }
+
+/* Pulsing glow for live incidents; disabled when the OS asks for less motion. */
+@keyframes ds-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--level, var(--ds-danger)) 55%, transparent); }
+  50% { box-shadow: 0 0 0 8px color-mix(in oklab, var(--level, var(--ds-danger)) 0%, transparent); }
+}
+
+.ds-pulse {
+  animation: ds-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-pulse { animation: none; }
 }

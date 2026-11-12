@@ -142,3 +142,47 @@ RSpec.describe "Dashboard layouts", :single_user_mode do
     expect(user.reload).to be_dashboard_layout_cards
   end
 end
+
+RSpec.describe "Dashboard stability levels", :single_user_mode do
+  let(:user) { SingleUserMode.user }
+
+  def subscription_resolved(days_ago, name)
+    create(:subscription, user: user, feed: create(:feed, name: name)).tap do |subscription|
+      create(:incident, feed: subscription.feed, impact: "major", started_at: days_ago.days.ago - 1.hour, resolved_at: days_ago.days.ago)
+    end
+  end
+
+  def node(subscription) = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)}")
+
+  it "labels each card with its level from the user's thresholds" do
+    cards = { "unstable" => subscription_resolved(3, "A"), "recovering" => subscription_resolved(14, "B"),
+              "stable" => subscription_resolved(45, "C"), "rock_solid" => subscription_resolved(120, "D") }
+
+    get root_path
+
+    cards.each do |level, subscription|
+      expect(node(subscription)["data-level"]).to eq(level)
+      expect(node(subscription).at_css("[data-level-label]").text).to eq(DashboardsHelper::STABILITY_LABELS.fetch(level))
+    end
+  end
+
+  it "makes a live incident pulse" do
+    subscription = create(:subscription, user: user)
+    create(:incident, :ongoing, feed: subscription.feed)
+
+    get root_path
+
+    expect(node(subscription)["data-level"]).to eq("ongoing")
+    expect(node(subscription)["class"]).to include("ds-pulse")
+  end
+
+  it "shows levels in the list layout too" do
+    user.update!(dashboard_layout: "list")
+    subscription = subscription_resolved(14, "Slack")
+
+    get root_path
+
+    expect(node(subscription)["data-level"]).to eq("recovering")
+    expect(node(subscription).text).to include("Recovering")
+  end
+end

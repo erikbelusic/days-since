@@ -19,6 +19,11 @@
   --ds-font-body: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --ds-font-display: var(--ds-font-body);
   --ds-radius-card: 0.75rem;
+  --ds-level-ongoing: #dc2626;     /* red-600 */
+  --ds-level-unstable: #c2410c;    /* orange-700 */
+  --ds-level-recovering: #ca8a04;  /* yellow-600 */
+  --ds-level-stable: #16a34a;      /* green-600 */
+  --ds-level-rock-solid: #0f172a;  /* plain ink */
   color-scheme: light;
 }
 
@@ -34,7 +39,12 @@
     --ds-accent-ink: #020617;
     --ds-ok: #34d399;              /* emerald-400 */
     --ds-danger: #f87171;          /* red-400 */
-    --ds-danger-surface: #450a0a;  /* red-950 */
-    color-scheme: dark;
+--ds-danger-surface: #450a0a;  /* red-950 */
+--ds-level-ongoing: #f87171;     /* red-400 */
+--ds-level-unstable: #fb923c;    /* orange-400 */
+--ds-level-recovering: #facc15;  /* yellow-400 */
+--ds-level-stable: #4ade80;      /* green-400 */
+--ds-level-rock-solid: #f1f5f9;  /* plain ink */
+color-scheme: dark;
   }
 }
