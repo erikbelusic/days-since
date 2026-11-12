@@ -41,7 +41,8 @@ Ruby is pinned in `.ruby-version` and managed with mise.
 - **Network I/O goes through Faraday** using the shared connection builder (timeouts, user agent, conditional GET headers). No model or view makes HTTP calls directly.
 - **Enums use string values** (`enum :provider, { statuspage: "statuspage", rss: "rss" }`) so the database stays readable.
 - **Times:** store UTC and compute "days since" in the user's `time_zone`. Use `Time.current` and `Date.current` in the right zone, never `Time.now`.
-- **SQLite migrations: beware table rebuilds.** On SQLite, `rename_column`, `change_column`, `remove_column` and similar changes rebuild the whole table. Rails turns foreign keys off for that, but SQLite ignores the setting inside a migration transaction, so dropping the old table fires `ON DELETE CASCADE` and deletes child rows. Renaming a `users` column once wiped every subscription this way. Prefer additive changes. If a rebuild is unavoidable, add `disable_ddl_transaction!` to the migration and test it on a copy of real data before committing.
+- **No database cascades.** Foreign keys never use `on_delete: :cascade` or `:nullify`. Declare `dependent: :destroy`, `:delete_all` or `:restrict_with_error` on the association instead, so Rails owns every delete and the database only guards integrity. `spec/db/foreign_keys_spec.rb` enforces this.
+- **SQLite migrations rebuild tables.** `rename_column`, `change_column`, `remove_column` and foreign-key changes copy the whole table. With no cascades that is no longer destructive (a cascade once wiped every subscription), but test such migrations on a copy of real data anyway. For renames, prefer SQLite's native `execute "ALTER TABLE t RENAME COLUMN a TO b"`, which doesn't rebuild the table.
 - **Hotwire first.** Use Turbo Frames and Streams for interactivity, and Stimulus only when Turbo can't do the job. Don't add a JavaScript build step, because the app uses Importmaps.
 
 ## Testing (RSpec)

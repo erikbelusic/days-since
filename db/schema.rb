@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_054135) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_060224) do
   create_table "feeds", force: :cascade do |t|
     t.string "url", null: false
     t.string "provider", null: false
@@ -84,8 +84,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_054135) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  add_foreign_key "incidents", "feeds", on_delete: :cascade
+  add_foreign_key "incidents", "feeds"
   add_foreign_key "sessions", "users"
   add_foreign_key "subscriptions", "feeds"
-  add_foreign_key "subscriptions", "users", on_delete: :cascade
+  add_foreign_key "subscriptions", "users"
 end
