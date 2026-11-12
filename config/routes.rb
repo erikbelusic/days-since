@@ -16,5 +16,7 @@ Rails.application.routes.draw do
     resource :position, only: :update, module: :subscriptions
   end
 
+  resource :settings, only: %i[ edit update ]
+
   root "dashboards#show"
 end

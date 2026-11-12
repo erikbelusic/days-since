@@ -1,0 +1,61 @@
+<% content_for :title, "Settings · days-since" %>
+
+<div class="mx-auto max-w-2xl">
+  <h1 class="font-display text-3xl font-bold">Settings</h1>
+
+  <%= form_with model: @user, url: settings_path, method: :patch, class: "mt-6 space-y-8 rounded-card border border-border bg-surface p-6" do |form| %>
+    <% if @user.errors.any? %>
+      <div id="form_errors" role="alert" class="rounded-md border border-danger bg-danger-surface px-4 py-3 text-danger">
+        <% @user.errors.full_messages.each do |message| %>
+          <p><%= message %></p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <fieldset>
+      <legend class="font-semibold">Theme</legend>
+      <div class="mt-3 grid gap-3 sm:grid-cols-2">
+        <% Theme.all.each do |theme| %>
+          <label class="flex cursor-pointer items-start gap-3 rounded-md border border-border p-3 has-[:checked]:border-accent has-[:checked]:bg-surface-muted">
+            <%= form.radio_button :theme, theme.key, class: "mt-1" %>
+            <span>
+              <span class="block font-medium"><%= theme.name %></span>
+              <span class="block text-sm text-ink-muted"><%= theme.description %></span>
+            </span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <div>
+      <%= form.label :time_zone, "Time zone", class: "block font-semibold" %>
+      <p class="text-sm text-ink-muted">Day counts roll over at midnight in this time zone.</p>
+      <%= form.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, class: "mt-2 block w-full rounded-md border border-border bg-surface px-3 py-2" %>
+    </div>
+
+    <div>
+      <%= form.label :default_min_severity, "By default, reset the counter for", class: "block font-semibold" %>
+      <p class="text-sm text-ink-muted">Each status page can override this from its Edit page.</p>
+      <%= form.select :default_min_severity, SubscriptionsHelper::SEVERITY_LABELS.invert, {}, class: "mt-2 block w-full rounded-md border border-border bg-surface px-3 py-2" %>
+    </div>
+
+    <fieldset>
+      <legend class="font-semibold">When a status page has no incidents on record, show</legend>
+      <div class="mt-3 space-y-2">
+        <label class="flex cursor-pointer items-center gap-3">
+          <%= form.radio_button :no_incident_display, "infinity" %>
+          <span><span class="font-medium">∞</span> <span class="text-ink-muted">(no incidents on record)</span></span>
+        </label>
+        <label class="flex cursor-pointer items-center gap-3">
+          <%= form.radio_button :no_incident_display, "since_tracking" %>
+          <span>Days since days-since started tracking it</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="flex items-center gap-4">
+      <%= form.submit "Save settings", class: "cursor-pointer rounded-md bg-accent px-4 py-2.5 font-medium text-accent-ink hover:opacity-90" %>
+      <%= link_to "Cancel", root_path, class: "text-ink-muted hover:underline" %>
+    </div>
+  <% end %>
+</div>
