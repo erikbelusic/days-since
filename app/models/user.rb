@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :feeds, through: :subscriptions
 
   enum :no_incident_display, { infinity: "infinity", since_tracking: "since_tracking" }, prefix: true, validate: true
 

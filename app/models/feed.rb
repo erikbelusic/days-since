@@ -3,11 +3,19 @@
 class Feed < ApplicationRecord
   enum :provider, { statuspage: "statuspage", rss: "rss" }, validate: true
   has_many :incidents, dependent: :delete_all
+  has_many :subscriptions, dependent: :restrict_with_error
+
+  # Feeds nobody subscribes to keep their history but are not polled.
+  scope :subscribed, -> { where(id: Subscription.select(:feed_id)) }
 
   normalizes :url, with: ->(url) { FeedUrl.normalize_or_nil(url) || url.to_s.strip }
 
   validates :url, presence: true, uniqueness: true
   validate :url_must_be_http
+
+  def subscribed?
+    subscriptions.exists?
+  end
 
   def display_name
     name.presence || URI.parse(url).host

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_043149) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_043220) do
   create_table "feeds", force: :cascade do |t|
     t.string "url", null: false
     t.string "provider", null: false
@@ -54,6 +54,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_043149) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "feed_id", null: false
+    t.string "display_name"
+    t.string "min_severity"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feed_id"], name: "index_subscriptions_on_feed_id"
+    t.index ["user_id", "feed_id"], name: "index_subscriptions_on_user_id_and_feed_id", unique: true
+    t.index ["user_id", "position"], name: "index_subscriptions_on_user_id_and_position"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -67,4 +81,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_043149) do
 
   add_foreign_key "incidents", "feeds", on_delete: :cascade
   add_foreign_key "sessions", "users"
+  add_foreign_key "subscriptions", "feeds"
+  add_foreign_key "subscriptions", "users", on_delete: :cascade
 end
