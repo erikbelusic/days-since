@@ -13,6 +13,7 @@ module FeedProviders
   def self.for(feed)
     case feed.provider
     when "statuspage" then Statuspage.new
+    when "rss" then Rss.new
     else raise ArgumentError, "No provider for #{feed.provider.inspect}"
     end
   end

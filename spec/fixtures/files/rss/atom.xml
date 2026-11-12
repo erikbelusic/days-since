@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Heroku Status</title>
+  <link href="https://status.heroku.com/" rel="alternate" type="text/html"/>
+  <link href="https://status.heroku.com/feed" rel="self"/>
+  <id>https://status.heroku.com/</id>
+  <updated>2026-03-07T10:00:00+00:00</updated>
+  <entry>
+    <title>RESOLVED: Increased API latency</title>
+    <link href="https://status.heroku.com/incidents/2901" rel="alternate" type="text/html"/>
+    <id>tag:status.heroku.com,2026:Incident/2901</id>
+    <published>2026-03-07T09:00:00+00:00</published>
+    <updated>2026-03-07T10:00:00+00:00</updated>
+    <summary>API latency was elevated.</summary>
+  </entry>
+  <entry>
+    <title>Router errors</title>
+    <link href="https://status.heroku.com/incidents/2899" rel="alternate" type="text/html"/>
+    <id>tag:status.heroku.com,2026:Incident/2899</id>
+    <updated>2026-03-01T12:30:00+00:00</updated>
+    <summary>Some apps returned H99 errors.</summary>
+  </entry>
+</feed>

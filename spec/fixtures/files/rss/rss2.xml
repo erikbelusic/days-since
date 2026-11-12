@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Slack System Status</title>
+    <link>https://slack-status.com</link>
+    <description>History of Slack System Status</description>
+    <item>
+      <title>Incident: Trouble uploading files</title>
+      <description>Some users had trouble uploading files. We've fixed it.</description>
+      <pubDate>Mon, 09 Mar 2026 07:53:33 -0700</pubDate>
+      <link>
+        https://slack-status.com/2026-03/abc123
+      </link>
+      <guid>
+        https://slack-status.com/2026-03/abc123
+      </guid>
+    </item>
+    <item>
+      <title>Scheduled maintenance: Database upgrade</title>
+      <description>Planned maintenance window.</description>
+      <pubDate>Sun, 08 Mar 2026 02:00:00 +0000</pubDate>
+      <link>https://slack-status.com/2026-03/maint1</link>
+      <guid>https://slack-status.com/2026-03/maint1</guid>
+    </item>
+    <item>
+      <title>Incident: Messages delayed</title>
+      <description>Messages were delayed for some users.</description>
+      <pubDate>Thu, 26 Feb 2026 18:15:00 +0000</pubDate>
+      <link>https://slack-status.com/2026-02/def456</link>
+    </item>
+    <item>
+      <title>Incident without a date</title>
+      <description>Should be ignored because it has no time.</description>
+      <guid>https://slack-status.com/no-date</guid>
+    </item>
+  </channel>
+</rss>

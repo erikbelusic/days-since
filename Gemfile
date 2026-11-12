@@ -81,3 +81,6 @@ end
 # HTTP client for polling status pages [https://lostisland.github.io/faraday]
 gem "faraday"
 gem "faraday-follow_redirects"
+
+# RSS/Atom parsing for non-Statuspage status pages [https://github.com/feedjira/feedjira]
+gem "feedjira"
