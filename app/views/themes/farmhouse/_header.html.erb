@@ -1,16 +1,16 @@
-<header class="fh-header fh-wood text-[#fbfaf7]">
+<header class="fh-header fh-wood">
   <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
-    <%= link_to root_path, class: "font-display text-3xl leading-none tracking-wide drop-shadow-[0_1px_0_rgb(0_0_0/0.4)]" do %>
+    <%= link_to root_path, class: "fh-ink rounded-sm bg-[#fbfaf7]/90 px-3 pt-1.5 pb-1 font-display text-3xl leading-none tracking-wide shadow-sm hover:bg-[#fbfaf7]" do %>
       Days Since
     <% end %>
 
     <% if authenticated? %>
-      <div class="flex flex-wrap items-center gap-4 text-sm [&_select]:border-[#fbfaf7]/60 [&_select]:bg-[#5e5446] [&_select]:text-[#fbfaf7] [&_label]:text-[#fbfaf7]/80">
+      <div class="flex flex-wrap items-center gap-4 rounded-sm bg-[#fbfaf7]/90 px-3 py-1.5 text-sm text-[#1d1a17] shadow-sm [&_select]:border-[#5a4636]/50 [&_select]:bg-[#fbfaf7] [&_select]:text-[#1d1a17] [&_label]:text-[#5a4636]">
         <%= render "shared/theme_picker" %>
-        <span class="hidden text-[#fbfaf7]/75 lg:inline"><%= Current.user.email_address %></span>
-        <%= link_to "Settings", edit_settings_path, class: "hover:underline" %>
+        <span class="hidden text-[#5a4636] lg:inline"><%= Current.user.email_address %></span>
+        <%= link_to "Settings", edit_settings_path, class: "font-semibold hover:underline" %>
         <% unless SingleUserMode.enabled? %>
-          <%= button_to "Sign out", session_path, method: :delete, class: "cursor-pointer rounded border border-[#fbfaf7]/60 px-3 py-1 hover:bg-[#fbfaf7] hover:text-[#5e5446]" %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "cursor-pointer rounded border border-[#5a4636]/50 px-3 py-1 hover:bg-[#5a4636] hover:text-[#fbfaf7]" %>
         <% end %>
       </div>
     <% end %>
