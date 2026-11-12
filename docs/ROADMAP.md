@@ -17,14 +17,6 @@ Ideas to pick up **after the MVP is complete** (after phase H and the final chec
 - Today a card only gets a red outline while an incident is **ongoing**. A card at **0 days** because something was resolved today looks calm, with no outline, even though the service just had an incident.
 - The color thresholds above would cover this: 0 days should always show the most severe color.
 
-### Explain which incident the counter is using
-- *Reported with Huntress:* the card's "Last:" incident (Nov 2, **major**) didn't match the top of the status page (Nov 3, impact **none**). The newer incident was filtered out by the "minor and worse" threshold, and the card gives no hint of that.
-- Ideas:
-  - Label it "Last counted incident (minor+)".
-  - Add a note such as "1 lower-severity incident since".
-  - Add a tooltip showing the active threshold.
-  - Link to the full incident list.
-
 ## Logos
 
 ### Service logos on cards
@@ -35,7 +27,6 @@ Ideas to pick up **after the MVP is complete** (after phase H and the final chec
   3. A third-party logo or favicon API. This is a privacy and dependency tradeoff, and our `HttpClient` currently blocks it by design.
   4. Let users upload or override a logo per subscription (Active Storage).
 - Store the logo on `Feed`, since it's shared, with an optional per-subscription override.
-
 
 ## Carried over from MVP decisions
 

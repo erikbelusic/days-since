@@ -103,3 +103,32 @@ RSpec.describe DaysSinceCounter do
     end
   end
 end
+
+RSpec.describe DaysSinceCounter, "explaining what was counted" do
+  let(:user) { create(:user, default_min_severity: "minor") }
+  let(:feed) { create(:feed) }
+  let(:subscription) { create(:subscription, user: user, feed: feed) }
+
+  def result = described_class.new(subscription.reload, now: Time.utc(2026, 11, 12)).result
+
+  it "reports the threshold and counts newer lower-severity incidents it skipped" do
+    counted = create(:incident, feed: feed, impact: "major", started_at: Time.utc(2026, 11, 2, 19), resolved_at: Time.utc(2026, 11, 2, 20))
+    create(:incident, feed: feed, impact: "none", started_at: Time.utc(2026, 11, 3, 4), resolved_at: Time.utc(2026, 11, 3, 7))
+    create(:incident, feed: feed, impact: "none", started_at: Time.utc(2026, 10, 28), resolved_at: Time.utc(2026, 10, 28, 1))
+
+    expect(result).to have_attributes(incident: counted, min_severity: "minor", ignored_count: 1)
+  end
+
+  it "counts every skipped incident when nothing meets the threshold" do
+    create_list(:incident, 2, feed: feed, impact: "none")
+
+    expect(result).to have_attributes(state: :no_history, ignored_count: 2)
+  end
+
+  it "reports nothing skipped when every incident counts" do
+    subscription.update!(min_severity: "none")
+    create(:incident, feed: feed, impact: "none")
+
+    expect(result.ignored_count).to eq(0)
+  end
+end

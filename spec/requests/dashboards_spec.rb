@@ -84,3 +84,19 @@ RSpec.describe "Dashboard status page links", :single_user_mode do
     expect(Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)} h2 a")).to be_nil
   end
 end
+
+RSpec.describe "Dashboard counted-incident explanation", :single_user_mode do
+  it "labels the counted incident with the threshold and notes skipped lower-severity incidents" do
+    travel_to Time.utc(2026, 11, 12) do
+      subscription = create(:subscription, user: SingleUserMode.user, feed: create(:feed, name: "Huntress"))
+      create(:incident, feed: subscription.feed, title: "SAT Performance Issues", impact: "major", started_at: Time.utc(2026, 11, 2, 19), resolved_at: Time.utc(2026, 11, 2, 20))
+      create(:incident, feed: subscription.feed, title: "Delay in sending escalations", impact: "none", started_at: Time.utc(2026, 11, 3, 4), resolved_at: Time.utc(2026, 11, 3, 7))
+
+      get root_path
+
+      card = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)}").text.squish
+      expect(card).to include("Last counted (minor+): SAT Performance Issues")
+      expect(card).to include("+1 lower-severity incident since, not counted")
+    end
+  end
+end
