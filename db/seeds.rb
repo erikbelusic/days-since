@@ -14,6 +14,7 @@ if Rails.env.development?
       feed = Feed.find_or_create_by!(url: attrs[:url]) { |f| f.assign_attributes(attrs.except(:url)) }
       user.subscriptions.create!(feed: feed)
       PollFeedJob.perform_later(feed)
+      FetchFeedLogoJob.perform_later(feed)
     end
 
     puts "Seeded #{user.email_address} with #{user.subscriptions.count} status pages."

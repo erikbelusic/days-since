@@ -25,6 +25,7 @@ class SubscriptionForm
 
     if @subscription.save
       PollFeedJob.perform_later(feed) if feed.last_polled_at.nil?
+      FetchFeedLogoJob.perform_later(feed) if feed.logo_checked_at.nil?
       true
     else
       @subscription.errors.each { |error| errors.add(:base, error.full_message) }

@@ -14,6 +14,10 @@ shared: &shared
     class: PollDueFeedsJob
     queue: default
     schedule: every 5 minutes
+  refresh_feed_logos:
+    class: RefreshFeedLogosJob
+    queue: default
+    schedule: every day at 4am
 
 development:
   <<: *shared

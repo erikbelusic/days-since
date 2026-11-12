@@ -134,3 +134,12 @@ RSpec.describe "Managing subscriptions", :single_user_mode do
     expect(others.reload.display_name).to be_nil
   end
 end
+
+RSpec.describe "Subscribing fetches a logo", :single_user_mode do
+  it "queues a logo check for a feed that has never had one" do
+    stub_statuspage_site("www.githubstatus.com")
+
+    expect { post subscriptions_path, params: { subscription_form: { url: "www.githubstatus.com" } } }
+      .to have_enqueued_job(FetchFeedLogoJob)
+  end
+end

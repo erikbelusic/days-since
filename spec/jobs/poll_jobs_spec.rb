@@ -39,3 +39,36 @@ RSpec.describe "Feed polling jobs" do
     end
   end
 end
+
+RSpec.describe "Feed logo jobs" do
+  describe RefreshFeedLogosJob do
+    it "queues a logo check for subscribed feeds never checked or checked over a week ago" do
+      now = Time.utc(2026, 3, 10)
+      never = create(:subscription, feed: create(:feed, logo_checked_at: nil)).feed
+      stale = create(:subscription, feed: create(:feed, logo_checked_at: now - 8.days)).feed
+      create(:subscription, feed: create(:feed, logo_checked_at: now - 1.day))
+      create(:feed, logo_checked_at: nil) # nobody subscribes
+
+      expect { described_class.perform_now(now: now) }
+        .to have_enqueued_job(FetchFeedLogoJob).with(never)
+        .and have_enqueued_job(FetchFeedLogoJob).with(stale)
+        .and have_enqueued_job(FetchFeedLogoJob).exactly(2).times
+    end
+
+    it "runs daily" do
+      schedule = ActiveSupport::ConfigurationFile.parse(Rails.root.join("config/recurring.yml"))
+
+      expect(schedule.dig("production", "refresh_feed_logos")).to include("class" => "RefreshFeedLogosJob")
+    end
+  end
+
+  describe FetchFeedLogoJob do
+    it "skips feeds nobody subscribes to" do
+      feed = create(:feed)
+
+      described_class.perform_now(feed)
+
+      expect(feed.reload.logo_checked_at).to be_nil
+    end
+  end
+end
