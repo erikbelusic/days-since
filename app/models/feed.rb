@@ -2,6 +2,7 @@
 # URL so each source is polled once no matter how many subscribers it has.
 class Feed < ApplicationRecord
   enum :provider, { statuspage: "statuspage", rss: "rss" }, validate: true
+  has_many :incidents, dependent: :delete_all
 
   normalizes :url, with: ->(url) { FeedUrl.normalize_or_nil(url) || url.to_s.strip }
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_043113) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_043149) do
   create_table "feeds", force: :cascade do |t|
     t.string "url", null: false
     t.string "provider", null: false
@@ -27,6 +27,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_043113) do
     t.datetime "updated_at", null: false
     t.index ["next_poll_at"], name: "index_feeds_on_next_poll_at"
     t.index ["url"], name: "index_feeds_on_url", unique: true
+  end
+
+  create_table "incidents", force: :cascade do |t|
+    t.integer "feed_id", null: false
+    t.string "external_id", null: false
+    t.string "title", null: false
+    t.string "impact", default: "unknown", null: false
+    t.string "status"
+    t.string "url"
+    t.datetime "started_at", null: false
+    t.datetime "resolved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feed_id", "external_id"], name: "index_incidents_on_feed_id_and_external_id", unique: true
+    t.index ["feed_id", "started_at"], name: "index_incidents_on_feed_id_and_started_at"
+    t.index ["feed_id"], name: "index_incidents_on_feed_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -49,5 +65,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_043113) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "incidents", "feeds", on_delete: :cascade
   add_foreign_key "sessions", "users"
 end
