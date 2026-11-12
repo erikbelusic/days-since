@@ -58,14 +58,14 @@ end
 
 RSpec.describe User, "stability thresholds" do
   it "defaults to 7, 30, and 90 days" do
-    expect(create(:user)).to have_attributes(recovering_after_days: 7, stable_after_days: 30, rock_solid_after_days: 90)
+    expect(create(:user)).to have_attributes(short_streak_after_days: 7, long_streak_after_days: 30, solid_streak_after_days: 90)
   end
 
   it "requires positive whole numbers that increase" do
-    expect(build(:user, recovering_after_days: 0)).not_to be_valid
-    expect(build(:user, stable_after_days: 2.5)).not_to be_valid
-    expect(build(:user, recovering_after_days: 30, stable_after_days: 30)).not_to be_valid
-    expect(build(:user, stable_after_days: 100, rock_solid_after_days: 90)).not_to be_valid
-    expect(build(:user, recovering_after_days: 1, stable_after_days: 2, rock_solid_after_days: 3)).to be_valid
+    expect(build(:user, short_streak_after_days: 0)).not_to be_valid
+    expect(build(:user, long_streak_after_days: 2.5)).not_to be_valid
+    expect(build(:user, short_streak_after_days: 30, long_streak_after_days: 30)).not_to be_valid
+    expect(build(:user, long_streak_after_days: 100, solid_streak_after_days: 90)).not_to be_valid
+    expect(build(:user, short_streak_after_days: 1, long_streak_after_days: 2, solid_streak_after_days: 3)).to be_valid
   end
 end

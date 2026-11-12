@@ -40,15 +40,15 @@
 }
 
 /*
- * Stability levels: cards and rows carry data-level="ongoing|unstable|
- * recovering|stable|rock_solid". Each theme supplies --ds-level-* colors;
+ * Stability levels: cards and rows carry data-level="ongoing|day_one|
+ * short_streak|long_streak|solid_streak". Each theme supplies --ds-level-* colors;
  * views use text-level / border-level / bg-level for "this card's level".
  */
 [data-level="ongoing"] { --level: var(--ds-level-ongoing, var(--ds-danger)); }
-[data-level="unstable"] { --level: var(--ds-level-unstable); }
-[data-level="recovering"] { --level: var(--ds-level-recovering); }
-[data-level="stable"] { --level: var(--ds-level-stable); }
-[data-level="rock_solid"] { --level: var(--ds-level-rock-solid); }
+[data-level="day_one"] { --level: var(--ds-level-day-one); }
+[data-level="short_streak"] { --level: var(--ds-level-short-streak); }
+[data-level="long_streak"] { --level: var(--ds-level-long-streak); }
+[data-level="solid_streak"] { --level: var(--ds-level-solid-streak); }
 
 /* Pulsing glow for live incidents; disabled when the OS asks for less motion. */
 @keyframes ds-pulse {

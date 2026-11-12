@@ -1,7 +1,7 @@
 module DashboardsHelper
   SEVERITY_SHORT_LABELS = { "none" => "any severity", "minor" => "minor+", "major" => "major+", "critical" => "critical only" }.freeze
 
-  STABILITY_LABELS = { "ongoing" => "Ongoing", "unstable" => "Unstable", "recovering" => "Recovering", "stable" => "Stable", "rock_solid" => "Rock solid" }.freeze
+  STABILITY_LABELS = { "ongoing" => "Ongoing", "day_one" => "Back to day one", "short_streak" => "Short streak", "long_streak" => "Long streak", "solid_streak" => "Solid streak" }.freeze
 
   def counter_caption(result)
     case result.state

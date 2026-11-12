@@ -176,10 +176,10 @@ end
 
 RSpec.describe DaysSinceCounter, "stability level" do
   it "includes the stability level in the result" do
-    user = create(:user, recovering_after_days: 7)
+    user = create(:user, short_streak_after_days: 7)
     subscription = create(:subscription, user: user)
     create(:incident, feed: subscription.feed, impact: "major", started_at: 3.days.ago, resolved_at: 3.days.ago)
 
-    expect(described_class.new(subscription).result.level).to eq("unstable")
+    expect(described_class.new(subscription).result.level).to eq("day_one")
   end
 end

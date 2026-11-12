@@ -119,12 +119,12 @@ Every card also gets a **stability level** based on its day count and three per-
 | Level | When |
 |---|---|
 | `ongoing` | A relevant incident is unresolved. This is always the most urgent level. |
-| `unstable` | Fewer than 7 days since the last incident |
-| `recovering` | 7–29 days |
-| `stable` | 30–89 days, or no incidents on record (∞) |
-| `rock_solid` | 90 days or more |
+| `day_one` | Fewer than 7 days since the last incident ("Back to day one") |
+| `short_streak` | 7–29 days |
+| `long_streak` | 30–89 days, or no incidents on record (∞) |
+| `solid_streak` | 90 days or more |
 
-Users set the **thresholds**, not the colors. Each theme decides how every level looks. The default theme fades dark orange → amber → green → plain ink, while Worksite uses safety-sign words (WARNING, CAUTION, SAFE).
+Users set the **thresholds**, not the colors or words. Each theme decides how every level looks and what it is called. The default theme says "Back to day one", "Short streak", "Long streak" and "Solid streak", fading dark orange → amber → green → plain ink. Worksite uses safety-sign words (WARNING, CAUTION, SAFE).
 
 ### Providers and auto-detection
 

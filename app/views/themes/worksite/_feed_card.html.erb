@@ -1,7 +1,7 @@
 <%# locals: (subscription:, result:) %>
-<% sign = { "ongoing" => [ "Danger", "bg-[#c62828] text-white" ], "unstable" => [ "Warning", "bg-[#e8590c] text-[#111]" ],
-            "recovering" => [ "Caution", "bg-[#111] text-[#f5c400]" ], "stable" => [ "Safe", "bg-[#1e7a34] text-white" ],
-            "rock_solid" => [ "★ Safety record ★", "bg-[#1e7a34] text-white" ] }.fetch(result.level) %>
+<% sign = { "ongoing" => [ "Danger", "bg-[#c62828] text-white" ], "day_one" => [ "Warning", "bg-[#e8590c] text-[#111]" ],
+            "short_streak" => [ "Caution", "bg-[#111] text-[#f5c400]" ], "long_streak" => [ "Safe", "bg-[#1e7a34] text-white" ],
+            "solid_streak" => [ "★ Safety record ★", "bg-[#1e7a34] text-white" ] }.fetch(result.level) %>
 <article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
          class="<%= result.ongoing? ? "ws-hazard-red ds-pulse" : "ws-hazard" %> flex flex-col rounded-card p-4 shadow-[0_6px_0_rgb(0_0_0/0.35)]">
   <div class="relative flex flex-1 flex-col bg-surface px-5 pt-4 pb-3 text-ink">

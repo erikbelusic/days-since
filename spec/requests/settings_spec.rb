@@ -54,16 +54,16 @@ RSpec.describe "Settings stability thresholds", :single_user_mode do
   let(:user) { SingleUserMode.user }
 
   it "saves custom thresholds" do
-    patch settings_path, params: { user: { recovering_after_days: 3, stable_after_days: 14, rock_solid_after_days: 60 } }
+    patch settings_path, params: { user: { short_streak_after_days: 3, long_streak_after_days: 14, solid_streak_after_days: 60 } }
 
-    expect(user.reload).to have_attributes(recovering_after_days: 3, stable_after_days: 14, rock_solid_after_days: 60)
+    expect(user.reload).to have_attributes(short_streak_after_days: 3, long_streak_after_days: 14, solid_streak_after_days: 60)
   end
 
   it "rejects thresholds that don't increase" do
-    patch settings_path, params: { user: { recovering_after_days: 30, stable_after_days: 10 } }
+    patch settings_path, params: { user: { short_streak_after_days: 30, long_streak_after_days: 10 } }
 
     expect(response).to have_http_status(:unprocessable_content)
-    expect(response.body).to include("Stability thresholds must increase")
-    expect(user.reload.recovering_after_days).to eq(7)
+    expect(response.body).to include("Streak thresholds must increase")
+    expect(user.reload.short_streak_after_days).to eq(7)
   end
 end

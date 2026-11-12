@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_054135) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_055142) do
   create_table "feeds", force: :cascade do |t|
     t.string "url", null: false
     t.string "provider", null: false
@@ -78,9 +78,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_054135) do
     t.string "no_incident_display", default: "infinity", null: false
     t.string "theme", default: "default", null: false
     t.string "dashboard_layout", default: "cards", null: false
-    t.integer "recovering_after_days", default: 7, null: false
-    t.integer "stable_after_days", default: 30, null: false
-    t.integer "rock_solid_after_days", default: 90, null: false
+    t.integer "short_streak_after_days", default: 7, null: false
+    t.integer "long_streak_after_days", default: 30, null: false
+    t.integer "solid_streak_after_days", default: 90, null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 

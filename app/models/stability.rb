@@ -1,23 +1,24 @@
-# Names how stable a service looks, from the counter result and the user's
-# day thresholds. Themes decide how each level looks (see CLAUDE.md).
+# Names how long a service has stayed incident-free, from the counter result
+# and the user's day thresholds. Themes decide how each level looks and what
+# it's called (see CLAUDE.md); the default wording is in parentheses.
 #
-#   ongoing     an incident is happening right now (always most urgent)
-#   unstable    fewer than recovering_after_days since the last incident
-#   recovering  fewer than stable_after_days
-#   stable      fewer than rock_solid_after_days, or no incidents on record
-#   rock_solid  rock_solid_after_days or more
+#   ongoing       an incident is happening right now; always most urgent ("Ongoing")
+#   day_one       fewer than short_streak_after_days since the last incident ("Back to day one")
+#   short_streak  fewer than long_streak_after_days ("Short streak")
+#   long_streak   fewer than solid_streak_after_days, or no incidents on record ("Long streak")
+#   solid_streak  solid_streak_after_days or more ("Solid streak")
 module Stability
-  LEVELS = %w[ ongoing unstable recovering stable rock_solid ].freeze
+  LEVELS = %w[ ongoing day_one short_streak long_streak solid_streak ].freeze
 
   def self.level(result, user)
     return "ongoing" if result.ongoing?
-    return "stable" if result.infinite?
+    return "long_streak" if result.infinite?
 
     days = result.days
-    if days < user.recovering_after_days then "unstable"
-    elsif days < user.stable_after_days then "recovering"
-    elsif days < user.rock_solid_after_days then "stable"
-    else "rock_solid"
+    if days < user.short_streak_after_days then "day_one"
+    elsif days < user.long_streak_after_days then "short_streak"
+    elsif days < user.solid_streak_after_days then "long_streak"
+    else "solid_streak"
     end
   end
 end

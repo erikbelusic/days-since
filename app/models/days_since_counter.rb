@@ -9,8 +9,8 @@ class DaysSinceCounter
   # ignored_count: newer incidents skipped for being below that threshold
   # activity:      relevant incidents active on each of the last
   #                ACTIVITY_DAYS days in the user's time zone, oldest first
-  # level:         Stability level name (ongoing, unstable, recovering,
-  #                stable, rock_solid) from the user's thresholds
+  # level:         Stability level name (ongoing, day_one, short_streak,
+  #                long_streak, solid_streak) from the user's thresholds
   Result = Data.define(:state, :days, :incident, :min_severity, :ignored_count, :activity, :level) do
     def ongoing? = state == :ongoing
     def no_history? = state == :no_history

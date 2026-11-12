@@ -155,8 +155,8 @@ RSpec.describe "Dashboard stability levels", :single_user_mode do
   def node(subscription) = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)}")
 
   it "labels each card with its level from the user's thresholds" do
-    cards = { "unstable" => subscription_resolved(3, "A"), "recovering" => subscription_resolved(14, "B"),
-              "stable" => subscription_resolved(45, "C"), "rock_solid" => subscription_resolved(120, "D") }
+    cards = { "day_one" => subscription_resolved(3, "A"), "short_streak" => subscription_resolved(14, "B"),
+              "long_streak" => subscription_resolved(45, "C"), "solid_streak" => subscription_resolved(120, "D") }
 
     get root_path
 
@@ -182,8 +182,8 @@ RSpec.describe "Dashboard stability levels", :single_user_mode do
 
     get root_path
 
-    expect(node(subscription)["data-level"]).to eq("recovering")
-    expect(node(subscription).text).to include("Recovering")
+    expect(node(subscription)["data-level"]).to eq("short_streak")
+    expect(node(subscription).text).to include("Short streak")
   end
 end
 
