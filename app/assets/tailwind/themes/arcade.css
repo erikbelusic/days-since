@@ -1,0 +1,50 @@
+/*
+ * Arcade: a retro 8-bit cabinet. Dark neon screen, CRT scanlines, pixel font,
+ * and the streak shown as a score with pixel-heart lives. Single (dark) mode.
+ * Tokens are scoped to <body data-theme="arcade">. Generic pixel art only.
+ */
+[data-theme="arcade"] {
+  --ds-canvas: #0b0a1f;
+  --ds-surface: #15133a;
+  --ds-surface-muted: #221f55;
+  --ds-ink: #f2f0ff;
+  --ds-ink-muted: #9d97d6;
+  --ds-border: #3b3685;
+  --ds-accent: #ff2bd6;          /* neon pink */
+  --ds-accent-ink: #0b0a1f;
+  --ds-ok: #39ff14;
+  --ds-danger: #ff3355;
+  --ds-danger-surface: #3a0d22;
+  --ds-font-body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ds-font-display: "Press Start 2P", ui-monospace, monospace;
+  --ds-radius-card: 0;
+  --ds-level-ongoing: #ff3355;       /* game over red */
+  --ds-level-day-one: #ff9f1c;       /* press start orange */
+  --ds-level-short-streak: #ffe600;  /* level-up yellow */
+  --ds-level-long-streak: #39ff14;   /* combo green */
+  --ds-level-solid-streak: #00e5ff;  /* high-score cyan */
+  color-scheme: dark;
+
+  /* CRT scanlines over the whole screen. */
+  &:is(body)::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+    background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.22) 0 1px, transparent 1px 3px);
+  }
+
+  .ar-glow { text-shadow: 0 0 6px var(--level, var(--ds-accent)), 0 0 18px var(--level, var(--ds-accent)); }
+  .ar-frame { box-shadow: 0 0 0 2px var(--level), 0 0 18px -2px var(--level), inset 0 0 24px -8px var(--level); }
+  .ar-pixelated { image-rendering: pixelated; }
+  .ar-blink { animation: ar-blink 1s steps(1) infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ar-blink { animation: none; }
+  }
+}
+
+@keyframes ar-blink {
+  50% { opacity: 0; }
+}

@@ -1,0 +1,49 @@
+<%# locals: (subscription:, result:) %>
+<% lives = { "ongoing" => 0, "day_one" => 1, "short_streak" => 2, "long_streak" => 3, "solid_streak" => 3 }.fetch(result.level) %>
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="ar-frame flex flex-col bg-surface p-4">
+  <header class="flex items-center gap-2">
+    <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <%= service_logo(subscription, css_class: "h-7 w-7 border-2 border-level", image_class: "ar-pixelated bg-white p-0.5", monogram_class: "bg-surface-muted font-display text-[0.6rem] text-level") %>
+    <h2 class="min-w-0 flex-1 truncate font-display text-[0.7rem] uppercase leading-tight">
+      <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+            class: "hover:text-accent", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+    </h2>
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "font-display text-[0.5rem] uppercase text-ink-muted hover:text-accent", aria: { label: "Edit #{subscription.name}" } %>
+  </header>
+
+  <div class="mt-5 text-center">
+    <p class="font-display text-[0.6rem] text-ink-muted">SCORE</p>
+    <p class="ar-glow mt-2 font-display text-3xl text-level tabular-nums" data-days>
+      <%= result.infinite? ? "∞" : result.days.to_s.rjust(6, "0") %>
+    </p>
+    <p class="mt-2 font-display text-[0.5rem] text-ink-muted">
+      <%= result.no_history? && !result.infinite? ? "DAYS SINCE INSERT COIN" : "DAYS WITHOUT AN INCIDENT" %>
+    </p>
+  </div>
+
+  <div class="mt-5 flex items-center justify-between">
+    <span class="flex gap-1.5 text-level" aria-label="<%= lives %> of 3 lives">
+      <% 3.times do |i| %><%= render "themes/arcade/pixel", sprite: i < lives ? "heart" : "empty", css_class: "h-4 w-5" %><% end %>
+      <% if result.level == "solid_streak" %><span class="ml-1 text-[#ffe600]"><%= render "themes/arcade/pixel", sprite: "star", css_class: "h-4 w-5" %></span><% end %>
+    </span>
+    <span class="<%= "ar-blink" if result.ongoing? %> ar-glow font-display text-[0.65rem] uppercase text-level" data-level-label><%= stability_label(result.level) %></span>
+  </div>
+
+  <footer class="mt-4 space-y-1 border-t-2 border-dashed border-border pt-3 font-body text-xs text-ink-muted">
+    <% if result.incident %>
+      <p class="truncate">
+        <span class="text-accent"><%= result.ongoing? ? "BOSS:" : "LAST BOSS:" %></span>
+        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent", target: "_blank", rel: "noopener" %>
+      </p>
+    <% end %>
+    <% if result.ignored_count.positive? %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>"><%= ignored_incidents_note(result) %></p>
+    <% end %>
+    <% if subscription.feed.failing? %>
+      <p class="truncate text-danger" title="<%= subscription.feed.last_error %>">CONNECTION LOST: <%= subscription.feed.last_error %></p>
+    <% elsif subscription.feed.last_success_at.nil? %>
+      <p class="ar-blink">INSERT COIN…</p>
+    <% end %>
+  </footer>
+</article>

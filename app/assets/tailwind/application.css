@@ -10,6 +10,7 @@
 @import "./themes/datadog.css";
 @import "./themes/garden.css";
 @import "./themes/swiss.css";
+@import "./themes/arcade.css";
 
 /*
  * Semantic tokens: views use these utilities (bg-surface, text-ink,

@@ -1,0 +1,14 @@
+<%# Generic 7x6 pixel sprites: heart (filled or empty) and star. %>
+<%# locals: (sprite:, css_class: "h-4 w-4") %>
+<% rows = {
+     "heart" => %w[.XX.XX. XXXXXXX XXXXXXX .XXXXX. ..XXX.. ...X...],
+     "empty" => %w[.XX.XX. X..X..X X.....X .X...X. ..X.X.. ...X...],
+     "star" => %w[...X... ..XXX.. XXXXXXX .XXXXX. .XX.XX. X.....X]
+   }.fetch(sprite) %>
+<svg viewBox="0 0 7 6" class="<%= css_class %>" shape-rendering="crispEdges" fill="currentColor" aria-hidden="true">
+  <% rows.each_with_index do |row, y| %>
+    <% row.chars.each_with_index do |cell, x| %>
+      <% if cell == "X" %><rect x="<%= x %>" y="<%= y %>" width="1" height="1"/><% end %>
+    <% end %>
+  <% end %>
+</svg>
