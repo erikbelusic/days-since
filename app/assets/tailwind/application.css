@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import "./fonts.css";
+
 /* Theme token values. Add one import per theme (see CLAUDE.md). */
 @import "./themes/default.css";
 

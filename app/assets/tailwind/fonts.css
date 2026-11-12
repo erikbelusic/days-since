@@ -1,0 +1,20 @@
+/*
+ * Self-hosted fonts (SIL Open Font License; license files sit next to each
+ * font in app/assets/fonts). Absolute url()s are resolved and digested by
+ * Propshaft relative to the asset load path.
+ */
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("/worksite/BebasNeue-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Oswald";
+  src: url("/worksite/Oswald-Variable.ttf") format("truetype");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
