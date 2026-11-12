@@ -22,3 +22,25 @@ RSpec.describe Theme do
     end
   end
 end
+
+RSpec.describe Theme, "level labels" do
+  it "names every stability level, falling back to the default words" do
+    Theme.all.each do |theme|
+      Stability::LEVELS.each do |level|
+        expect(theme.level_label(level)).to be_present
+      end
+    end
+  end
+
+  it "lets a theme use its own words" do
+    expect(Theme.find("worksite").level_label("day_one")).to eq("Warning")
+    expect(Theme.find("farmhouse").level_label("solid_streak")).to eq("Solid ground")
+    expect(Theme.default.level_label("short_streak")).to eq("Short streak")
+  end
+
+  it "only labels known levels" do
+    Theme.all.each do |theme|
+      expect(theme.level_labels.keys - Stability::LEVELS).to be_empty
+    end
+  end
+end

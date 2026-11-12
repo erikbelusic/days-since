@@ -162,7 +162,7 @@ RSpec.describe "Dashboard stability levels", :single_user_mode do
 
     cards.each do |level, subscription|
       expect(node(subscription)["data-level"]).to eq(level)
-      expect(node(subscription).at_css("[data-level-label]").text).to eq(DashboardsHelper::STABILITY_LABELS.fetch(level))
+      expect(node(subscription).at_css("[data-level-label]").text).to eq(Theme::DEFAULT_LEVEL_LABELS.fetch(level))
     end
   end
 
@@ -211,5 +211,19 @@ RSpec.describe "Dashboard live incident callouts", :single_user_mode do
 
     expect(page.at_css("#live_incidents")).to be_nil
     expect(page.at_css("title").text).to eq("Dashboard · days-since")
+  end
+end
+
+RSpec.describe "Dashboard level words follow the theme", :single_user_mode do
+  it "uses the theme's words in the list layout too" do
+    user = SingleUserMode.user
+    user.update!(theme: "worksite", dashboard_layout: "list")
+    subscription = create(:subscription, user: user)
+    create(:incident, feed: subscription.feed, impact: "major", started_at: 3.days.ago - 1.hour, resolved_at: 3.days.ago)
+
+    get root_path
+
+    row = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)}")
+    expect(row.at_css("[data-level-label]").text).to eq("Warning")
   end
 end
