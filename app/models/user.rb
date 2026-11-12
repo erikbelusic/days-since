@@ -13,6 +13,9 @@ class User < ApplicationRecord
   validates :default_min_severity, inclusion: { in: Severity::LEVELS }
   validates :theme, inclusion: { in: ->(_) { Theme.keys } }
   validate :time_zone_must_exist
+  validates :recovering_after_days, :stable_after_days, :rock_solid_after_days,
+            numericality: { only_integer: true, greater_than: 0, less_than: 10_000 }
+  validate :stability_thresholds_must_increase
 
   # Accounts are created by an admin (there is no public sign-up). Returns the
   # new user and the password that was set, generating one when none is given.
@@ -27,6 +30,13 @@ class User < ApplicationRecord
   end
 
   private
+    def stability_thresholds_must_increase
+      return unless recovering_after_days.is_a?(Integer) && stable_after_days.is_a?(Integer) && rock_solid_after_days.is_a?(Integer)
+      return if recovering_after_days < stable_after_days && stable_after_days < rock_solid_after_days
+
+      errors.add(:base, "Stability thresholds must increase: recovering < stable < rock solid")
+    end
+
     def time_zone_must_exist
       errors.add(:time_zone, "is not a recognized time zone") unless ActiveSupport::TimeZone[time_zone.to_s]
     end

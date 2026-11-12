@@ -55,3 +55,17 @@ RSpec.describe User, "theme" do
     expect(build(:user, theme: "not-a-theme")).not_to be_valid
   end
 end
+
+RSpec.describe User, "stability thresholds" do
+  it "defaults to 7, 30, and 90 days" do
+    expect(create(:user)).to have_attributes(recovering_after_days: 7, stable_after_days: 30, rock_solid_after_days: 90)
+  end
+
+  it "requires positive whole numbers that increase" do
+    expect(build(:user, recovering_after_days: 0)).not_to be_valid
+    expect(build(:user, stable_after_days: 2.5)).not_to be_valid
+    expect(build(:user, recovering_after_days: 30, stable_after_days: 30)).not_to be_valid
+    expect(build(:user, stable_after_days: 100, rock_solid_after_days: 90)).not_to be_valid
+    expect(build(:user, recovering_after_days: 1, stable_after_days: 2, rock_solid_after_days: 3)).to be_valid
+  end
+end

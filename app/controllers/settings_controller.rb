@@ -18,6 +18,7 @@ class SettingsController < ApplicationController
     end
 
     def settings_params
-      params.expect(user: [ :time_zone, :default_min_severity, :no_incident_display ])
+      params.expect(user: [ :time_zone, :default_min_severity, :no_incident_display,
+                           :recovering_after_days, :stable_after_days, :rock_solid_after_days ])
     end
 end

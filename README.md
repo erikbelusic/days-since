@@ -112,6 +112,20 @@ For a given subscription:
 4. Otherwise, the count is the number of **calendar days in the user's time zone** from the last relevant incident's `resolved_at` until today.
 5. If there are **no relevant incidents on record**, the card shows either **`∞ No incidents on record`** (default) or the number of days since we started tracking the feed. The user's `no_incident_display` setting picks which.
 
+#### Stability levels
+
+Every card also gets a **stability level** based on its day count and three per-user thresholds in Settings (defaults: 7, 30 and 90 days):
+
+| Level | When |
+|---|---|
+| `ongoing` | A relevant incident is unresolved. This is always the most urgent level. |
+| `unstable` | Fewer than 7 days since the last incident |
+| `recovering` | 7–29 days |
+| `stable` | 30–89 days, or no incidents on record (∞) |
+| `rock_solid` | 90 days or more |
+
+Users set the **thresholds**, not the colors. Each theme decides how every level looks. The default theme fades dark orange → amber → green → plain ink, while Worksite uses safety-sign words (WARNING, CAUTION, SAFE).
+
 ### Providers and auto-detection
 
 Detection runs **synchronously when the subscription form is submitted**, so errors show up right away:
