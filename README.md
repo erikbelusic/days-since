@@ -110,10 +110,12 @@ For a given subscription:
 
 Detection runs **synchronously when the subscription form is submitted**, so errors show up right away:
 
-1. Probe `<url>/api/v2/summary.json`. If it responds, the provider is **Statuspage**.
-2. Otherwise, fetch the page and look for an RSS/Atom `<link rel="alternate">`. If one is found, the provider is **RSS**.
-3. Otherwise, try to parse the URL itself as an RSS/Atom feed.
-4. If none of these work, show a validation error.
+1. Load the URL, following redirects (for example `githubstatus.com` redirects to `www.githubstatus.com`).
+2. Probe `<root>/api/v2/summary.json`. If it responds, the provider is **Statuspage**, polled at `<root>/api/v2/incidents.json`. Statuspage wins even when the page also advertises a feed.
+3. Otherwise, if the URL is itself an RSS/Atom feed, the provider is **RSS**.
+4. Otherwise, look for an RSS/Atom `<link rel="alternate">` in the page.
+5. Otherwise, try a few common feed paths (`/feed`, `/feed/rss`, `/history.atom`, …). Slack and Heroku publish feeds without advertising them.
+6. If none of these work, show a validation error.
 
 The user can **manually override** the detected provider.
 

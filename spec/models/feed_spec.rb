@@ -72,3 +72,41 @@ RSpec.describe Feed, "#apply_fetch!" do
     expect(feed.reload.name).to eq("My Git Host")
   end
 end
+
+RSpec.describe Feed, ".resolve!" do
+  let(:detector) { instance_double(FeedProviders::Detector) }
+  let(:result) { FeedProviders::Detector::Result.new(provider: "statuspage", url: "https://www.githubstatus.com/api/v2/incidents.json", name: "GitHub") }
+
+  it "creates a feed from the detected provider and canonical URL" do
+    allow(detector).to receive(:detect).with("githubstatus.com", provider: nil).and_return(result)
+
+    feed = Feed.resolve!("githubstatus.com", detector: detector)
+
+    expect(feed).to have_attributes(provider: "statuspage", url: result.url, name: "GitHub")
+  end
+
+  it "reuses one feed for different inputs that resolve to the same canonical URL" do
+    allow(detector).to receive(:detect).and_return(result)
+
+    first = Feed.resolve!("githubstatus.com", detector: detector)
+    second = Feed.resolve!("https://www.githubstatus.com/", detector: detector)
+
+    expect(second).to eq(first)
+    expect(Feed.count).to eq(1)
+  end
+
+  it "skips detection when the URL already matches a feed" do
+    existing = create(:feed, url: "https://www.githubstatus.com/api/v2/incidents.json")
+    allow(detector).to receive(:detect)
+
+    expect(Feed.resolve!("www.githubstatus.com/api/v2/incidents.json/", detector: detector)).to eq(existing)
+    expect(detector).not_to have_received(:detect)
+  end
+
+  it "passes a manual provider override to detection" do
+    allow(detector).to receive(:detect).with("githubstatus.com", provider: "rss")
+      .and_return(FeedProviders::Detector::Result.new(provider: "rss", url: "https://www.githubstatus.com/history.atom", name: "GitHub"))
+
+    expect(Feed.resolve!("githubstatus.com", provider: "rss", detector: detector)).to have_attributes(provider: "rss")
+  end
+end

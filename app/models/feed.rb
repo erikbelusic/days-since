@@ -13,6 +13,23 @@ class Feed < ApplicationRecord
   validates :url, presence: true, uniqueness: true
   validate :url_must_be_http
 
+  # Finds or creates the shared Feed for a user-entered URL. A URL that already
+  # matches a feed skips detection; otherwise the detector picks the provider
+  # and canonical URL, so equivalent inputs land on the same Feed.
+  def self.resolve!(input, provider: nil, detector: FeedProviders::Detector.new)
+    if provider.blank? && (existing = find_by(url: FeedUrl.normalize_or_nil(input)))
+      return existing
+    end
+
+    result = detector.detect(input, provider: provider)
+    find_or_create_by!(url: result.url) do |feed|
+      feed.provider = result.provider
+      feed.name = result.name
+    end
+  rescue ActiveRecord::RecordNotUnique
+    find_by!(url: result.url)
+  end
+
   def subscribed?
     subscriptions.exists?
   end
