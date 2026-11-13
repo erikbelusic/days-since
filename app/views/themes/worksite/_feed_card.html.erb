@@ -28,25 +28,28 @@
       <p class="mt-3 flex items-center justify-center gap-2 bg-danger px-2 py-1 font-display text-2xl leading-none tracking-wider text-white">
         <%= render "themes/worksite/warning_sign", css_class: "h-6 w-6" %> Incident in progress
       </p>
+    <% else %>
+      <p class="mt-3 text-center font-display text-3xl leading-none tracking-wide">
+        <% if result.waiting? %>Awaiting first inspection
+        <% elsif result.no_history? && result.infinite? %>No incidents on record
+        <% elsif result.no_history? %>Days since tracking started
+        <% else %>Days since last incident<% end %>
+      </p>
     <% end %>
 
-    <p class="mt-3 text-center font-display text-4xl leading-[0.9] tracking-wide">
-      <% if result.waiting? %>
-        <span class="block">Awaiting first</span> <span class="block">inspection</span>
-      <% elsif result.no_history? && result.infinite? %>
-        <span class="block">No incidents</span> <span class="block">on record</span>
-      <% elsif result.no_history? %>
-        <span class="block">Days since</span> <span class="block">tracking started</span>
-      <% else %>
-        <span class="block">Days since</span> <span class="block">last incident</span>
-      <% end %>
-    </p>
+    <%# The inspection log: one tag per day for the last 28 days. %>
+    <div class="mt-4">
+      <%= render "themes/default/day_strip", result: result, css_class: "h-6 gap-[3px]", day_class: "ws-tag" %>
+      <div class="mt-1 flex justify-between text-xs uppercase tracking-wide text-ink-muted"><span>28 days ago</span><span>Today</span></div>
+    </div>
 
-    <footer class="mt-auto space-y-0.5 pt-3 text-xs uppercase tracking-wide text-ink-muted">
+    <footer class="mt-auto space-y-0.5 pt-3 text-sm uppercase tracking-wide text-ink-muted">
       <% if result.incident %>
-        <p class="truncate">
-          <%= result.ongoing? ? "Current:" : "Last:" %>
-          <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:underline", target: "_blank", rel: "noopener" %>
+        <p class="flex items-baseline gap-3 border-t-2 border-[#111] pt-2">
+          <span class="min-w-0 flex-1 truncate">
+            <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:underline", target: "_blank", rel: "noopener" %>
+          </span>
+          <span class="shrink-0 tabular-nums"><%= result.ongoing? ? "Now" : l(result.incident.started_at.in_time_zone(Current.user.zone).to_date, format: "%b %-d") %></span>
         </p>
       <% end %>
       <% if result.ignored_count.positive? %>

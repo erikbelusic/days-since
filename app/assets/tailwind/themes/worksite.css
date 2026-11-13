@@ -23,6 +23,12 @@
   --ds-level-short-streak: #6b5200;  /* CAUTION gold, readable on safety yellow */
   --ds-level-long-streak: #1e7a34;   /* SAFE green */
   --ds-level-solid-streak: #111111;  /* black */
+  --ds-day-untracked: rgb(0 0 0 / 0.12);
+  --ds-day-clear: #ffffff;
+  --ds-day-minor: #f08c00;
+  --ds-day-unknown: #a0522d;
+  --ds-day-major: #c62828;
+  --ds-day-critical: #111111;
   color-scheme: light;
 
   --ws-stripe-yellow: #f5c400;
@@ -66,6 +72,10 @@
     border: 4px solid var(--ws-stripe-black);
     box-shadow: inset 0 2px 0 rgb(0 0 0 / 0.08);
   }
+
+  /* An inspection tag: outlined in black; untracked days are left blank. */
+  .ws-tag { border: 1.5px solid #111; border-radius: 2px; }
+  .ws-tag[data-day="untracked"] { border-style: dashed; border-color: rgb(0 0 0 / 0.35); }
 
   .ws-bolt {
     background: radial-gradient(circle at 35% 35%, #d9d9d9, #6b6b6b 70%);
