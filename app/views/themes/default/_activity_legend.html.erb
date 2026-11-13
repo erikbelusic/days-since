@@ -5,6 +5,6 @@
 <ul class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted" aria-label="Day colors in the last 28 days" data-activity-legend>
   <% { "untracked" => "Not tracked yet", "clear" => "No incidents", "minor" => "Minor", ("unknown" if unknown) => "Severity unknown",
        "major" => "Major", "critical" => "Critical" }.except(nil).each do |day, label| %>
-    <li class="flex items-center gap-1.5"><span class="ds-day inline-block h-3.5 w-1.5 rounded-full" data-day="<%= day %>" aria-hidden="true"></span><%= label %></li>
+    <li class="flex items-center gap-1.5"><span class="ds-day inline-block h-3.5 w-1.5 rounded-full ring-1 ring-black/15" data-day="<%= day %>" aria-hidden="true"></span><%= label %></li>
   <% end %>
 </ul>

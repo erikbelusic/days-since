@@ -24,6 +24,12 @@
   --ds-level-short-streak: #9a7412;  /* mustard */
   --ds-level-long-streak: #4e6a3a;   /* sage */
   --ds-level-solid-streak: #2b2724;  /* charcoal */
+  --ds-day-untracked: #b9ae9c;       /* bare weathered wood */
+  --ds-day-clear: #f4efe4;           /* whitewashed */
+  --ds-day-minor: #d9a21b;           /* mustard */
+  --ds-day-unknown: #b4531f;         /* rust */
+  --ds-day-major: #a3322b;           /* barn red */
+  --ds-day-critical: #2b2724;        /* tar */
   color-scheme: light;
 
   --fh-numeral-font: "Abril Fatface", "Bodoni 72", Didot, Georgia, serif;
@@ -95,4 +101,12 @@
   .fh-header {
     background-color: var(--fh-wood-dark);
   }
+}
+[data-theme="farmhouse"] {
+  /* A fence picket: pointed top, painted the day's color. */
+  .fh-picket {
+    clip-path: polygon(0 22%, 50% 0, 100% 22%, 100% 100%, 0 100%);
+    box-shadow: inset -1px 0 0 rgb(0 0 0 / 0.18);
+  }
+  .fh-rail { background: #4a4036; box-shadow: 0 1px 0 rgb(255 255 255 / 0.25); }
 }
