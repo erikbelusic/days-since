@@ -171,7 +171,7 @@ See [`CLAUDE.md`](CLAUDE.md) for the step-by-step guide to adding a theme.
 
 ## Roadmap
 
-Post-MVP ideas are tracked in [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Current status, what to build next, and post-MVP ideas live in [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Contributing
 
