@@ -5,9 +5,14 @@
 <%= turbo_stream_from Current.user, :dashboard %>
 <div data-controller="auto-refresh" hidden></div>
 
+<%# The header already carries the name, so the heading is for screen readers only. %>
+<h1 class="sr-only">Dashboard</h1>
+
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-  <h1 class="font-display text-3xl font-bold">Days since…</h1>
-  <div class="flex flex-wrap items-center gap-3">
+  <% if @cards.any? && !Current.user.dashboard_layout_list? && (legend = own_themed_partial("activity_legend")) %>
+    <%= render legend, results: @cards.map(&:last) %>
+  <% end %>
+  <div class="ml-auto flex flex-wrap items-center gap-3">
     <div class="flex overflow-hidden rounded-md border border-border text-sm" role="group" aria-label="Dashboard layout">
       <% { "cards" => "Cards", "list" => "List" }.each do |layout, label| %>
         <%= button_to label, dashboard_layout_path, method: :patch, params: { layout: layout },
@@ -18,10 +23,6 @@
     <%= link_to "Add status page", new_subscription_path, class: "rounded-md bg-accent px-4 py-2 font-medium text-accent-ink hover:opacity-90" %>
   </div>
 </div>
-
-<% if @cards.any? && !Current.user.dashboard_layout_list? && (legend = own_themed_partial("activity_legend")) %>
-  <%= render legend, results: @cards.map(&:last) %>
-<% end %>
 
 <% if @live.any? %>
   <%= render themed_partial("live_banner"), subscriptions: @live %>
