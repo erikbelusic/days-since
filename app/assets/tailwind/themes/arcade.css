@@ -23,6 +23,12 @@
   --ds-level-short-streak: #ffe600;  /* level-up yellow */
   --ds-level-long-streak: #39ff14;   /* combo green */
   --ds-level-solid-streak: #00e5ff;  /* high-score cyan */
+  --ds-day-untracked: #1c1a45;
+  --ds-day-clear: #2c4f8a;
+  --ds-day-minor: #ffe600;
+  --ds-day-unknown: #ff9f1c;
+  --ds-day-major: #ff3355;
+  --ds-day-critical: #ff2bd6;
   color-scheme: dark;
 
   /* CRT scanlines over the whole screen. */
@@ -38,6 +44,9 @@
   .ar-glow { text-shadow: 0 0 6px var(--level, var(--ds-accent)), 0 0 18px var(--level, var(--ds-accent)); }
   .ar-frame { box-shadow: 0 0 0 2px var(--level), 0 0 18px -2px var(--level), inset 0 0 24px -8px var(--level); }
   .ar-pixelated { image-rendering: pixelated; }
+  /* A stage-map block: square, with a hard pixel highlight; hit days glow. */
+  .ar-block { box-shadow: inset 2px 2px 0 rgb(255 255 255 / 0.18), inset -2px -2px 0 rgb(0 0 0 / 0.3); }
+  .ar-block:not([data-day="clear"]):not([data-day="untracked"]) { filter: drop-shadow(0 0 3px var(--ds-day-major)); }
   .ar-blink { animation: ar-blink 1s steps(1) infinite; }
 
   @media (prefers-reduced-motion: reduce) {

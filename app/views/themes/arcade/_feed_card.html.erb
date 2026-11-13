@@ -14,7 +14,7 @@
 
   <div class="mt-5 text-center">
     <p class="font-display text-[0.6rem] text-ink-muted">SCORE</p>
-    <p class="ar-glow mt-2 font-display text-3xl text-level tabular-nums" data-days>
+    <p class="ar-glow mt-2 font-display <%= result.infinite? ? "text-6xl leading-none" : "text-3xl" %> text-level tabular-nums" data-days>
       <%= result.waiting? ? "------" : result.infinite? ? "∞" : result.days.to_s.rjust(6, "0") %>
     </p>
     <p class="mt-2 font-display text-[0.5rem] text-ink-muted">
@@ -30,11 +30,20 @@
     <span class="<%= "ar-blink" if result.ongoing? %> ar-glow font-display text-[0.65rem] uppercase text-level" data-level-label><%= stability_label(result.level) %></span>
   </div>
 
+  <%# Stage map: one pixel block per day for the last 28 days. %>
+  <div class="mt-4">
+    <%= render "themes/default/day_strip", result: result, css_class: "h-3.5 gap-[2px]", day_class: "ar-block" %>
+    <div class="mt-1.5 flex justify-between font-display text-[0.45rem] text-ink-muted"><span>STAGE -28</span><span>NOW</span></div>
+  </div>
+
   <footer class="mt-4 space-y-1 border-t-2 border-dashed border-border pt-3 font-body text-xs text-ink-muted">
     <% if result.incident %>
-      <p class="truncate">
-        <span class="text-accent"><%= result.ongoing? ? "BOSS:" : "LAST BOSS:" %></span>
-        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent", target: "_blank", rel: "noopener" %>
+      <p class="flex items-baseline gap-2">
+        <span class="shrink-0 text-accent"><%= result.ongoing? ? "BOSS:" : "LAST BOSS:" %></span>
+        <span class="min-w-0 flex-1 truncate">
+          <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent", target: "_blank", rel: "noopener" %>
+        </span>
+        <span class="shrink-0 tabular-nums"><%= result.ongoing? ? "NOW" : l(result.incident.started_at.in_time_zone(Current.user.zone).to_date, format: "%b %-d").upcase %></span>
       </p>
     <% end %>
     <% if result.ignored_count.positive? %>
