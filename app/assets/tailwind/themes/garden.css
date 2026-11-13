@@ -23,6 +23,12 @@
   --ds-level-short-streak: #7fae47;  /* new leaves */
   --ds-level-long-streak: #e2559a;   /* blossom */
   --ds-level-solid-streak: #2f8f95;  /* deep teal */
+  --ds-day-untracked: #f6d3e4;       /* closed bud */
+  --ds-day-clear: #8fd4a6;           /* mint leaf */
+  --ds-day-minor: #ffc94d;           /* buttercup */
+  --ds-day-unknown: #ff9f6b;         /* marigold */
+  --ds-day-major: #ef5d7a;           /* coral */
+  --ds-day-critical: #a3385a;        /* berry */
   color-scheme: light;
 
   /* Pink to lavender to cyan, with floating pastel dots. */
@@ -84,4 +90,8 @@
 @keyframes gd-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
+}
+[data-theme="garden"] {
+  /* A blossom: a soft dot with a little highlight. */
+  .gd-blossom { box-shadow: inset -1px -1px 0 rgb(0 0 0 / 0.08), inset 1px 1px 0 rgb(255 255 255 / 0.5); }
 }

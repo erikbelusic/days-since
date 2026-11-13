@@ -70,11 +70,20 @@
     </span>
   </div>
 
-  <footer class="mt-auto space-y-0.5 px-5 pt-2 pb-4 text-center text-base text-ink-muted">
+  <%# The flower bed: one blossom per day for the last 28 days. %>
+  <div class="mx-5 mt-3">
+    <%= render "themes/default/day_strip", result: result, css_class: "gap-[3px]", day_class: "aspect-square rounded-full gd-blossom" %>
+    <div class="mt-0.5 flex justify-between text-sm text-ink-muted"><span>four weeks ago</span><span>today</span></div>
+  </div>
+
+  <footer class="mt-auto space-y-0.5 px-5 pt-2 pb-4 text-base text-ink-muted">
     <% if result.incident %>
-      <p class="truncate">
-        <%= storm ? "Storm:" : "Last storm:" %>
-        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:underline", target: "_blank", rel: "noopener" %>
+      <p class="flex items-baseline gap-3 border-t-2 border-dashed border-border pt-2">
+        <span class="min-w-0 flex-1 truncate">
+          <%= storm ? "Storm:" : "Last storm:" %>
+          <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:underline", target: "_blank", rel: "noopener" %>
+        </span>
+        <span class="shrink-0"><%= storm ? "now" : l(result.incident.started_at.in_time_zone(Current.user.zone).to_date, format: "%b %-d") %></span>
       </p>
     <% end %>
     <% if result.ignored_count.positive? %>
