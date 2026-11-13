@@ -1,0 +1,28 @@
+<header class="border-b border-border bg-[#0a0d10] shadow-[inset_0_-1px_0_rgb(255_255_255/0.04)]">
+  <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
+    <%= link_to root_path, class: "flex items-center gap-3 leading-none" do %>
+      <%# A generic mission patch: a planet with an orbit and a star. %>
+      <svg viewBox="0 0 40 40" class="h-9 w-9" aria-hidden="true">
+        <circle cx="20" cy="20" r="18" fill="#132033" stroke="#ffb000" stroke-width="2"/>
+        <circle cx="20" cy="22" r="7" fill="#5ac8fa"/>
+        <ellipse cx="20" cy="22" rx="14" ry="4.5" fill="none" stroke="#e4ebf1" stroke-width="1.5" transform="rotate(-20 20 22)"/>
+        <path d="M29 9 l1.2 2.6 2.8 .3 -2.1 1.9 .6 2.8 -2.5 -1.4 -2.5 1.4 .6 -2.8 -2.1 -1.9 2.8 -.3z" fill="#ffb000"/>
+      </svg>
+      <span>
+        <span class="block font-display text-xl font-medium uppercase tracking-[0.2em]">Mission Control</span>
+        <span class="mt-1 block font-body text-[0.65rem] uppercase tracking-wider text-accent">days-since · flight ops</span>
+      </span>
+    <% end %>
+
+    <% if authenticated? %>
+      <div class="flex flex-wrap items-center gap-4 font-display text-sm uppercase tracking-widest [&_select]:rounded-sm [&_select]:border-border [&_select]:bg-surface [&_select]:font-body [&_select]:text-xs [&_select]:normal-case [&_select]:tracking-normal">
+        <%= render "shared/theme_picker" %>
+        <span class="hidden font-body text-xs normal-case tracking-normal text-ink-muted lg:inline"><%= Current.user.email_address %></span>
+        <%= link_to "Settings", edit_settings_path, class: "hover:text-accent" %>
+        <% unless SingleUserMode.enabled? %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "cursor-pointer uppercase tracking-widest hover:text-accent" %>
+        <% end %>
+      </div>
+    <% end %>
+  </nav>
+</header>

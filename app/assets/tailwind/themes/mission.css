@@ -1,0 +1,82 @@
+/*
+ * Mission Control: a 1960s flight-operations console. Gray-blue panels,
+ * recessed screens with seven-segment readouts, and an annunciator row that
+ * lights the current stability level. Single (dark) mode. Tokens are scoped
+ * to <body data-theme="mission">. Oswald is reused from the worksite theme.
+ */
+[data-theme="mission"] {
+  --ds-canvas: #0e1215;
+  --ds-surface: #1c2329;
+  --ds-surface-muted: #262f37;
+  --ds-ink: #e4ebf1;
+  --ds-ink-muted: #8a98a6;
+  --ds-border: #36424d;
+  --ds-accent: #ffb000;          /* console amber */
+  --ds-accent-ink: #0e1215;
+  --ds-ok: #3ddc84;
+  --ds-danger: #ff453a;
+  --ds-danger-surface: #3a1210;
+  --ds-font-body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ds-font-display: "Oswald", "Arial Narrow", sans-serif;
+  --ds-radius-card: 0.25rem;
+  --ds-level-ongoing: #ff453a;       /* abort red */
+  --ds-level-day-one: #ff8a1f;       /* hold orange */
+  --ds-level-short-streak: #ffc933;  /* go amber */
+  --ds-level-long-streak: #3ddc84;   /* nominal green */
+  --ds-level-solid-streak: #5ac8fa;  /* all-systems-go blue */
+  color-scheme: dark;
+
+  main h1 { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+
+  /* A console panel: bevelled edge and a faint brushed top light. */
+  .mc-panel {
+    background: linear-gradient(to bottom, #222a31, var(--ds-surface) 40%);
+    border: 1px solid var(--ds-border);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 2px 0 #070a0c, 0 8px 18px -10px #000;
+  }
+
+  /* A panel screw in each corner. */
+  .mc-screw {
+    width: 0.45rem; height: 0.45rem; border-radius: 9999px;
+    background: radial-gradient(circle at 35% 35%, #6b7884, #2a333b);
+    box-shadow: 0 0 0 1px #0b0e10;
+  }
+
+  /* The recessed screen behind a readout, with a faint graticule. */
+  .mc-screen {
+    background-color: #05080a;
+    background-image:
+      linear-gradient(rgb(90 200 250 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(90 200 250 / 0.05) 1px, transparent 1px);
+    background-size: 12px 12px;
+    box-shadow: inset 0 2px 8px #000, inset 0 0 0 1px #000, 0 1px 0 rgb(255 255 255 / 0.05);
+  }
+
+  .mc-segments { overflow: visible; }
+  .mc-segments .on { fill: currentColor; }
+  .mc-segments .halo { fill: currentColor; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; opacity: 0.25; }
+  .mc-segments .off { fill: currentColor; opacity: 0.07; }
+
+  /* Annunciator lamps: dark until lit, then glowing in their level color. */
+  .mc-lamp {
+    background: #11161a;
+    color: #4d5a66;
+    box-shadow: inset 0 0 0 1px #000, inset 0 1px 0 rgb(255 255 255 / 0.04);
+  }
+  .mc-lamp-lit {
+    background: var(--level);
+    color: #0e1215;
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.4), 0 0 12px -1px var(--level);
+  }
+
+  .mc-glow { text-shadow: 0 0 8px var(--level, var(--ds-accent)); }
+  .mc-blink { animation: mc-blink 1.2s steps(1) infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mc-blink { animation: none; }
+  }
+}
+
+@keyframes mc-blink {
+  50% { opacity: 0.35; }
+}

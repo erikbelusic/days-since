@@ -1,0 +1,28 @@
+<%# A seven-segment readout. Unlit segments stay faintly visible, like a real display. %>
+<%# locals: (text:, css_class: "") %>
+<%
+  hseg = ->(y, x1, x2) { t = 1.7; "#{x1},#{y} #{x1 + t / 2},#{y - t / 2} #{x2 - t / 2},#{y - t / 2} #{x2},#{y} #{x2 - t / 2},#{y + t / 2} #{x1 + t / 2},#{y + t / 2}" }
+  vseg = ->(x, y1, y2) { t = 1.7; "#{x},#{y1} #{x + t / 2},#{y1 + t / 2} #{x + t / 2},#{y2 - t / 2} #{x},#{y2} #{x - t / 2},#{y2 - t / 2} #{x - t / 2},#{y1 + t / 2}" }
+  segments = {
+    a: hseg.(1.5, 2.2, 9.8), b: vseg.(10.5, 2.2, 9.6), c: vseg.(10.5, 10.4, 17.8),
+    d: hseg.(18.5, 2.2, 9.8), e: vseg.(1.5, 10.4, 17.8), f: vseg.(1.5, 2.2, 9.6), g: hseg.(10, 2.2, 9.8)
+  }
+  lit = {
+    "0" => "abcdef", "1" => "bc", "2" => "abdeg", "3" => "abcdg", "4" => "bcfg", "5" => "acdfg",
+    "6" => "acdefg", "7" => "abc", "8" => "abcdefg", "9" => "abcdfg", "-" => "g"
+  }
+  chars = text.to_s.chars
+%>
+<svg viewBox="0 0 <%= chars.size * 14 - 2 %> 20" class="mc-segments <%= css_class %>" aria-hidden="true">
+  <% chars.each_with_index do |char, i| %>
+    <g transform="translate(<%= i * 14 %> 0) skewX(-6) translate(1 0)">
+      <% segments.each do |name, points| %>
+        <% if lit.fetch(char, "").include?(name.to_s) %>
+          <polygon points="<%= points %>" class="halo"/><polygon points="<%= points %>" class="on"/>
+        <% else %>
+          <polygon points="<%= points %>" class="off"/>
+        <% end %>
+      <% end %>
+    </g>
+  <% end %>
+</svg>

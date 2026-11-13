@@ -27,8 +27,8 @@ class Theme < Data.define(:key, :name, :description, :level_labels)
         level_labels: { "ongoing" => "Alert", "day_one" => "Warn", "short_streak" => "Watch", "long_streak" => "OK", "solid_streak" => "SLO met" }),
     new(key: "garden", name: "Little Garden", description: "A whimsical storybook garden: the plant grows with every incident-free day.",
         level_labels: { "ongoing" => "Storm's here", "day_one" => "Just planted", "short_streak" => "Sprouting", "long_streak" => "In bloom", "solid_streak" => "Mighty oak" }),
-    new(key: "swiss", name: "Swiss Report", description: "Serious and minimal: Helvetica, strict grid, black rules, one signal red.",
-        level_labels: { "ongoing" => "Active incident", "day_one" => "Recent", "short_streak" => "Moderate", "long_streak" => "Established", "solid_streak" => "Sustained" }),
+    new(key: "mission", name: "Mission Control", description: "A flight-operations console: seven-segment readouts, annunciator lamps, and telemetry.",
+        level_labels: { "ongoing" => "Abort", "day_one" => "Hold", "short_streak" => "Go", "long_streak" => "Nominal", "solid_streak" => "All systems go" }),
     new(key: "arcade", name: "Arcade", description: "A retro 8-bit cabinet: neon scores, pixel-heart lives, and CRT scanlines.",
         level_labels: { "ongoing" => "Game over", "day_one" => "Press start", "short_streak" => "Level up", "long_streak" => "Combo!", "solid_streak" => "High score!" })
   ].freeze

@@ -1,0 +1,73 @@
+<%# locals: (subscription:, result:) %>
+<% levels = %w[ ongoing day_one short_streak long_streak solid_streak ] %>
+<% readout = result.infinite? ? "---" : result.days.to_s.rjust(3, "0") %>
+<% peak = [ result.activity.max.to_i, 1 ].max %>
+<article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
+         class="mc-panel relative flex flex-col rounded-card px-4 pt-4 pb-3">
+  <span class="mc-screw absolute top-1.5 left-1.5"></span><span class="mc-screw absolute top-1.5 right-1.5"></span>
+  <span class="mc-screw absolute bottom-1.5 left-1.5"></span><span class="mc-screw absolute right-1.5 bottom-1.5"></span>
+
+  <header class="flex items-center gap-2">
+    <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <%= service_logo(subscription, css_class: "h-6 w-6 rounded-sm", image_class: "bg-white p-0.5", monogram_class: "bg-surface-muted font-display text-xs text-accent") %>
+    <h2 class="min-w-0 flex-1 truncate font-display text-lg uppercase tracking-widest">
+      <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+            class: "hover:text-accent", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+    </h2>
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "font-display text-xs uppercase tracking-widest text-ink-muted hover:text-accent", aria: { label: "Edit #{subscription.name}" } %>
+  </header>
+
+  <div class="mc-screen mt-3 rounded-sm px-4 pt-3 pb-2">
+    <div class="flex items-baseline justify-between font-body text-[0.65rem] uppercase tracking-wider text-ink-muted">
+      <span>T+ days</span>
+      <span class="<%= "text-level" if result.ongoing? %>"><%= result.ongoing? ? "Master alarm" : "Since last anomaly" %></span>
+    </div>
+    <div class="mt-2 flex items-center justify-center text-level" data-days aria-label="<%= result.infinite? ? "No anomalies on record" : pluralize(result.days, "day") %>">
+      <%= render "themes/mission/segments", text: readout, css_class: "h-16 w-auto #{"mc-blink" if result.ongoing?}" %>
+    </div>
+    <p class="mt-2 text-center font-body text-[0.65rem] uppercase tracking-wider text-ink-muted">
+      <% if result.ongoing? %>Anomaly in progress
+      <% elsif result.infinite? %>No anomalies on record
+      <% elsif result.no_history? %>Since tracking began
+      <% else %>Days without an incident<% end %>
+    </p>
+  </div>
+
+  <%# Annunciator row: one lamp per level, the current one lit. %>
+  <div class="mt-3 grid grid-cols-5 gap-1" role="list" aria-label="Status">
+    <% levels.each do |level| %>
+      <% lit = level == result.level %>
+      <span role="listitem" data-level="<%= level %>"
+            class="<%= lit ? "mc-lamp-lit" : "mc-lamp" %> <%= "mc-blink" if lit && result.ongoing? %> flex min-h-9 items-center justify-center rounded-sm px-1 text-center font-display text-[0.6rem] uppercase leading-tight tracking-wider"
+            <%= "data-level-label" if lit %> <%= "aria-current=true" if lit %>><%= stability_label(level) %></span>
+    <% end %>
+  </div>
+
+  <%# Telemetry: relevant incidents on each of the last 28 days. %>
+  <div class="mt-3">
+    <div class="flex h-6 items-end gap-[2px] border-b border-border" role="img" data-activity-bars
+         aria-label="<%= pluralize(result.activity.count(&:positive?), "day") %> with incidents in the last <%= result.activity.size %> days">
+      <% result.activity.each do |count| %>
+        <span class="flex-1 <%= count.positive? ? "bg-danger" : "bg-[#2b6b4a]" %>" style="height: <%= count.positive? ? (35 + 65 * count / peak) : 12 %>%"></span>
+      <% end %>
+    </div>
+    <div class="flex justify-between pt-1 font-body text-[0.6rem] uppercase text-ink-muted"><span>Telemetry −<%= result.activity.size %>d</span><span>Now</span></div>
+  </div>
+
+  <footer class="mt-auto space-y-0.5 pt-2 font-body text-xs text-ink-muted">
+    <% if result.incident %>
+      <p class="truncate">
+        <span class="text-accent"><%= result.ongoing? ? "ANOMALY:" : "LAST ANOMALY #{result.incident.started_at.in_time_zone(Current.user.zone).to_date.iso8601}:" %></span>
+        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent", target: "_blank", rel: "noopener" %>
+      </p>
+    <% end %>
+    <% if result.ignored_count.positive? %>
+      <p class="truncate" title="<%= threshold_explanation(result) %>"><%= ignored_incidents_note(result) %></p>
+    <% end %>
+    <% if subscription.feed.failing? %>
+      <p class="truncate text-danger" title="<%= subscription.feed.last_error %>">LOSS OF SIGNAL: <%= subscription.feed.last_error %></p>
+    <% elsif subscription.feed.last_success_at.nil? %>
+      <p class="mc-blink">ACQUIRING SIGNAL…</p>
+    <% end %>
+  </footer>
+</article>
