@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "GitHub-inspired theme", :single_user_mode do
   let(:user) { SingleUserMode.user.tap { |u| u.update!(theme: "github", time_zone: "UTC") } }
 
-  it "shows status labels and a 28-day activity grid" do
+  it "shows status labels and a 28-day contribution-style grid colored by severity" do
     travel_to Time.utc(2026, 3, 28, 12) do
       healthy = create(:subscription, user: user, feed: create(:feed, name: "GitHub"))
       create(:incident, feed: healthy.feed, impact: "major", started_at: Time.utc(2026, 3, 20, 9), resolved_at: Time.utc(2026, 3, 21, 9))
@@ -18,15 +18,15 @@ RSpec.describe "GitHub-inspired theme", :single_user_mode do
       within("##{ActionView::RecordIdentifier.dom_id(healthy)}") do
         expect(page).to have_css("[data-level-label]", exact_text: "Passing")
         expect(page).to have_css("[data-days]", text: "7")
-        expect(page).to have_css("[data-activity-grid] .gh-cell", count: 28)
-        expect(page).to have_css("[data-activity-grid] .gh-cell-incident", count: 2)
-        expect(page).to have_css("[data-activity-grid][aria-label='2 days with incidents in the last 28 days']")
+        expect(page).to have_css("[data-activity-bars] .gh-cell", count: 28)
+        expect(page).to have_css("[data-activity-bars] .gh-cell[data-day=major]", count: 2)
+        expect(page).to have_css("[data-activity-bars][aria-label='2 days with incidents in the last 28 days']")
       end
 
       within("##{ActionView::RecordIdentifier.dom_id(ongoing)}") do
         expect(page).to have_css("[data-level-label]", exact_text: "Failing")
         expect(page).to have_text("DNS trouble")
-        expect(page).to have_css("[data-activity-grid] .gh-cell:last-child.gh-cell-incident")
+        expect(page).to have_css("[data-activity-bars] .gh-cell:last-child[data-day=minor]")
       end
 
       within("##{ActionView::RecordIdentifier.dom_id(quiet)}") do

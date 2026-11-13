@@ -27,11 +27,12 @@
 
   --gh-header: #ffffff;
   --gh-btn-primary: #1f883d;
-  --gh-grid-empty: #eff2f5;
-  --gh-grid-clean-1: #aceebb;
-  --gh-grid-clean-2: #4ac26b;
-  --gh-grid-incident: #ff8182;
-  --gh-grid-incident-2: #d1242f;
+  --ds-day-untracked: #eff2f5;
+  --ds-day-clear: #aceebb;
+  --ds-day-minor: #d4a72c;
+  --ds-day-unknown: #fb8f44;
+  --ds-day-major: #d1242f;
+  --ds-day-critical: #82071e;
   --gh-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
 
@@ -57,11 +58,12 @@
 
     --gh-header: #010409;
     --gh-btn-primary: #238636;
-    --gh-grid-empty: #151b23;
-    --gh-grid-clean-1: #033a16;
-    --gh-grid-clean-2: #196c2e;
-    --gh-grid-incident: #8e1519;
-    --gh-grid-incident-2: #f85149;
+    --ds-day-untracked: #151b23;
+    --ds-day-clear: #196c2e;
+    --ds-day-minor: #9e6a03;
+    --ds-day-unknown: #bd561d;
+    --ds-day-major: #da3633;
+    --ds-day-critical: #ff7b72;
   }
 }
 
@@ -69,9 +71,4 @@
   .gh-header { background: var(--gh-header); }
   .gh-mono { font-family: var(--gh-mono); }
   .gh-cell { width: 0.7rem; height: 0.7rem; border-radius: 2px; outline: 1px solid rgb(31 35 40 / 0.06); outline-offset: -1px; }
-  .gh-cell-empty { background: var(--gh-grid-empty); }
-  .gh-cell-clean { background: var(--gh-grid-clean-1); }
-  .gh-cell-clean-streak { background: var(--gh-grid-clean-2); }
-  .gh-cell-incident { background: var(--gh-grid-incident); }
-  .gh-cell-incident-many { background: var(--gh-grid-incident-2); }
 }
