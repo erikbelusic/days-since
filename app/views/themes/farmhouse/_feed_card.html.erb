@@ -1,5 +1,5 @@
 <%# locals: (subscription:, result:) %>
-<% digits = result.infinite? ? [ "∞" ] : result.days.to_s.rjust(3, "0").chars %>
+<% digits = result.waiting? ? %w[ – – – ] : result.infinite? ? [ "∞" ] : result.days.to_s.rjust(3, "0").chars %>
 <article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
          class="fh-wood <%= "ds-pulse" if result.ongoing? %> flex flex-col rounded-card px-6 pt-4 pb-4">
   <header class="grid grid-cols-[3rem_minmax(0,1fr)_3rem] items-center gap-2 font-body text-xs text-[#1d1a17]">
@@ -15,7 +15,9 @@
   <p class="mt-3 text-center"><span class="fh-ribbon bg-level px-5 py-1 font-body text-xs font-bold uppercase tracking-[0.15em] text-[#fbfaf7]" data-level-label><%= stability_label(result.level) %></span></p>
 
   <p class="fh-ink mt-2 text-center font-display text-[2.6rem] leading-[0.95] uppercase">
-    <% if result.no_history? && result.infinite? %>
+    <% if result.waiting? %>
+      <span class="block">No news</span> <span class="block">yet</span>
+    <% elsif result.no_history? && result.infinite? %>
       <span class="block">No incidents</span> <span class="block">on record</span>
     <% elsif result.no_history? %>
       <span class="block">Days since</span> <span class="block">we started</span>
@@ -24,7 +26,7 @@
     <% end %>
   </p>
 
-  <div class="mt-5 flex justify-center gap-3" data-days aria-label="<%= result.infinite? ? "infinite" : result.days %> days">
+  <div class="mt-5 flex justify-center gap-3" data-days aria-label="<%= result.waiting? ? "No data yet" : "#{result.infinite? ? "infinite" : result.days} days" %>">
     <% digits.each do |digit| %>
       <span class="fh-flip <%= "fh-flip-ongoing" if result.ongoing? %> flex h-24 w-16 items-center justify-center pt-3 text-6xl leading-none" aria-hidden="true"><%= digit %></span>
     <% end %>

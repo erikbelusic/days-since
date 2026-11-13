@@ -47,6 +47,7 @@
  * short_streak|long_streak|solid_streak". Each theme supplies --ds-level-* colors;
  * views use text-level / border-level / bg-level for "this card's level".
  */
+[data-level="waiting"] { --level: var(--ds-level-waiting, var(--ds-ink-muted)); }
 [data-level="ongoing"] { --level: var(--ds-level-ongoing, var(--ds-danger)); }
 [data-level="day_one"] { --level: var(--ds-level-day-one); }
 [data-level="short_streak"] { --level: var(--ds-level-short-streak); }

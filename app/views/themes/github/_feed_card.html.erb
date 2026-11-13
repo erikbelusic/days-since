@@ -17,7 +17,7 @@
 
   <div class="flex items-end justify-between gap-4 px-4 pt-4">
     <div>
-      <p class="text-5xl font-semibold tabular-nums text-level" data-days><%= result.infinite? ? "∞" : result.days %></p>
+      <p class="text-5xl font-semibold tabular-nums text-level" data-days><%= result.waiting? ? "–" : result.infinite? ? "∞" : result.days %></p>
       <p class="mt-1 text-sm text-ink-muted"><%= counter_caption(result) %></p>
     </div>
     <%= render "themes/github/activity_grid", activity: result.activity %>

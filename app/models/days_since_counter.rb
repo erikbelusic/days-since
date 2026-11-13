@@ -9,15 +9,24 @@ class DaysSinceCounter
   # ignored_count: newer incidents skipped for being below that threshold
   # activity:      relevant incidents active on each of the last
   #                ACTIVITY_DAYS days in the user's time zone, oldest first
-  # level:         Stability level name (ongoing, day_one, short_streak,
-  #                long_streak, solid_streak) from the user's thresholds
-  Result = Data.define(:state, :days, :incident, :min_severity, :ignored_count, :activity, :level) do
+  # worst_impacts: the worst impact among those incidents on each of the
+  #                same days (nil on a clear day)
+  # tracked_since: the first local day we have incident data for: the
+  #                earlier of when we started polling the feed and its oldest
+  #                stored incident (nil until the first successful poll).
+  #                Days before it are unknown, not clear.
+  # level:         Stability level name (waiting, ongoing, day_one,
+  #                short_streak, long_streak, solid_streak) from the user's thresholds
+  Result = Data.define(:state, :days, :incident, :min_severity, :ignored_count, :activity, :worst_impacts, :tracked_since, :level) do
     def ongoing? = state == :ongoing
     def no_history? = state == :no_history
     def counting? = state == :counting
 
+    # The feed has never been polled successfully, so we know nothing yet.
+    def waiting? = state == :waiting
+
     # No incidents and the user prefers "∞" over counting from tracking start.
-    def infinite? = days.nil?
+    def infinite? = days.nil? && !waiting?
   end
 
   def initialize(subscription, now: Time.current)
@@ -34,6 +43,8 @@ class DaysSinceCounter
       build(:ongoing, 0, incident)
     elsif (incident = relevant_incidents.resolved.order(resolved_at: :desc).first)
       build(:counting, days_since(incident.resolved_at), incident)
+    elsif @feed.last_success_at.nil? && !@feed.incidents.exists?
+      build(:waiting, nil, nil)
     elsif @user.no_incident_display_since_tracking?
       build(:no_history, days_since(@feed.created_at), nil)
     else
@@ -43,8 +54,10 @@ class DaysSinceCounter
 
   private
     def build(state, days, incident)
+      counts, worst = activity
       result = Result.new(state: state, days: days, incident: incident, min_severity: @min_severity,
-                          ignored_count: ignored_since(incident), activity: activity, level: nil)
+                          ignored_count: ignored_since(incident), activity: counts, worst_impacts: worst,
+                          tracked_since: tracked_since, level: nil)
       result.with(level: Stability.level(result, @user))
     end
 
@@ -58,21 +71,34 @@ class DaysSinceCounter
       ignored.count
     end
 
+    # Per-day incident counts and worst impacts over the last ACTIVITY_DAYS.
     def activity
       first_day = @today - (ACTIVITY_DAYS - 1)
       counts = Array.new(ACTIVITY_DAYS, 0)
+      worst = Array.new(ACTIVITY_DAYS)
 
       relevant_incidents
         .where(started_at: ...(@today + 1).in_time_zone(@user.zone))
         .where("resolved_at IS NULL OR resolved_at >= ?", first_day.in_time_zone(@user.zone))
-        .pluck(:started_at, :resolved_at)
-        .each do |started_at, resolved_at|
+        .pluck(:started_at, :resolved_at, :impact)
+        .each do |started_at, resolved_at, impact|
           from = [ local_date(started_at), first_day ].max
           to = [ local_date(resolved_at || @now), @today ].min
-          (from..to).each { |day| counts[(day - first_day).to_i] += 1 }
+          (from..to).each do |day|
+            index = (day - first_day).to_i
+            counts[index] += 1
+            worst[index] = Severity.worst(worst[index], impact)
+          end
         end
 
-      counts
+      [ counts, worst ]
+    end
+
+    def tracked_since
+      return unless @feed.last_success_at
+
+      oldest = @feed.incidents.minimum(:started_at)
+      [ @feed.created_at, oldest ].compact.map { |time| local_date(time) }.min
     end
 
     def local_date(time)

@@ -10,7 +10,7 @@
           class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener" %>
   </td>
   <td class="py-2 pr-3 text-right font-numeric text-xl font-bold tabular-nums text-level" data-days>
-    <%= result.infinite? ? "∞" : result.days %>
+    <%= result.waiting? ? "–" : result.infinite? ? "∞" : result.days %>
   </td>
   <td class="py-2 pr-3 text-sm whitespace-nowrap">
     <% if result.ongoing? %>

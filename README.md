@@ -112,6 +112,9 @@ For a given subscription:
 3. If a relevant incident is **unresolved**, the card shows **`0` with an `ONGOING` state**.
 4. Otherwise, the count is the number of **calendar days in the user's time zone** from the last relevant incident's `resolved_at` until today.
 5. If there are **no relevant incidents on record**, the card shows either **`∞ No incidents on record`** (default) or the number of days since we started tracking the feed. The user's `no_incident_display` setting picks which.
+6. If the feed has **never been polled successfully** and has no incidents yet, the card is **waiting**: no number, just "no data yet". We know nothing, so it claims neither ∞ nor a streak.
+
+The counter also reports the last 28 days for themes to draw: the number of relevant incidents active each day, the **worst impact** each day (`unknown` from RSS ranks between minor and major), and **`tracked_since`**, the first day we have data for. That is the earlier of the feed's creation and its oldest stored incident. Days before it are unknown, not clear.
 
 #### Stability levels
 
@@ -119,6 +122,7 @@ Every card also gets a **stability level** based on its day count and three per-
 
 | Level | When |
 |---|---|
+| `waiting` | The feed hasn't been polled yet, so there's nothing to count ("Waiting for data") |
 | `ongoing` | A relevant incident is unresolved. This is always the most urgent level. |
 | `day_one` | Fewer than 7 days since the last incident ("Back to day one") |
 | `short_streak` | 7–29 days |

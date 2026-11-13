@@ -1,6 +1,6 @@
 <%# locals: (subscription:, result:) %>
 <% levels = %w[ ongoing day_one short_streak long_streak solid_streak ] %>
-<% readout = result.infinite? ? "---" : result.days.to_s.rjust(3, "0") %>
+<% readout = result.days.nil? ? "---" : result.days.to_s.rjust(3, "0") %>
 <% peak = [ result.activity.max.to_i, 1 ].max %>
 <article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
          class="mc-panel relative flex flex-col rounded-card px-4 pt-4 pb-3">
@@ -20,13 +20,18 @@
   <div class="mc-screen mt-3 rounded-sm px-4 pt-3 pb-2">
     <div class="flex items-baseline justify-between font-body text-[0.65rem] uppercase tracking-wider text-ink-muted">
       <span>T+ days</span>
-      <span class="<%= "text-level" if result.ongoing? %>"><%= result.ongoing? ? "Master alarm" : "Since last anomaly" %></span>
+      <% if result.waiting? %>
+        <span class="text-level" data-level-label><%= stability_label(result.level) %></span>
+      <% else %>
+        <span class="<%= "text-level" if result.ongoing? %>"><%= result.ongoing? ? "Master alarm" : "Since last anomaly" %></span>
+      <% end %>
     </div>
-    <div class="mt-2 flex items-center justify-center text-level" data-days aria-label="<%= result.infinite? ? "No anomalies on record" : pluralize(result.days, "day") %>">
+    <div class="mt-2 flex items-center justify-center text-level" data-days aria-label="<%= result.waiting? ? "Awaiting telemetry" : result.infinite? ? "No anomalies on record" : pluralize(result.days, "day") %>">
       <%= render "themes/mission/segments", text: readout, css_class: "h-16 w-auto #{"mc-blink" if result.ongoing?}" %>
     </div>
     <p class="mt-2 text-center font-body text-[0.65rem] uppercase tracking-wider text-ink-muted">
       <% if result.ongoing? %>Anomaly in progress
+      <% elsif result.waiting? %>Awaiting telemetry
       <% elsif result.infinite? %>No anomalies on record
       <% elsif result.no_history? %>Since tracking began
       <% else %>Days without an incident<% end %>

@@ -4,6 +4,7 @@
 # levels in its own words (anything it leaves out uses DEFAULT_LEVEL_LABELS).
 class Theme < Data.define(:key, :name, :description, :level_labels)
   DEFAULT_LEVEL_LABELS = {
+    "waiting" => "Waiting for data",
     "ongoing" => "Ongoing",
     "day_one" => "Back to day one",
     "short_streak" => "Short streak",
@@ -18,19 +19,19 @@ class Theme < Data.define(:key, :name, :description, :level_labels)
   REGISTRY = [
     new(key: "default", name: "Default", description: "Clean Tailwind look with automatic light and dark mode."),
     new(key: "worksite", name: "Worksite Safety Sign", description: "Hazard stripes and a \"DAYS SINCE LAST INCIDENT\" site board.",
-        level_labels: { "ongoing" => "Danger", "day_one" => "Warning", "short_streak" => "Caution", "long_streak" => "Safe", "solid_streak" => "★ Safety record ★" }),
+        level_labels: { "waiting" => "Not inspected", "ongoing" => "Danger", "day_one" => "Warning", "short_streak" => "Caution", "long_streak" => "Safe", "solid_streak" => "★ Safety record ★" }),
     new(key: "farmhouse", name: "Farmhouse", description: "A hand-lettered barn-wood sign with hanging flip-card numbers.",
-        level_labels: { "ongoing" => "Trouble now", "day_one" => "Starting over", "short_streak" => "Good stretch", "long_streak" => "Long stretch", "solid_streak" => "Solid ground" }),
+        level_labels: { "waiting" => "Not open yet", "ongoing" => "Trouble now", "day_one" => "Starting over", "short_streak" => "Good stretch", "long_streak" => "Long stretch", "solid_streak" => "Solid ground" }),
     new(key: "github", name: "GitHub-inspired", description: "Primer-style boxes, status labels, and a contribution-style activity grid. Light and dark.",
-        level_labels: { "ongoing" => "Failing", "day_one" => "Flaky", "short_streak" => "Passing", "long_streak" => "Green", "solid_streak" => "LTS" }),
+        level_labels: { "waiting" => "Queued", "ongoing" => "Failing", "day_one" => "Flaky", "short_streak" => "Passing", "long_streak" => "Green", "solid_streak" => "LTS" }),
     new(key: "datadog", name: "Datadog-inspired", description: "A dark monitoring dashboard: metric tiles, monitor badges, and timeseries bars.",
-        level_labels: { "ongoing" => "Alert", "day_one" => "Warn", "short_streak" => "Watch", "long_streak" => "OK", "solid_streak" => "SLO met" }),
+        level_labels: { "waiting" => "No data", "ongoing" => "Alert", "day_one" => "Warn", "short_streak" => "Watch", "long_streak" => "OK", "solid_streak" => "SLO met" }),
     new(key: "garden", name: "Little Garden", description: "A whimsical storybook garden: the plant grows with every incident-free day.",
-        level_labels: { "ongoing" => "Storm's here", "day_one" => "Just planted", "short_streak" => "Sprouting", "long_streak" => "In bloom", "solid_streak" => "Mighty oak" }),
+        level_labels: { "waiting" => "Not planted yet", "ongoing" => "Storm's here", "day_one" => "Just planted", "short_streak" => "Sprouting", "long_streak" => "In bloom", "solid_streak" => "Mighty oak" }),
     new(key: "mission", name: "Mission Control", description: "A flight-operations console: seven-segment readouts, annunciator lamps, and telemetry.",
-        level_labels: { "ongoing" => "Abort", "day_one" => "Hold", "short_streak" => "Go", "long_streak" => "Nominal", "solid_streak" => "All systems go" }),
+        level_labels: { "waiting" => "Standby", "ongoing" => "Abort", "day_one" => "Hold", "short_streak" => "Go", "long_streak" => "Nominal", "solid_streak" => "All systems go" }),
     new(key: "arcade", name: "Arcade", description: "A retro 8-bit cabinet: neon scores, pixel-heart lives, and CRT scanlines.",
-        level_labels: { "ongoing" => "Game over", "day_one" => "Press start", "short_streak" => "Level up", "long_streak" => "Combo!", "solid_streak" => "High score!" })
+        level_labels: { "waiting" => "Loading…", "ongoing" => "Game over", "day_one" => "Press start", "short_streak" => "Level up", "long_streak" => "Combo!", "solid_streak" => "High score!" })
   ].freeze
 
   class << self

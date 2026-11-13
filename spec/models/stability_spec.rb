@@ -4,7 +4,7 @@ RSpec.describe Stability do
   let(:user) { build(:user, short_streak_after_days: 7, long_streak_after_days: 30, solid_streak_after_days: 90) }
 
   def result(state: :counting, days: 0)
-    DaysSinceCounter::Result.new(state: state, days: days, incident: nil, min_severity: "minor", ignored_count: 0, activity: [], level: nil)
+    DaysSinceCounter::Result.new(state: state, days: days, incident: nil, min_severity: "minor", ignored_count: 0, activity: [], worst_impacts: [], tracked_since: nil, level: nil)
   end
 
   it "maps day counts onto the user's thresholds" do
@@ -12,6 +12,10 @@ RSpec.describe Stability do
                  30 => "long_streak", 89 => "long_streak", 90 => "solid_streak", 400 => "solid_streak" }
 
     expect(expected.keys.index_with { |days| described_class.level(result(days: days), user) }).to eq(expected)
+  end
+
+  it "reports a feed with no data yet as waiting, not as a streak" do
+    expect(described_class.level(result(state: :waiting, days: nil), user)).to eq("waiting")
   end
 
   it "always reports a live incident as ongoing" do

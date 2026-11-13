@@ -4,6 +4,10 @@
   <% stem = "#5e9e52" %>
   <% leaf = "#86c266" %>
   <% case level %>
+  <% when "waiting" %>
+    <%# Freshly turned soil with a marker: nothing has sprouted yet. %>
+    <path d="M28 96 C34 86 66 86 72 96Z" fill="#8a5a3b"/>
+    <circle cx="44" cy="91" r="1.6" fill="#5e3d27"/><circle cx="55" cy="89" r="1.6" fill="#5e3d27"/>
   <% when "ongoing" %>
     <%# A wilted sprout under the storm. %>
     <path d="M50 96 C50 84 52 78 58 74" fill="none" stroke="<%= stem %>" stroke-width="3" stroke-linecap="round"/>

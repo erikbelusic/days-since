@@ -16,8 +16,8 @@
   <p class="dd-mono truncate px-3 pt-1 text-[0.7rem] text-ink-muted" title="<%= metric %>"><%= metric %></p>
 
   <div class="mx-3 mt-3 flex items-baseline gap-2 rounded-sm px-3 py-2 dd-level-fill">
-    <p class="text-6xl font-light tabular-nums leading-none" data-days><%= result.infinite? ? "∞" : result.days %></p>
-    <p class="text-sm opacity-80"><%= result.infinite? ? "days" : "day".pluralize(result.days) %><%= " · incident active" if result.ongoing? %></p>
+    <p class="text-6xl font-light tabular-nums leading-none" data-days><%= result.waiting? ? "–" : result.infinite? ? "∞" : result.days %></p>
+    <p class="text-sm opacity-80"><%= result.waiting? ? "no data yet" : result.infinite? ? "days" : "day".pluralize(result.days) %><%= " · incident active" if result.ongoing? %></p>
   </div>
 
   <div class="px-3 pt-4">

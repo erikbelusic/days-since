@@ -104,6 +104,26 @@ RSpec.describe DaysSinceCounter do
   end
 end
 
+RSpec.describe DaysSinceCounter, "before the first successful poll" do
+  let(:user) { create(:user, no_incident_display: "since_tracking") }
+  let(:feed) { create(:feed, :never_polled) }
+  let(:subscription) { create(:subscription, user: user, feed: feed) }
+
+  def result = described_class.new(subscription.reload).result
+
+  it "is waiting, with no day count, level or tracked days, whatever the no-incident setting" do
+    expect(result).to have_attributes(state: :waiting, days: nil, level: "waiting", tracked_since: nil)
+    expect(result).to be_waiting
+    expect(result).not_to be_infinite
+  end
+
+  it "counts normally once incidents exist, even if the last poll never succeeded" do
+    create(:incident, feed: feed, impact: "major", started_at: 5.days.ago, resolved_at: 5.days.ago + 1.hour)
+
+    expect(result).to have_attributes(state: :counting, days: 5)
+  end
+end
+
 RSpec.describe DaysSinceCounter, "explaining what was counted" do
   let(:user) { create(:user, default_min_severity: "minor") }
   let(:feed) { create(:feed) }
@@ -171,6 +191,51 @@ RSpec.describe DaysSinceCounter, "recent activity" do
     create(:incident, feed: feed, impact: "major", started_at: Time.utc(2026, 2, 1), resolved_at: Time.utc(2026, 2, 2))
 
     expect(activity.sum).to eq(0)
+  end
+
+  describe "worst impact per day" do
+    def worst_impacts = described_class.new(subscription.reload, now: now).result.worst_impacts
+
+    it "keeps the most severe counted incident on each day and nil on clear days" do
+      create(:incident, feed: feed, impact: "minor", started_at: Time.utc(2026, 3, 20, 15), resolved_at: Time.utc(2026, 3, 21, 15))
+      create(:incident, feed: feed, impact: "critical", started_at: Time.utc(2026, 3, 21, 16), resolved_at: Time.utc(2026, 3, 21, 17))
+
+      expect(worst_impacts.size).to eq(28)
+      expect(worst_impacts[19..21]).to eq([ "minor", "critical", nil ]) # Mar 20, 21, 22
+      expect(worst_impacts.compact.size).to eq(2)
+    end
+
+    it "ranks an unknown (RSS) impact between minor and major" do
+      create(:incident, feed: feed, impact: "unknown", started_at: Time.utc(2026, 3, 20, 15), resolved_at: Time.utc(2026, 3, 20, 16))
+      create(:incident, feed: feed, impact: "minor", started_at: Time.utc(2026, 3, 20, 17), resolved_at: Time.utc(2026, 3, 20, 18))
+      create(:incident, feed: feed, impact: "unknown", started_at: Time.utc(2026, 3, 21, 15), resolved_at: Time.utc(2026, 3, 21, 16))
+      create(:incident, feed: feed, impact: "major", started_at: Time.utc(2026, 3, 21, 17), resolved_at: Time.utc(2026, 3, 21, 18))
+
+      expect(worst_impacts[19..20]).to eq([ "unknown", "major" ])
+    end
+  end
+
+  describe "tracked since" do
+    def tracked_since = described_class.new(subscription.reload, now: now).result.tracked_since
+
+    it "is nil until the feed has been polled successfully" do
+      feed.update!(last_success_at: nil)
+
+      expect(tracked_since).to be_nil
+    end
+
+    it "is the local day we started polling when there are no older incidents" do
+      feed.update!(created_at: Time.utc(2026, 3, 15, 3), last_success_at: now) # Mar 14 evening in Chicago
+
+      expect(tracked_since).to eq(Date.new(2026, 3, 14))
+    end
+
+    it "reaches back to the oldest stored incident, which the provider reported from before we started" do
+      feed.update!(created_at: Time.utc(2026, 3, 15, 18), last_success_at: now)
+      create(:incident, feed: feed, impact: "none", started_at: Time.utc(2026, 2, 10, 18), resolved_at: Time.utc(2026, 2, 10, 19))
+
+      expect(tracked_since).to eq(Date.new(2026, 2, 10))
+    end
   end
 end
 

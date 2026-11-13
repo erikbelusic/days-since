@@ -1,5 +1,5 @@
 <%# locals: (subscription:, result:) %>
-<% lives = { "ongoing" => 0, "day_one" => 1, "short_streak" => 2, "long_streak" => 3, "solid_streak" => 3 }.fetch(result.level) %>
+<% lives = { "waiting" => 0, "ongoing" => 0, "day_one" => 1, "short_streak" => 2, "long_streak" => 3, "solid_streak" => 3 }.fetch(result.level) %>
 <article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
          class="ar-frame flex flex-col bg-surface p-4">
   <header class="flex items-center gap-2">
@@ -15,10 +15,10 @@
   <div class="mt-5 text-center">
     <p class="font-display text-[0.6rem] text-ink-muted">SCORE</p>
     <p class="ar-glow mt-2 font-display text-3xl text-level tabular-nums" data-days>
-      <%= result.infinite? ? "∞" : result.days.to_s.rjust(6, "0") %>
+      <%= result.waiting? ? "------" : result.infinite? ? "∞" : result.days.to_s.rjust(6, "0") %>
     </p>
     <p class="mt-2 font-display text-[0.5rem] text-ink-muted">
-      <%= result.no_history? && !result.infinite? ? "DAYS SINCE INSERT COIN" : "DAYS WITHOUT AN INCIDENT" %>
+      <%= result.waiting? ? "WAITING FOR PLAYER 1" : result.no_history? && !result.infinite? ? "DAYS SINCE INSERT COIN" : "DAYS WITHOUT AN INCIDENT" %>
     </p>
   </div>
 
