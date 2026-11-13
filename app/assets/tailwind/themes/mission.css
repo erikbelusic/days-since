@@ -24,6 +24,12 @@
   --ds-level-short-streak: #ffc933;  /* go amber */
   --ds-level-long-streak: #3ddc84;   /* nominal green */
   --ds-level-solid-streak: #5ac8fa;  /* all-systems-go blue */
+  --ds-day-untracked: #26313a;
+  --ds-day-clear: #2b6b4a;
+  --ds-day-minor: #ffc933;
+  --ds-day-unknown: #ff8a1f;
+  --ds-day-major: #ff453a;
+  --ds-day-critical: #ff2d78;
   color-scheme: dark;
 
   main h1 { text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
@@ -68,6 +74,14 @@
     color: #0e1215;
     box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.4), 0 0 12px -1px var(--level);
   }
+
+  /* Telemetry trace: a short nominal tick, taller and glowing on bad days. */
+  .mc-trace { height: 18%; }
+  .mc-trace[data-day="untracked"] { height: 8%; }
+  .mc-trace[data-day="none"], .mc-trace[data-day="minor"] { height: 50%; }
+  .mc-trace[data-day="unknown"] { height: 65%; }
+  .mc-trace[data-day="major"], .mc-trace[data-day="critical"] { height: 100%; }
+  .mc-trace:not([data-day="clear"]):not([data-day="untracked"]) { box-shadow: 0 0 6px -1px var(--ds-day-major); }
 
   .mc-glow { text-shadow: 0 0 8px var(--level, var(--ds-accent)); }
   .mc-blink { animation: mc-blink 1.2s steps(1) infinite; }

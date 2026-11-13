@@ -25,7 +25,7 @@ RSpec.describe "Mission Control theme", :single_user_mode do
         expect(page).to have_css("#{card} [role=listitem]", count: 5)
       end
       expect(page).to have_css("##{ActionView::RecordIdentifier.dom_id(subscriptions[3])} [data-days][aria-label='3 days']")
-      expect(page).to have_css("##{ActionView::RecordIdentifier.dom_id(subscriptions[3])}", text: "LAST ANOMALY 2026-03-25: Outage")
+      expect(page).to have_css("##{ActionView::RecordIdentifier.dom_id(subscriptions[3])}", text: "LAST ANOMALY Outage MAR 25")
       expect(page).to have_css("##{ActionView::RecordIdentifier.dom_id(subscriptions[nil])} .mc-blink[data-level-label]")
     end
   end

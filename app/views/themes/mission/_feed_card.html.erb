@@ -1,7 +1,6 @@
 <%# locals: (subscription:, result:) %>
 <% levels = %w[ ongoing day_one short_streak long_streak solid_streak ] %>
 <% readout = result.days.nil? ? "---" : result.days.to_s.rjust(3, "0") %>
-<% peak = [ result.activity.max.to_i, 1 ].max %>
 <article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
          class="mc-panel relative flex flex-col rounded-card px-4 pt-4 pb-3">
   <span class="mc-screw absolute top-1.5 left-1.5"></span><span class="mc-screw absolute top-1.5 right-1.5"></span>
@@ -48,22 +47,22 @@
     <% end %>
   </div>
 
-  <%# Telemetry: relevant incidents on each of the last 28 days. %>
+  <%# Telemetry: the last 28 days on a recessed trace, taller and hotter for worse days. %>
   <div class="mt-3">
-    <div class="flex h-6 items-end gap-[2px] border-b border-border" role="img" data-activity-bars
-         aria-label="<%= pluralize(result.activity.count(&:positive?), "day") %> with incidents in the last <%= result.activity.size %> days">
-      <% result.activity.each do |count| %>
-        <span class="flex-1 <%= count.positive? ? "bg-danger" : "bg-[#2b6b4a]" %>" style="height: <%= count.positive? ? (35 + 65 * count / peak) : 12 %>%"></span>
-      <% end %>
+    <div class="mc-screen rounded-sm px-1.5 pt-1.5">
+      <%= render "themes/default/day_strip", result: result, css_class: "h-7 items-end gap-[2px]", day_class: "mc-trace" %>
     </div>
     <div class="flex justify-between pt-1 font-body text-[0.6rem] uppercase text-ink-muted"><span>Telemetry −<%= result.activity.size %>d</span><span>Now</span></div>
   </div>
 
   <footer class="mt-auto space-y-0.5 pt-2 font-body text-xs text-ink-muted">
     <% if result.incident %>
-      <p class="truncate">
-        <span class="text-accent"><%= result.ongoing? ? "ANOMALY:" : "LAST ANOMALY #{result.incident.started_at.in_time_zone(Current.user.zone).to_date.iso8601}:" %></span>
-        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent", target: "_blank", rel: "noopener" %>
+      <p class="flex items-baseline gap-2">
+        <span class="shrink-0 text-accent"><%= result.ongoing? ? "ANOMALY" : "LAST ANOMALY" %></span>
+        <span class="min-w-0 flex-1 truncate">
+          <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent", target: "_blank", rel: "noopener" %>
+        </span>
+        <span class="shrink-0 tabular-nums"><%= result.ongoing? ? "NOW" : l(result.incident.started_at.in_time_zone(Current.user.zone).to_date, format: "%b %-d").upcase %></span>
       </p>
     <% end %>
     <% if result.ignored_count.positive? %>
