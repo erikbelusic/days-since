@@ -19,6 +19,10 @@
   </div>
 </div>
 
+<% if @cards.any? && !Current.user.dashboard_layout_list? && (legend = own_themed_partial("activity_legend")) %>
+  <%= render legend, results: @cards.map(&:last) %>
+<% end %>
+
 <% if @live.any? %>
   <%= render themed_partial("live_banner"), subscriptions: @live %>
 <% end %>

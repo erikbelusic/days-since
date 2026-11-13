@@ -21,8 +21,8 @@ RSpec.describe "Dashboard", :single_user_mode do
 
       get root_path
 
-      expect(card_for(github).text).to include("GitHub").and include("7").and include("days since last incident")
-      expect(card_for(stripe).text).to include("Payments").and include("∞").and include("no incidents on record")
+      expect(card_for(github).text).to include("GitHub").and include("7").and include("Days since last incident")
+      expect(card_for(stripe).text).to include("Payments").and include("∞").and include("No incidents on record")
       expect(response.body.index("GitHub")).to be < response.body.index("Payments")
     end
   end
@@ -95,7 +95,7 @@ RSpec.describe "Dashboard skipped-incident note", :single_user_mode do
       get root_path
 
       card = Nokogiri::HTML(response.body).at_css("##{ActionView::RecordIdentifier.dom_id(subscription)}").text.squish
-      expect(card).to include("Last: SAT Performance Issues")
+      expect(card).to include("SAT Performance Issues")
       expect(card).to include("+1 lower-severity incident since, not counted")
     end
   end
@@ -261,5 +261,38 @@ RSpec.describe "Logos in every theme", :single_user_mode do
       expect(page.at_css("##{ActionView::RecordIdentifier.dom_id(with_logo)} img[data-service-logo]")).to be_present
       expect(page.at_css("##{ActionView::RecordIdentifier.dom_id(without)} [data-service-logo='monogram']")).to be_present
     end
+  end
+end
+
+RSpec.describe "Dashboard activity legend", :single_user_mode do
+  let(:user) { SingleUserMode.user }
+
+  before { create(:subscription, user: user) }
+
+  it "explains the day colors in the default theme's card layout" do
+    get root_path
+
+    legend = Nokogiri::HTML(response.body).at_css("[data-activity-legend]")
+    expect(legend.css("li").map { |item| item.text.strip }).to eq([ "Not tracked yet", "No incidents", "Minor", "Major", "Critical" ])
+  end
+
+  it "adds unknown severity only when an RSS incident shows up in the strip" do
+    feed = create(:feed, :rss)
+    create(:subscription, user: user, feed: feed)
+    create(:incident, feed: feed, impact: "unknown", started_at: 2.days.ago, resolved_at: 2.days.ago)
+
+    get root_path
+
+    expect(Nokogiri::HTML(response.body).at_css("[data-activity-legend]").text).to include("Severity unknown")
+  end
+
+  it "is left out of the list layout and of themes that don't define one" do
+    user.update!(dashboard_layout: "list")
+    get root_path
+    expect(response.body).not_to include("data-activity-legend")
+
+    user.update!(dashboard_layout: "cards", theme: "github")
+    get root_path
+    expect(response.body).not_to include("data-activity-legend")
   end
 end

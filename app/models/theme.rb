@@ -17,7 +17,7 @@ class Theme < Data.define(:key, :name, :description, :level_labels)
   end
 
   REGISTRY = [
-    new(key: "default", name: "Default", description: "Clean Tailwind look with automatic light and dark mode."),
+    new(key: "default", name: "Default", description: "A tally board: big day counts over a 28-day severity strip. Light and dark."),
     new(key: "worksite", name: "Worksite Safety Sign", description: "Hazard stripes and a \"DAYS SINCE LAST INCIDENT\" site board.",
         level_labels: { "waiting" => "Not inspected", "ongoing" => "Danger", "day_one" => "Warning", "short_streak" => "Caution", "long_streak" => "Safe", "solid_streak" => "★ Safety record ★" }),
     new(key: "farmhouse", name: "Farmhouse", description: "A hand-lettered barn-wood sign with hanging flip-card numbers.",

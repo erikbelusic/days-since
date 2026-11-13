@@ -1,7 +1,15 @@
 <header class="border-b border-border bg-surface">
   <nav class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
-    <%= link_to root_path, class: "font-display text-xl font-bold tracking-tight" do %>
-      days<span class="text-accent">-since</span>
+    <%= link_to root_path, class: "flex items-center gap-2.5 font-display text-xl font-bold tracking-tight" do %>
+      <%# A tally mark: four days and the slash that closes the week's count. %>
+      <svg viewBox="0 0 28 24" class="h-6 w-7 text-accent" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+          <line x1="5" y1="3" x2="5" y2="21"/><line x1="10.5" y1="3" x2="10.5" y2="21"/>
+          <line x1="16" y1="3" x2="16" y2="21"/><line x1="21.5" y1="3" x2="21.5" y2="21"/>
+          <line x1="2" y1="17" x2="25" y2="7"/>
+        </g>
+      </svg>
+      <span>days-since</span>
     <% end %>
 
     <% if authenticated? %>

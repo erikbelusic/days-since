@@ -1,33 +1,55 @@
 <%# locals: (subscription:, result:) %>
 <article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
-         class="flex flex-col rounded-card border border-l-4 border-border border-l-level p-5 shadow-sm <%= result.ongoing? ? "ds-pulse border-level bg-danger-surface" : "bg-surface" %>">
-  <header class="flex items-start justify-between gap-3">
-    <div class="flex min-w-0 items-start gap-2">
-      <span data-sortable-handle class="mt-0.5 cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
-      <%= service_logo(subscription, css_class: "h-6 w-6 rounded-md", monogram_class: "bg-surface-muted text-ink-muted text-xs") %>
-      <h2 class="font-display text-lg font-semibold leading-tight">
-        <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
-              class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
-      </h2>
-    </div>
-    <div class="flex shrink-0 items-center gap-2">
-      <span class="rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide <%= result.ongoing? ? "bg-level text-surface" : "border border-level text-level" %>" data-level-label><%= stability_label(result.level) %></span>
-      <%= link_to "Edit", edit_subscription_path(subscription), class: "text-sm text-ink-muted hover:text-ink hover:underline", aria: { label: "Edit #{subscription.name}" } %>
-    </div>
+         class="relative flex flex-col overflow-hidden rounded-card bg-surface p-5 <%= result.ongoing? ? "ds-pulse border-2 border-level pt-7" : "border border-border" %>">
+  <% if result.ongoing? %>
+    <%# A band across the top marks a live incident without tinting the whole card. %>
+    <span class="absolute inset-x-0 top-0 h-2 bg-level" aria-hidden="true"></span>
+  <% end %>
+  <header class="flex items-center gap-2.5">
+    <span data-sortable-handle class="cursor-grab select-none text-ink-muted" title="Drag to reorder" aria-hidden="true">⠿</span>
+    <%= service_logo(subscription, css_class: "h-7 w-7 rounded-lg", image_class: "bg-white p-0.5 ring-1 ring-border", monogram_class: "bg-surface-muted text-ink-muted text-xs") %>
+    <h2 class="min-w-0 flex-1 truncate font-display text-lg font-semibold tracking-tight">
+      <%= link_to_if subscription.feed.site_url.present?, subscription.name, subscription.feed.site_url,
+            class: "hover:underline underline-offset-2", target: "_blank", rel: "noopener", title: "Open the #{subscription.name} status page" %>
+    </h2>
+    <%= link_to "Edit", edit_subscription_path(subscription), class: "text-sm text-ink-muted hover:text-ink hover:underline", aria: { label: "Edit #{subscription.name}" } %>
   </header>
 
-  <div class="my-6 text-center">
-    <p class="font-numeric text-7xl font-bold tabular-nums text-level" data-days>
-      <%= result.infinite? ? "∞" : result.days %>
+  <div class="mt-6 flex items-end justify-between gap-3">
+    <p class="df-count font-numeric text-8xl font-bold tabular-nums text-level" data-days>
+      <%= result.waiting? ? "–" : result.infinite? ? "∞" : result.days %>
     </p>
-    <p class="mt-1 text-sm text-ink-muted"><%= counter_caption(result) %></p>
+    <p class="mb-1 flex items-center gap-1.5 text-sm font-semibold text-level">
+      <span class="h-2 w-2 rounded-full bg-level" aria-hidden="true"></span>
+      <span data-level-label><%= stability_label(result.level) %></span>
+    </p>
+  </div>
+  <p class="mt-2 text-sm text-ink-muted"><%= counter_caption(result).upcase_first %></p>
+
+  <%# The last 28 days: a pill per day, colored by the worst incident that counts.
+      Gray days are before we had any data for this page. %>
+  <% today = Time.current.in_time_zone(Current.user.zone).to_date %>
+  <% first_day = today - (result.worst_impacts.size - 1) %>
+  <div class="mt-5">
+    <div class="flex h-7 gap-[3px]" role="img" data-activity-bars
+         aria-label="<%= pluralize(result.activity.count(&:positive?), "day") %> with incidents in the last <%= result.activity.size %> days">
+      <% result.worst_impacts.each_with_index do |impact, index| %>
+        <% day = first_day + index %>
+        <% state = impact || (result.tracked_since && day >= result.tracked_since ? "clear" : "untracked") %>
+        <span class="df-day flex-1 rounded-full" data-day="<%= state %>"
+              title="<%= l(day, format: "%b %-d") %>: <%= { "clear" => "no incidents", "untracked" => "not tracked yet", "unknown" => "incident" }.fetch(state) { "#{state} incident" } %>"></span>
+      <% end %>
+    </div>
+    <div class="mt-1.5 flex justify-between text-xs text-ink-muted"><span>4 weeks ago</span><span>Today</span></div>
   </div>
 
-  <footer class="mt-auto space-y-1 border-t border-border pt-3 text-sm text-ink-muted">
+  <footer class="mt-auto space-y-1 pt-4 text-sm text-ink-muted">
     <% if result.incident %>
-      <p class="truncate">
-        <%= result.ongoing? ? "Current:" : "Last:" %>
-        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink underline-offset-2 hover:underline", target: "_blank", rel: "noopener" %>
+      <p class="flex items-baseline gap-3 border-t border-border pt-3">
+        <span class="min-w-0 flex-1 truncate">
+          <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink underline-offset-2 hover:underline", target: "_blank", rel: "noopener" %>
+        </span>
+        <span class="shrink-0 tabular-nums"><%= result.ongoing? ? "Now" : l(result.incident.started_at.in_time_zone(Current.user.zone).to_date, format: "%b %-d") %></span>
       </p>
     <% end %>
     <% if result.ignored_count.positive? %>

@@ -1,50 +1,103 @@
 /*
- * Default theme: plain Tailwind look (slate + indigo), light and dark.
- * These values are also the :root fallback, so every theme gets the full
- * token set even if it only overrides some of it.
+ * :root fallback: the full token set, so a theme that leaves a token out
+ * still renders. Kept deliberately plain; the default theme itself is below.
  */
-:root,
-[data-theme="default"] {
-  --ds-canvas: #f8fafc;          /* slate-50 */
+:root {
+  --ds-canvas: #f8fafc;
   --ds-surface: #ffffff;
-  --ds-surface-muted: #f1f5f9;   /* slate-100 */
-  --ds-ink: #0f172a;             /* slate-900 */
-  --ds-ink-muted: #64748b;       /* slate-500 */
-  --ds-border: #e2e8f0;          /* slate-200 */
-  --ds-accent: #4f46e5;          /* indigo-600 */
+  --ds-surface-muted: #f1f5f9;
+  --ds-ink: #0f172a;
+  --ds-ink-muted: #64748b;
+  --ds-border: #e2e8f0;
+  --ds-accent: #4f46e5;
   --ds-accent-ink: #ffffff;
-  --ds-ok: #059669;              /* emerald-600 */
-  --ds-danger: #dc2626;          /* red-600 */
-  --ds-danger-surface: #fef2f2;  /* red-50 */
+  --ds-ok: #059669;
+  --ds-danger: #dc2626;
+  --ds-danger-surface: #fef2f2;
   --ds-font-body: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --ds-font-display: var(--ds-font-body);
   --ds-radius-card: 0.75rem;
-  --ds-level-ongoing: #dc2626;     /* red-600 */
-  --ds-level-day-one: #c2410c;    /* orange-700 */
-  --ds-level-short-streak: #ca8a04;  /* yellow-600 */
-  --ds-level-long-streak: #16a34a;      /* green-600 */
-  --ds-level-solid-streak: #0f172a;  /* plain ink */
+  --ds-level-ongoing: #dc2626;
+  --ds-level-day-one: #c2410c;
+  --ds-level-short-streak: #ca8a04;
+  --ds-level-long-streak: #16a34a;
+  --ds-level-solid-streak: #0f172a;
   color-scheme: light;
+}
+
+/*
+ * Default theme: a tally board. Cool slate and cobalt, the day count set
+ * large in Bricolage Grotesque, and a 28-day strip of pills under it.
+ * Light and dark via prefers-color-scheme.
+ */
+[data-theme="default"] {
+  --ds-canvas: #eef2f6;
+  --ds-surface: #ffffff;
+  --ds-surface-muted: #e6ebf1;
+  --ds-ink: #172334;
+  --ds-ink-muted: #5a6879;
+  --ds-border: #d5dde7;
+  --ds-accent: #2f55d4;          /* cobalt */
+  --ds-accent-ink: #ffffff;
+  --ds-ok: #1f9d55;
+  --ds-danger: #d62f3c;
+  --ds-danger-surface: #fdf0f0;
+  --ds-font-body: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --ds-font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --ds-radius-card: 1.25rem;
+  --ds-level-ongoing: #d62f3c;
+  --ds-level-day-one: #dd6b1a;
+  --ds-level-short-streak: #b98900;
+  --ds-level-long-streak: #1f9d55;
+  --ds-level-solid-streak: #172334;
+  --df-day-untracked: #dde3ea;
+  --df-day-clear: #bfe3cb;
+  --df-day-minor: #e3a008;
+  --df-day-unknown: #e5603b;
+  --df-day-major: #d62f3c;
+  --df-day-critical: #8a1420;
+  color-scheme: light;
+
+  main h1 { font-size: 2.5rem; letter-spacing: -0.035em; line-height: 1; }
+
+  .df-day { background: var(--df-day-clear); }
+  .df-day[data-day="untracked"] { background: var(--df-day-untracked); }
+  .df-day[data-day="none"], .df-day[data-day="minor"] { background: var(--df-day-minor); }
+  .df-day[data-day="unknown"] { background: var(--df-day-unknown); }
+  .df-day[data-day="major"] { background: var(--df-day-major); }
+  .df-day[data-day="critical"] { background: var(--df-day-critical); }
+
+  .df-count {
+    font-variation-settings: "opsz" 96;
+    letter-spacing: -0.045em;
+    line-height: 0.85;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="default"] {
-    --ds-canvas: #020617;          /* slate-950 */
-    --ds-surface: #0f172a;         /* slate-900 */
-    --ds-surface-muted: #1e293b;   /* slate-800 */
-    --ds-ink: #f1f5f9;             /* slate-100 */
-    --ds-ink-muted: #94a3b8;       /* slate-400 */
-    --ds-border: #1e293b;          /* slate-800 */
-    --ds-accent: #818cf8;          /* indigo-400 */
-    --ds-accent-ink: #020617;
-    --ds-ok: #34d399;              /* emerald-400 */
-    --ds-danger: #f87171;          /* red-400 */
---ds-danger-surface: #450a0a;  /* red-950 */
---ds-level-ongoing: #f87171;     /* red-400 */
---ds-level-day-one: #fb923c;    /* orange-400 */
---ds-level-short-streak: #facc15;  /* yellow-400 */
---ds-level-long-streak: #4ade80;      /* green-400 */
---ds-level-solid-streak: #f1f5f9;  /* plain ink */
-color-scheme: dark;
+    --ds-canvas: #0c1420;
+    --ds-surface: #131e2c;
+    --ds-surface-muted: #1a2738;
+    --ds-ink: #e7edf4;
+    --ds-ink-muted: #8d9bb0;
+    --ds-border: #223247;
+    --ds-accent: #8aa4ff;
+    --ds-accent-ink: #0c1420;
+    --ds-ok: #4cc47c;
+    --ds-danger: #ff6b70;
+    --ds-danger-surface: #2a1519;
+    --ds-level-ongoing: #ff6b70;
+    --ds-level-day-one: #ff9a4d;
+    --ds-level-short-streak: #f2c544;
+    --ds-level-long-streak: #4cc47c;
+    --ds-level-solid-streak: #e7edf4;
+    --df-day-untracked: #223042;
+    --df-day-clear: #23523a;
+    --df-day-minor: #f2b632;
+    --df-day-unknown: #ff8a5c;
+    --df-day-major: #ff5a60;
+    --df-day-critical: #c0182f;
+    color-scheme: dark;
   }
 }
