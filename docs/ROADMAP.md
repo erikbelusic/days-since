@@ -32,7 +32,7 @@ Taken from [mrshu/github-statuses](https://github.com/mrshu/github-statuses), an
 
    Show it on cards and in themes that suit it (GitHub, Datadog, Mission Control). Decide whether the severity threshold applies, i.e. "uptime counting minor+".
 
-5. **Color history days by worst severity.** *Partly done:* the counter now reports `worst_impacts` and `tracked_since`, and the default theme uses them. Still to do: use them in the GitHub, Datadog and Mission Control themes, which still color by count only.
+5. **Color history days by worst severity.** *Done:* the counter reports `worst_impacts` and `tracked_since`, and every theme draws them through the shared `day_strip` partial.
 
 6. **Component filters.** Statuspage incidents list the affected `components`. Let a subscription count only the components the user cares about, e.g. "days since a GitHub **Actions** incident". This needs schema decisions:
    - store components per incident (a join table, or JSON on `Incident`)
