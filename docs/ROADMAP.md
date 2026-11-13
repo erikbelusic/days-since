@@ -54,3 +54,17 @@ Not planned: their ML guess of affected components (GLiNER2). It's a heavy runti
 - **Time zone picker** should support IANA names (`America/Chicago`), not only Rails zone names.
 - **URL query strings:** normalization strips them (decision 2c). Revisit if a real feed needs one, for example `?format=rss`.
 - **Google Cloud-style feeds** post one entry per *update*, so one incident becomes several entries. Consider grouping them by the incident ID inside the entry ID.
+
+## Last: history backfill
+
+- **Backfill incident history from `/history.json`.** `/api/v2/incidents.json` only returns the 50 most recent incidents. That's about 2 weeks for Cloudflare and 2–3 months for GitHub or Claude (checked 2026-11-12). Statuspage pages also serve an undocumented `/history.json?page=N`, three months per page; GitHub's goes back to 2011. Each incident has:
+  - `code` (matches our `external_id`)
+  - `name`
+  - `impact`
+  - `timestamp` (`Nov 28, 06:59 - 08:23 UTC`, with the year taken from the month the incident is listed under)
+  - `message` (often the postmortem)
+
+  Run it as a throttled one-time job when a feed is first subscribed, so uptime % and history views have data from day one. Caveats:
+  - The endpoint is undocumented and could change.
+  - Times are only accurate to the minute and arrive as HTML that needs parsing.
+  - A full backfill is many requests (about 60 for GitHub).
