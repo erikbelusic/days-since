@@ -1,6 +1,5 @@
 <%# locals: (subscription:, result:) %>
 <% metric = "days_since{service:#{subscription.name.parameterize(separator: "_")}}" %>
-<% peak = [ result.activity.max.to_i, 1 ].max %>
 <article id="<%= dom_id(subscription) %>" data-sortable-url="<%= subscription_position_path(subscription) %>" data-level="<%= result.level %>"
          class="dd-tile-edge <%= "ds-pulse" if result.ongoing? %> flex flex-col rounded-card border border-border bg-surface">
   <header class="flex items-center gap-2 px-3 pt-3 text-xs">
@@ -15,26 +14,25 @@
   </header>
   <p class="dd-mono truncate px-3 pt-1 text-[0.7rem] text-ink-muted" title="<%= metric %>"><%= metric %></p>
 
-  <div class="mx-3 mt-3 flex items-baseline gap-2 rounded-sm px-3 py-2 dd-level-fill">
+  <div class="mx-3 mt-3 flex items-baseline gap-2 rounded-sm px-3 py-2 <%= result.ongoing? ? "dd-level-fill" : "dd-level-tint" %>">
     <p class="text-6xl font-light tabular-nums leading-none" data-days><%= result.waiting? ? "–" : result.infinite? ? "∞" : result.days %></p>
     <p class="text-sm opacity-80"><%= result.waiting? ? "no data yet" : result.infinite? ? "days" : "day".pluralize(result.days) %><%= " · incident active" if result.ongoing? %></p>
   </div>
 
   <div class="px-3 pt-4">
-    <div class="dd-gridline flex h-14 items-end gap-[2px] border-b border-border" role="img" data-activity-bars
-         aria-label="<%= pluralize(result.activity.count(&:positive?), "day") %> with incidents in the last <%= result.activity.size %> days">
-      <% result.activity.each do |count| %>
-        <span class="<%= count.positive? ? "dd-bar" : "dd-bar-clear" %> flex-1 rounded-t-[1px]" style="height: <%= count.positive? ? (25 + 75 * count / peak) : 6 %>%"></span>
-      <% end %>
-    </div>
+    <%# Timeseries: taller and hotter bars for worse days; no bar before tracking. %>
+    <%= render "themes/default/day_strip", result: result, css_class: "dd-gridline h-14 items-end gap-[2px] border-b border-border", day_class: "dd-bar rounded-t-[1px]" %>
     <div class="dd-mono flex justify-between pt-1 text-[0.65rem] text-ink-muted"><span>-<%= result.activity.size %>d</span><span>now</span></div>
   </div>
 
   <footer class="mt-auto space-y-0.5 border-t border-border px-3 py-2 text-xs text-ink-muted">
     <% if result.incident %>
-      <p class="truncate">
-        <span class="dd-mono"><%= result.ongoing? ? "TRIGGERED" : "RESOLVED" %></span>
-        <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent hover:underline", target: "_blank", rel: "noopener" %>
+      <p class="flex items-baseline gap-2">
+        <span class="dd-mono shrink-0 <%= result.ongoing? ? "text-danger" : "text-ok" %>"><%= result.ongoing? ? "TRIGGERED" : "RESOLVED" %></span>
+        <span class="min-w-0 flex-1 truncate">
+          <%= link_to_if result.incident.url.present?, result.incident.title, result.incident.url, class: "text-ink hover:text-accent hover:underline", target: "_blank", rel: "noopener" %>
+        </span>
+        <span class="dd-mono shrink-0"><%= result.ongoing? ? "now" : l(result.incident.started_at.in_time_zone(Current.user.zone).to_date, format: "%b %-d") %></span>
       </p>
     <% end %>
     <% if result.ignored_count.positive? %>

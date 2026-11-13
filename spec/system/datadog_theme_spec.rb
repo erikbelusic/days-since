@@ -21,7 +21,7 @@ RSpec.describe "Datadog-inspired theme", :single_user_mode do
         expect(page).to have_css("[data-monitor-status]", exact_text: "Warn")
         expect(page).to have_text("days_since{service:github}")
         expect(page).to have_css("[data-days]", text: "1")
-        expect(page).to have_css("[data-activity-bars] .dd-bar", count: 1)
+        expect(page).to have_css("[data-activity-bars] .dd-bar:not([data-day=clear]):not([data-day=untracked])", count: 1)
         expect(page).to have_css("[data-activity-bars] span", count: 28)
       end
 

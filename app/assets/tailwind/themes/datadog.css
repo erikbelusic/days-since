@@ -23,6 +23,12 @@
   --ds-level-short-streak: #f5b82e;  /* watch */
   --ds-level-long-streak: #3ec46d;   /* ok */
   --ds-level-solid-streak: #a77ae6;  /* SLO met */
+  --ds-day-untracked: #4a4757;
+  --ds-day-clear: color-mix(in oklab, #3ec46d 55%, transparent);
+  --ds-day-minor: #f5b82e;
+  --ds-day-unknown: #f57c2a;
+  --ds-day-major: #f2475a;
+  --ds-day-critical: #e0397e;
   color-scheme: dark;
 
   --dd-nav: #632ca6;
@@ -35,7 +41,15 @@
   [data-level="short_streak"] .dd-level-fill,
   [data-level="long_streak"] .dd-level-fill { color: #14131a; }
   .dd-tile-edge { box-shadow: inset 0 3px 0 var(--level); }
-  .dd-bar { background: var(--ds-danger); }
-  .dd-bar-clear { background: color-mix(in oklab, var(--ds-ok) 45%, transparent); }
+  /* Quieter conditional formatting: tinted, with the value in the level color.
+     Only a live alert gets the solid fill. */
+  .dd-level-tint { background: color-mix(in oklab, var(--level) 16%, var(--ds-surface)); color: var(--level); }
+  .dd-level-tint p:last-child { color: var(--ds-ink-muted); }
+  .dd-bar { height: 6%; }
+  .dd-bar[data-day="untracked"] { height: 3%; }
+  .dd-bar[data-day="none"], .dd-bar[data-day="minor"] { height: 40%; }
+  .dd-bar[data-day="unknown"] { height: 55%; }
+  .dd-bar[data-day="major"] { height: 75%; }
+  .dd-bar[data-day="critical"] { height: 100%; }
   .dd-gridline { background-image: linear-gradient(to top, var(--ds-border) 1px, transparent 1px); background-size: 100% 25%; }
 }
