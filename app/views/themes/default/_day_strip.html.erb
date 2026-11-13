@@ -1,0 +1,15 @@
+<%# The last 28 days, oldest first: one .ds-day per day, colored by the worst
+    incident that counted that day (data-day). Days before we had any data for
+    the page are "untracked". Themes shape the days with day_class or CSS. %>
+<%# locals: (result:, css_class: "", day_class: "") %>
+<% today = Time.current.in_time_zone(Current.user.zone).to_date %>
+<% first_day = today - (result.worst_impacts.size - 1) %>
+<div class="flex <%= css_class %>" role="img" data-activity-bars
+     aria-label="<%= pluralize(result.activity.count(&:positive?), "day") %> with incidents in the last <%= result.activity.size %> days">
+  <% result.worst_impacts.each_with_index do |impact, index| %>
+    <% day = first_day + index %>
+    <% state = impact || (result.tracked_since && day >= result.tracked_since ? "clear" : "untracked") %>
+    <span class="ds-day flex-1 <%= day_class %>" data-day="<%= state %>"
+          title="<%= l(day, format: "%b %-d") %>: <%= { "clear" => "no incidents", "untracked" => "not tracked yet", "unknown" => "incident" }.fetch(state) { "#{state} incident" } %>"></span>
+  <% end %>
+</div>

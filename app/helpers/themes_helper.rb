@@ -9,13 +9,10 @@ module ThemesHelper
   # version when the current theme doesn't override it:
   #   render themed_partial("feed_card"), result: ...
   def themed_partial(name, theme: current_theme)
-    own_themed_partial(name, theme: theme) || "themes/default/#{name}"
-  end
-
-  # Path to the current theme's own partial, or nil when it has none. For
-  # optional extras that only make sense in the theme that defines them, e.g.
-  #   <% if (legend = own_themed_partial("activity_legend")) %>
-  def own_themed_partial(name, theme: current_theme)
-    "themes/#{theme.key}/#{name}" if lookup_context.exists?(name, [ "themes/#{theme.key}" ], true)
+    if lookup_context.exists?(name, [ "themes/#{theme.key}" ], true)
+      "themes/#{theme.key}/#{name}"
+    else
+      "themes/default/#{name}"
+    end
   end
 end

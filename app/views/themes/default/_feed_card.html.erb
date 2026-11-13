@@ -26,20 +26,8 @@
   </div>
   <p class="mt-2 text-sm text-ink-muted"><%= counter_caption(result).upcase_first %></p>
 
-  <%# The last 28 days: a pill per day, colored by the worst incident that counts.
-      Gray days are before we had any data for this page. %>
-  <% today = Time.current.in_time_zone(Current.user.zone).to_date %>
-  <% first_day = today - (result.worst_impacts.size - 1) %>
   <div class="mt-5">
-    <div class="flex h-7 gap-[3px]" role="img" data-activity-bars
-         aria-label="<%= pluralize(result.activity.count(&:positive?), "day") %> with incidents in the last <%= result.activity.size %> days">
-      <% result.worst_impacts.each_with_index do |impact, index| %>
-        <% day = first_day + index %>
-        <% state = impact || (result.tracked_since && day >= result.tracked_since ? "clear" : "untracked") %>
-        <span class="df-day flex-1 rounded-full" data-day="<%= state %>"
-              title="<%= l(day, format: "%b %-d") %>: <%= { "clear" => "no incidents", "untracked" => "not tracked yet", "unknown" => "incident" }.fetch(state) { "#{state} incident" } %>"></span>
-      <% end %>
-    </div>
+    <%= render "themes/default/day_strip", result: result, css_class: "h-7 gap-[3px]", day_class: "rounded-full" %>
     <div class="mt-1.5 flex justify-between text-xs text-ink-muted"><span>4 weeks ago</span><span>Today</span></div>
   </div>
 

@@ -54,6 +54,17 @@
 [data-level="long_streak"] { --level: var(--ds-level-long-streak); }
 [data-level="solid_streak"] { --level: var(--ds-level-solid-streak); }
 
+/*
+ * The 28-day strip: each day carries data-day="untracked|clear|none|minor|
+ * unknown|major|critical" and themes supply --ds-day-* colors (and any shape).
+ */
+.ds-day { background: var(--ds-day-clear); }
+.ds-day[data-day="untracked"] { background: var(--ds-day-untracked); }
+.ds-day[data-day="none"], .ds-day[data-day="minor"] { background: var(--ds-day-minor); }
+.ds-day[data-day="unknown"] { background: var(--ds-day-unknown); }
+.ds-day[data-day="major"] { background: var(--ds-day-major); }
+.ds-day[data-day="critical"] { background: var(--ds-day-critical); }
+
 /* Pulsing glow for live incidents; disabled when the OS asks for less motion. */
 @keyframes ds-pulse {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--level, var(--ds-danger)) 55%, transparent); }

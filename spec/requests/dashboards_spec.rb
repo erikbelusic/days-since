@@ -286,13 +286,19 @@ RSpec.describe "Dashboard activity legend", :single_user_mode do
     expect(Nokogiri::HTML(response.body).at_css("[data-activity-legend]").text).to include("Severity unknown")
   end
 
-  it "is left out of the list layout and of themes that don't define one" do
+  it "is left out of the list layout, which has no day strip" do
     user.update!(dashboard_layout: "list")
     get root_path
-    expect(response.body).not_to include("data-activity-legend")
 
-    user.update!(dashboard_layout: "cards", theme: "github")
-    get root_path
     expect(response.body).not_to include("data-activity-legend")
+  end
+
+  it "appears in every theme, since every card has a day strip" do
+    Theme.all.each do |theme|
+      user.update!(theme: theme.key)
+      get root_path
+
+      expect(response.body).to include("data-activity-legend"), "missing in #{theme.key}"
+    end
   end
 end
